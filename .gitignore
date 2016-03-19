@@ -1,5 +1,8 @@
-/api/config
-/node_modules
-/assets
-/js
-/view/css
+public/api/config.inc.php
+public/api/src/vendor/*
+public/api/logs/*
+public/css/*
+public/js/*
+public/api2/*
+public/assets/*
+/node_modules/*

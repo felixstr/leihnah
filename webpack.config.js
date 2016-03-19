@@ -5,12 +5,12 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var autoprefixer = require('autoprefixer');
 var precss = require('precss');
 module.exports = {
-	context: __dirname + '/src',
+	context: __dirname + '/src-frontend',
 	entry: {
 		app: './index.js'
 	},
 	output: {
-		path: __dirname + '/js/',
+		path: __dirname + '/public/js/',
 		filename: 'app.js'
 	},
 	module: {
@@ -20,7 +20,7 @@ module.exports = {
 		}]
 	},
 	plugins: [
-	new ExtractTextPlugin("../view/css/style.css", {
+	new ExtractTextPlugin("../css/style.css", {
 		allChunks: true
 	})],
 	postcss: function() {

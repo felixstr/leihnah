@@ -12,6 +12,18 @@ angular.module('AuthTest').controller('LoginController', function($scope, $http,
 		password: undefined
 	}
 	
+/*
+		$http.get('api/objects')
+		.success(function(response) {
+			console.log('objects', response);
+		})
+		.error(function(error) {
+			console.log(error);
+		});
+		
+*/
+		
+	
 	// Function
 	$scope.signUserUp = function() {
 		var data = {
@@ -36,6 +48,7 @@ angular.module('AuthTest').controller('LoginController', function($scope, $http,
 			username: $scope.loginInfo.username,
 			password: $scope.loginInfo.password
 		}
+		
 		
 		$http.post('api/login.php', data)
 			.success(function(response) {

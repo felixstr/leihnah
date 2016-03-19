@@ -15,16 +15,16 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 		.state('home', {
 			url: '/home',
 			controller: 'LoginController',
-			templateUrl: 'view/template/login.html'
+			templateUrl: 'template/login.html'
 		})
 		.state('application', {
 			url: '/app',
 			controller: 'MainController',
-			templateUrl: 'view/template/application.html'
+			templateUrl: 'template/application.html'
 		})
 		.state('add', {
 			url: '/app/add',
 			controller: 'AddItemController',
-			templateUrl: 'view/template/addItem.html'
+			templateUrl: 'template/addItem.html'
 		});
 });
