@@ -1,37 +1,84 @@
-angular.module('AuthTest').service('AuthenticationService', ["$http", "$state", function($http, $state) {
+angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", function($http, $state) {
 	var self = this;
-	self.checkToken = function() {
-		var data = { token: self.getToken() };
-
-		$http.post('./api/checkToken.php', data)
-			.success(function(response) {
-				console.log(response);
-				if (!response.authenticated) {
-					$state.go('home');
-					console.log('logged-out');
-				} else {
-					console.log('logged-in');
-				}
+	
+	self.currentUser = null;
+	self.authenticationChecked = false;
+	self.authenticated = false;
+	self.state = 'blaa';
+	
+	self.checkAuthentication = function(callback) {
+		if (self.authenticationChecked) {
+			console.log('authentication already checked');
+			if (self.currentUser === null) {
+				callback(false);
+			} else {
+				callback(true, self.currentUser);
+			}
+		} else {
+// 			console.log('check authentication - token: ', self.getLocalToken());
+		
+			var currentUser = null;
+		
+			$http.get('api/userinfo', {
+				headers: { 'auth-token': self.getLocalToken() }
 			})
-			.error(function(error) {
-				console.log(error);
+			.success(function(response) {
+// 				console.log('userinfo-response', response);
+				if (response.authenticated) {
+					self.currentUser = response.user;
+					self.authenticated = true;
+					callback(true, self.currentUser);
+				} else {
+					callback(false);
+				}
 			});
+		
+		}
 
 	}
 	
-	self.getToken = function() {
+	self.getLocalToken = function() {
 		var token = null;
 
 		try {
 	        if (localStorage['token']) {
-				console.log(localStorage['token']);
+// 				console.log(localStorage['token']);
 				token = JSON.parse(localStorage['token']);
 			}
 	    } catch (e) {
-	        console.log('invalid json string');
+	        console.warn('no token', e);
 	    }
 		
 		
 		return token;
 	}
+	
+	self.getUser = function() {
+		return self.currentUser;
+	}
+	
+	self.isAuthenticated = function() {
+		return self.authenticated;
+	}
+	
+	self.setLocalToken = function(token) {
+		localStorage.setItem('token', JSON.stringify(token));
+	}
+	
+	self.setUser = function (user) {
+		self.currentUser = user;
+		self.authenticated = true;
+	}
+	
+	self.changeState = function() {
+		self.state = (self.state == 'blaa' ? 'jaa' : 'blaa');
+		console.log('changeState', self.state);
+	}
+	
+	self.logout = function() {
+		self.authenticated = false;
+		self.setLocalToken(null);
+		self.currentUser = null;
+	}
+	
 }]);

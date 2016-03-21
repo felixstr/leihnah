@@ -1,0 +1,12 @@
+<p>logged in: {{ authenticated }}</p>
+
+
+<button ng-click="logoutUser()" ng-show="authenticated">logout</button>
+
+<a ui-sref="objects">Gegenstände</a>
+<a ui-sref="profil">Profil</a>
+<a ui-sref="home">Home</a>
+
+
+
+<div ui-view></div>

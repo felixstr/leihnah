@@ -1,5 +1,7 @@
-angular.module('AuthTest').controller('LoginController', function($scope, $http, $state) {
-	console.log('LoginControllerrrr');
+angular.module('Leihnah').controller('HomeController', function($scope, $http, $state, AuthenticationService, auth) {
+	console.log('HomeController');
+	
+
 	
 	// Variables
 	$scope.signUpInfo = {
@@ -11,17 +13,19 @@ angular.module('AuthTest').controller('LoginController', function($scope, $http,
 		username: undefined,
 		password: undefined
 	}
-	
 /*
-		$http.get('api/objects')
-		.success(function(response) {
-			console.log('objects', response);
-		})
-		.error(function(error) {
-			console.log(error);
-		});
-		
-*/
+	
+	$http.get('api/objects', {
+		headers: { 'auth-token': '234234234234324' },
+	})
+	.success(function(response) {
+		console.log('objects', response);
+	})
+	.error(function(error) {
+		console.log(error);
+	});
+	
+*/	
 		
 	
 	// Function
@@ -50,12 +54,17 @@ angular.module('AuthTest').controller('LoginController', function($scope, $http,
 		}
 		
 		
-		$http.post('api/login.php', data)
+		$http.post('api/login', data)
 			.success(function(response) {
-				console.log(response);
 				if (response.authenticated) {
-					localStorage.setItem('token', JSON.stringify(response.token));
-					$state.go('application');
+					
+					
+					$scope.authenticated = true;
+					AuthenticationService.setLocalToken(response.user.token);
+					AuthenticationService.setUser(response.user);
+					
+					$state.go('objects');
+					
 				} else {
 					console.log('wrong credentials');
 				}
@@ -65,6 +74,8 @@ angular.module('AuthTest').controller('LoginController', function($scope, $http,
 				console.log(error);
 			});
 	}
+	
+	
 	
 });
 

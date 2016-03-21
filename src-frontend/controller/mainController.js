@@ -1,20 +1,34 @@
-angular.module('AuthTest').controller('MainController', function($scope, $http, $state, AuthenticationService) {
+angular.module('Leihnah').controller('MainController', function($scope, $http, $state, AuthenticationService, auth) {
+	console.log('MainController');
 	
-	AuthenticationService.checkToken();
 	
-	$scope.logout = function() {
-		var data = {
-			token: AuthenticationService.getToken()
-		}
+	if (AuthenticationService.authenticated && $state.is('home')) {
+		$state.go('objects')
+	}
+	
+	$scope.$watch(function() { return AuthenticationService.authenticated; }, function(newVal, oldVal) {
+		console.log('changed');
+		$scope.authenticated = AuthenticationService.authenticated;
+	});
+	
+	
+	$scope.logoutUser = function() {
+	
+		$http.post('api/logout', {
+				headers: { 'auth-token': AuthenticationService.getLocalToken() }
+			})
+			.success(function(response) {
+				if (!response.authenticated) {
 
-		$http.post('api/logout.php', data)
-			.success(function(response){
-				console.log(response);
-				localStorage.clear();
-				$state.go('home');
+					AuthenticationService.logout();
+					
+					$state.go('home');
+				}
 			})
 			.error(function(error) {
 				console.log(error);
 			});
 	}
+	
+	
 });

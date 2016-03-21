@@ -1,4 +1,4 @@
-angular.module('AuthTest').controller('AddItemController', function($scope, Upload, $timeout, AuthenticationService) {
+angular.module('Leihnah').controller('AddItemController', function($scope, Upload, $timeout, AuthenticationService) {
 	
 	AuthenticationService.checkToken();
 	

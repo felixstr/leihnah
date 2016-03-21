@@ -33,12 +33,71 @@ $container['db'] = function ($c) {
 };
 
 $app->get('/objects', function (Request $request, Response $response) {
-    $this->logger->addInfo("Object List");
+    $this->logger->addInfo("header", $request->getHeaders());
     
     $mapper = new ObjectMapper($this->db, $this->logger);
     $objects = $mapper->getObjects();
 
 	$newResponse = $response->withJson($objects);
+	
+    return $newResponse;
+});
+
+
+/**
+* falls angemeldet, wird aktueller benutzer zurückgegeben.
+*/
+$app->get('/userinfo', function (Request $request, Response $response) {
+    $this->logger->addInfo("header", $request->getHeader('auth-token'));
+//     $this->logger->addInfo("method", array($request->getMethod()));
+    
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::initialize($this->db, $this->logger);
+    
+	$userinfo = Authentication::getUserInfo();
+
+		
+	$newResponse = $response->withJson($userinfo);
+	
+    return $newResponse;
+});
+
+/**
+* login mit username und passwort
+*/
+$app->post('/login', function (Request $request, Response $response) {
+	$this->logger->addInfo("body", $request->getParsedBody());
+	$requestBody = $request->getParsedBody();
+    
+    Authentication::setCredentials($requestBody['username'], $requestBody['password']);
+    Authentication::initialize($this->db, $this->logger);
+    
+	$userinfo = Authentication::getUserInfo();
+		
+	$newResponse = $response->withJson($userinfo);
+
+	
+    return $newResponse;
+});
+
+
+/**
+* logout user
+*/
+$app->post('/logout', function (Request $request, Response $response) {
+	$this->logger->addInfo("body", $request->getParsedBody());
+	$requestBody = $request->getParsedBody();
+    
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::logout();
+    
+	$userinfo = Authentication::getUserInfo();
+	
+	
+		
+	$newResponse = $response->withJson($userinfo);
+
 	
     return $newResponse;
 });
