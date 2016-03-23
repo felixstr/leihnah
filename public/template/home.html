@@ -5,16 +5,22 @@
 
 	<section class="sign-up">
 		<h2>Registrieren</h2>
-		<input type="text" class="form-control" ng-model="signUpInfo.username" placeholder="Choose a Username">
-		<input type="password" class="form-control" ng-model="signUpInfo.password" placeholder="Choose a password">
-		<button ng-click="signUserUp()">Registrieren</button>
+		Username OK: {{ registerInfo.usernameOk }}
+		<form name="register" ng-submit="register.$valid && registerUser()">
+			<input name="username" type="text" ng-model="registerInfo.username" placeholder="Choose a Username" ng-change="checkUsername()" ng-minlength="3" required>
+			<input type="password" ng-model="registerInfo.password" placeholder="Choose a password" ng-minlength="4" required>
+			<button type="submit">Registrieren</button>
+		</form>
 	</section>
 	
 	<section class="login">
 		<h2>Anmelden</h2>
-		<input type="text" class="form-control" ng-model="loginInfo.username" placeholder="Username">
-		<input type="password" class="form-control" ng-model="loginInfo.password" placeholder="Password">
-		<button ng-click="loginUser()">Anmelden</button>
+		
+		<form name="login" ng-submit="login.$valid && loginUser()">
+			<input type="text" ng-model="loginInfo.username" placeholder="Username" ng-minlength="3" required>
+			<input type="password" ng-model="loginInfo.password" placeholder="Password" required>
+			<button type="submit">Anmelden</button>
+		</form>
 	</section>
 		
 </section>

@@ -1,45 +1,64 @@
 angular.module('Leihnah').controller('HomeController', function($scope, $http, $state, AuthenticationService, auth) {
-	console.log('HomeController');
-	
-
 	
 	// Variables
-	$scope.signUpInfo = {
+	$scope.registerInfo = {
 		username: undefined,
-		password: undefined
+		password: undefined,
+		usernameOk: true,
 	}
 	
 	$scope.loginInfo = {
 		username: undefined,
 		password: undefined
 	}
-/*
-	
-	$http.get('api/objects', {
-		headers: { 'auth-token': '234234234234324' },
-	})
-	.success(function(response) {
-		console.log('objects', response);
-	})
-	.error(function(error) {
-		console.log(error);
-	});
-	
-*/	
-		
 	
 	// Function
-	$scope.signUserUp = function() {
-		var data = {
-			username: $scope.signUpInfo.username,
-			password: $scope.signUpInfo.password
+	$scope.checkUsername = function() {
+		console.log('check username: ', $scope.registerInfo.username);
+		
+		if ($scope.registerInfo.username != undefined) {
+			$http.post('api/usernameexists', {
+					username: $scope.registerInfo.username
+				})
+				.success(function(response) {
+					console.log(response);
+					if (response.usernameExists) {
+						$scope.register.username.$setValidity("exists", false);
+					} else {
+						$scope.register.username.$setValidity("exists", true);
+					}
+					$scope.registerInfo.usernameOk = !response.usernameExists;
+				})
+				.error(function(error) {
+					console.log(error);
+				});
 		}
 		
-		$http.post('api/signup.php', data)
+	}
+	
+	$scope.registerUser = function() {
+		var data = {
+			username: $scope.registerInfo.username,
+			password: $scope.registerInfo.password
+		}
+		
+		$http.post('api/register', data)
 			.success(function(response) {
 				console.log(response);
-				localStorage.setItem('user', JSON.stringify({user: response[0].email }));
-				$state.go('application');
+				
+				$scope.registerInfo.username = '';
+				$scope.registerInfo.password = '';
+				
+				if (response.authenticated) {
+					
+					
+					$scope.authenticated = true;
+					AuthenticationService.setLocalToken(response.user.token);
+					AuthenticationService.setUser(response.user);
+					
+					$state.go('objects');
+					
+				}
 				
 			})
 			.error(function(error) {
@@ -51,8 +70,7 @@ angular.module('Leihnah').controller('HomeController', function($scope, $http, $
 		var data = {
 			username: $scope.loginInfo.username,
 			password: $scope.loginInfo.password
-		}
-		
+		}	
 		
 		$http.post('api/login', data)
 			.success(function(response) {

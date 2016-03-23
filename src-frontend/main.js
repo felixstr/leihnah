@@ -41,35 +41,51 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 			templateUrl: 'template/objects.html',
 			parent: 'layout'
 		})
+		.state('neighbor', {
+			url: '/neighbor',
+			controller: 'NeighborController',
+			templateUrl: 'template/neighbor.html',
+			parent: 'layout'
+		})
+		.state('wishlist', {
+			url: '/wishlist',
+			controller: 'WishlistController',
+			templateUrl: 'template/wishlist.html',
+			parent: 'layout'
+		})
 		.state('profil', {
 			url: '/profil',
 			controller: 'ProfilController',
 			templateUrl: 'template/profil.html',
 			parent: 'layout'
+		})
+		.state('profil.base', {
+			url: '/base',
+			controller: 'ProfilBaseController',
+			templateUrl: 'template/profilBase.html',
+			parent: 'profil'
 		});
 });
 
 app.run(function($rootScope, $state, $transitions, AuthenticationService) {
 	console.log('run');
 	
-	$transitions.onBefore({ to: 'home' }, function($state) {
-		
-		console.log('tra', $state.current);
-		
-// 		console.log(AuthenticationService.isAuthenticated());
-						
+	$transitions.onBefore({ to: 'home' }, function($state) {								
 		return AuthenticationService.isAuthenticated() ? $state.target('objects') : true;
 	});
 	
 	var toHome = function($state) {	
-		
-		console.log('auth', AuthenticationService.isAuthenticated());
-		
-		return AuthenticationService.isAuthenticated() ? true : $state.target('home');
+		var result = true;
+		if (AuthenticationService.authenticationChecked && !AuthenticationService.isAuthenticated()) {
+			result = $state.target('home');
+		}
+				
+		return result;
 	};
 	
 	$transitions.onBefore({ to: 'objects' }, toHome);
+	$transitions.onBefore({ to: 'neighbor' }, toHome);
+	$transitions.onBefore({ to: 'wishlist' }, toHome);
 	$transitions.onBefore({ to: 'profil' }, toHome);
-	
 
 });

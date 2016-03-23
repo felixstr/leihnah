@@ -5,4 +5,6 @@ public/css/*
 public/js/*
 public/api2/*
 public/assets/*
-/node_modules/*
+node_modules/*
+public/api/classes/Authentication.php
+public/api/classes/NeighborEntity.php

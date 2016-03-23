@@ -1,8 +1,10 @@
 angular.module('Leihnah').controller('MainController', function($scope, $http, $state, AuthenticationService, auth) {
-	console.log('MainController');
+	console.log('MainController', $state.current);
+	
+	$scope.state = $state;
 	
 	
-	if (AuthenticationService.authenticated && $state.is('home')) {
+	if (AuthenticationService.authenticated && $state.is("home")) {
 		$state.go('objects')
 	}
 	
@@ -13,8 +15,8 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	
 	
 	$scope.logoutUser = function() {
-	
-		$http.post('api/logout', {
+		console.log('AuthenticationService.getLocalToken()', AuthenticationService.getLocalToken());
+		$http.post('api/logout', '', {
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
