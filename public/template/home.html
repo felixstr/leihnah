@@ -7,8 +7,9 @@
 		<h2>Registrieren</h2>
 		Username OK: {{ registerInfo.usernameOk }}
 		<form name="register" ng-submit="register.$valid && registerUser()">
-			<input name="username" type="text" ng-model="registerInfo.username" placeholder="Choose a Username" ng-change="checkUsername()" ng-minlength="3" required>
-			<input type="password" ng-model="registerInfo.password" placeholder="Choose a password" ng-minlength="4" required>
+			<input name="username" type="text" ng-model="registerInfo.username" placeholder="Deine Mail Adresse" ng-change="checkUsername()" ng-minlength="3" required>
+			<input type="password" ng-model="registerInfo.password" placeholder="Wähle ein Passwort" ng-minlength="4" required>
+			<input type="text" ng-model="registerInfo.person1_firstName" placeholder="Dein Vorname" ng-minlength="3" required>
 			<button type="submit">Registrieren</button>
 		</form>
 	</section>

@@ -39,7 +39,8 @@ angular.module('Leihnah').controller('HomeController', function($scope, $http, $
 	$scope.registerUser = function() {
 		var data = {
 			username: $scope.registerInfo.username,
-			password: $scope.registerInfo.password
+			password: $scope.registerInfo.password,
+			person1_firstName: $scope.registerInfo.person1_firstName
 		}
 		
 		$http.post('api/register', data)
@@ -48,6 +49,7 @@ angular.module('Leihnah').controller('HomeController', function($scope, $http, $
 				
 				$scope.registerInfo.username = '';
 				$scope.registerInfo.password = '';
+				$scope.registerInfo.person1_firstName = '';
 				
 				if (response.authenticated) {
 					

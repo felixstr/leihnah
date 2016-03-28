@@ -86,15 +86,22 @@ $app->post('/register', function (Request $request, Response $response) {
 	
 	Authentication::initialize($this->db, $this->logger);
 	
-	$neigborAdded = NeighborEntity::factory($this->db)
+	$userId = UserEntity::factory($this->db)
 		->setName($requestBody['username'])
 		->setPassword($requestBody['password'])
 		->add();
 	
-	$result = array('saved' => $neigborAdded);
+	$result = array('saved' => $userId !== false);
 	
 	
-	if ($neigborAdded) {
+	if ($userId) {
+		$neighborAdded = NeighborEntity::factory($this->db)
+			->setUserId($userId)
+			->setAccountName($requestBody['person1_firstName'])
+			->setPerson1_firstName($requestBody['person1_firstName'])
+			->add();
+		
+		
 		Authentication::setCredentials($requestBody['username'], $requestBody['password']);
 		Authentication::login($this->db, $this->logger);
     
@@ -146,5 +153,46 @@ $app->post('/logout', function (Request $request, Response $response) {
 	
     return $newResponse;
 });
+
+/**
+* falls angemeldet, wird aktueller oder anch id aufgelöster nachbar (profil) zurückgegeben.
+*/
+$app->get('/neighbor[/{id}]', function (Request $request, Response $response, $args) {
+    $this->logger->addInfo("header", $request->getHeader('auth-token'));
+//     $this->logger->addInfo("method", array($request->getMethod()));
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+    $result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    if (isset($args['id'])) {
+		    $id = $args['id'];
+	    } else {
+		    $id = Authentication::getUser()->getId();
+	    }
+	    $this->logger->addInfo("id", array($id));
+	    
+	    $neighbor = NeighborEntity::factory($this->db)
+			->setUserId($id)
+			->initialize()
+			->toArray();
+			
+		if (is_array($neighbor)) {
+			$result = $neighbor;
+			$result['ok'] = true;
+		}
+		
+    }
+
+		
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+
 
 $app->run();

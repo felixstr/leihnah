@@ -4,7 +4,6 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 	self.currentUser = null;
 	self.authenticationChecked = false;
 	self.authenticated = false;
-	self.state = 'blaa';
 	
 	self.checkAuthentication = function(callback) {
 		if (self.authenticationChecked) {
@@ -23,7 +22,7 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 				headers: { 'auth-token': self.getLocalToken() }
 			})
 			.success(function(response) {
-// 				console.log('userinfo-response', response);
+				console.log('userinfo-response', response);
 				if (response.authenticated) {
 					self.currentUser = response.user;
 					self.authenticated = true;
@@ -70,10 +69,6 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 		self.authenticated = true;
 	}
 	
-	self.changeState = function() {
-		self.state = (self.state == 'blaa' ? 'jaa' : 'blaa');
-		console.log('changeState', self.state);
-	}
 	
 	self.logout = function() {
 		self.authenticated = false;
