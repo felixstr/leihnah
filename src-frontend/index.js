@@ -2,6 +2,7 @@ require('./index.scss');
 
 require('angular');
 require('ui-router');
+require('angular-ui-bootstrap');
 require('ng-file-upload');
 
 var appModule = require('./main.js');
@@ -13,6 +14,7 @@ require('./controller/neighborController.js');
 require('./controller/wishlistController.js');
 require('./controller/profilController.js');
 require('./controller/profilBaseController.js');
+require('./controller/modal/editProfilController.js');
 require('./controller/addItemController.js');
 require('./service/authenticationService.js');
 

@@ -1,4 +1,4 @@
-var app = angular.module('Leihnah', ["ui.router", "ngFileUpload"]); 
+var app = angular.module('Leihnah', ["ui.router", 'ui.bootstrap', "ngFileUpload"]); 
 module.exports = app;
  
  
