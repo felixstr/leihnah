@@ -1,18 +1,18 @@
+<header ng-if="!state.is('home')">
+	<nav class="pages">
+		<a ui-sref="objects">Gegenstände</a>
+		<a ui-sref="neighbor">Nachbarn</a>
+		<a ui-sref="wishlist">Wunschliste</a>
+	</nav>
+	
+	<a class="profil" href ui-sref="profil.base">Beni Hunziker (profil)</a>
+</header>
+
+
 <p>logged in: {{ authenticated }}</p>
 <p>state: {{ state.current }}</p>
 
 
 <button ng-click="logoutUser()" ng-show="authenticated">logout</button>
 
-<a ui-sref="home">Home</a>
-
-<nav ng-if="!state.is('home')">
-	<a ui-sref="objects">Gegenstände</a>
-	<a ui-sref="neighbor">Nachbarn</a>
-	<a ui-sref="wishlist">Wunschliste</a>
-	<a ui-sref="profil.base">Profil</a>
-</nav>
-
-
-
-<div ui-view></div>
+<div id="containerMain" ui-view></div>

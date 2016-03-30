@@ -3,6 +3,8 @@
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 
 require 'src/vendor/autoload.php';
 
@@ -193,6 +195,67 @@ $app->get('/neighbor[/{id}]', function (Request $request, Response $response, $a
     return $newResponse;
 });
 
+/**
+* falls angemeldet, wird aktueller oder anch id aufgelöster nachbar (profil) updated.
+*/
+$app->post('/neighbor[/{id}]', function (Request $request, Response $response, $args) {
+//     $this->logger->addInfo("header", $request->getHeader('auth-token'));
+//     $this->logger->addInfo("method", array($request->getMethod()));
+    $requestBody = $request->getParsedBody();
+    $body = $request->getBody();
+    $this->logger->addInfo("requestBody", array($requestBody));
+    $this->logger->addInfo("body", array($body));
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+    $result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    if (isset($args['id'])) {
+		    $id = $args['id'];
+	    } else {
+		    $id = Authentication::getUser()->getId();
+	    }
+// 	    $this->logger->addInfo("id", array($id));
+		
+		$filename = false;
+		if (isset($_FILES['file'])) {
+			$filename = $_FILES['file']['name'];
+			$tmp_name = $_FILES['file']['tmp_name'];
+			$destination = '../assets/img/'.$filename;
+			$imagine = new Imagine\Gd\Imagine();
+			$image = $imagine->open($tmp_name);
+			$image
+				->resize(new Box(200, 200))
+				->save($destination);
+		}
+		
+		
+// 		
+		
+	    
+	    $neighbor = NeighborEntity::factory($this->db)
+			->setUserId($id)
+			->initialize()
+			->setAccountName($requestBody['accountName'])
+			->setAccountImage($filename)
+			->update()
+			->toArray();
+			
+		if (is_array($neighbor)) {
+			$result['neighbor'] = $neighbor;
+			$result['ok'] = true;
+		}
+		
+    }
+
+		
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
 
 
 $app->run();

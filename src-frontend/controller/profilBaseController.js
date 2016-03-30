@@ -2,7 +2,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 
 	console.log('ProfilBaseController');
 
-	$scope.items = ['item1', 'item2', 'item3'];
+	$scope.currentNeighbor = '';
 	
 	$scope.loadCurrentNeighbor = function() {
 		$http.get('api/neighbor', {
@@ -21,18 +21,22 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 	
 	$scope.openModalProfilEdit = function() {
 		var modalInstance = $uibModal.open({
-			animation: true,
+			backdrop: 'static',
+			keyboard: false,
+			size: 'medium',
 			templateUrl: 'template/modal/editProfil.html',
 			controller: 'EditProfilController',
 			resolve: {
-				items: function () {
-					return $scope.items;
+				currentNeighbor: function () {
+					return $scope.currentNeighbor;
 				}
 			}
 		});
 		
-		modalInstance.result.then(function (selectedItem) {
-			$scope.selected = selectedItem;
+		modalInstance.result.then(function (neighbor) {
+			$scope.currentNeighbor = neighbor;
+			
+			
 		}, function () {
 			console.log('Modal dismissed at: ' + new Date());
 		});

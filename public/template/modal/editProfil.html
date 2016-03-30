@@ -1,1 +1,22 @@
-profil edit form
+<div class="modal-footer">
+	
+	
+    <form name="editProfil" ng-submit="editProfil.$valid && save()">
+	    <label>Anzeige Name</label>
+		<input type="text" name="accountName" ng-model="currentNeighbor.accountName" ng-minlength="3" required>
+		<i ng-show="editProfil.accountName.$error.required">*required</i>
+		
+		<label>Profilbild</label>
+		<input type="file" ngf-select ng-model="profilImage.file" name="image" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFiles">
+		<i ng-show="editProfil.image.$error.required">*required</i><br>
+		<i ng-show="editProfil.image.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
+		<img ng-show="editProfil.image.$valid && !profilImage.uploadedImage" ngf-thumbnail="profilImage.file" class="thumb"> 
+		
+		
+		<input type="button" class="btNormal" ng-click="cancel()" value="Abbrechen">
+		<input type="submit" class="btPrimary" type="submit" value="Speichern">
+		
+		
+	</form>
+		
+</div>

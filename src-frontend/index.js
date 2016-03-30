@@ -1,4 +1,5 @@
 require('./index.scss');
+require('./modal.scss');
 
 require('angular');
 require('ui-router');
