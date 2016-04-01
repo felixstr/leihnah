@@ -5,8 +5,12 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	
 	
 	if (AuthenticationService.authenticated && $state.is("home")) {
-		$state.go('objects')
+		$state.go('objects');
 	}
+	if (!AuthenticationService.authenticated && !$state.is("home")) {
+		$state.go('home');
+	}
+	
 	
 	$scope.$watch(function() { return AuthenticationService.authenticated; }, function(newVal, oldVal) {
 		console.log('changed');

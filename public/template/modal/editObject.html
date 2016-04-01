@@ -1,0 +1,48 @@
+<form name="editObject" ng-submit="editObject.$valid && save()">
+    <div class="formRow">
+		<label>Bild</label>
+		<input type="file" ngf-select ng-model="objectImage.file1" name="image_1" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
+		<i ng-show="editObject.image_1.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
+		<img ng-show="editObject.image_1.$valid" ngf-thumbnail="objectImage.file1" class="thumb"> 
+		<img ng-show="currentObject.image_1 != '' && objectImage.file1 === undefined" ng-src="assets/img/{{ currentObject.image_1 }}" class="thumb"> 
+    </div>
+    
+    <div class="formRow">
+	    <label>Name des Gegenstandes</label>
+		<input type="text" name="name" ng-model="currentObject.name" ng-minlength="3" required>
+		<i ng-show="editObject.name.$error.required">*Pflichtfeld</i>
+    </div>
+    
+    <div class="formRow">
+		<label>Beschreibung</label>
+		<textarea name="description" ng-model="currentObject.description" ng-minlength="3" required></textarea>
+		<i ng-show="editObject.description.$error.required">*Pflichtfeld</i>
+	</div>
+	
+	<div class="formRow">
+		<label>Wie ist der Zustand? Gibt es Defekte?</label>
+		<textarea name="damage" ng-model="currentObject.damage"></textarea>
+	</div>
+	
+	<div class="formRow">
+		<label>Kategorie</label>
+		<select name="category" ng-model="currentObject.category" ng-options="option.name for option in categories track by option.id">
+			<option ng-repeat="option in categories" value="{{option.id}}">{{option.name}}</option>
+		</select>
+		
+		
+	</div>
+	
+	<div class="formRow">
+		<label>Zu Verschenken<input type="checkbox" ng-model="currentObject.gift"></label>
+		
+		
+	</div>
+	
+
+	
+	<input type="button" class="btNormal" ng-click="cancel()" value="Abbrechen">
+	<input type="submit" class="btPrimary" type="submit" value="Speichern">
+	
+	
+</form>

@@ -9,7 +9,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				console.log(response);
+				console.log('loadCurrentNeighbor', response);
 				if (response.ok) {
 					$scope.currentNeighbor = response;
 				}
@@ -40,6 +40,30 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 		}, function () {
 			console.log('Modal dismissed at: ' + new Date());
 		});
+	}
+	
+	$scope.openModalPasswordEdit = function() {
+		var modalInstance = $uibModal.open({
+			backdrop: 'static',
+			keyboard: false,
+			size: 'medium',
+			templateUrl: 'template/modal/editPassword.html',
+			controller: 'EditPasswordController'/*,
+			resolve: {
+				currentNeighbor: function () {
+					return $scope.currentNeighbor;
+				}
+			}*/
+		});
+		/*
+		modalInstance.result.then(function (neighbor) {
+			$scope.currentNeighbor = neighbor;
+			
+			
+		}, function () {
+			console.log('Modal dismissed at: ' + new Date());
+		});
+		*/
 	}
 	
 	

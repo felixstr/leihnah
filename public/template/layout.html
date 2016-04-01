@@ -2,17 +2,20 @@
 	<nav class="pages">
 		<a ui-sref="objects">Gegenstände</a>
 		<a ui-sref="neighbor">Nachbarn</a>
-		<a ui-sref="wishlist">Wunschliste</a>
+<!-- 		<a ui-sref="wishlist">Wunschliste</a> -->
 	</nav>
 	
+	<button id="bt_logout" ng-click="logoutUser()" ng-show="authenticated">logout</button>
 	<a class="profil" href ui-sref="profil.base">Beni Hunziker (profil)</a>
+	
 </header>
 
 
+<!--
 <p>logged in: {{ authenticated }}</p>
 <p>state: {{ state.current }}</p>
+-->
 
 
-<button ng-click="logoutUser()" ng-show="authenticated">logout</button>
 
-<div id="containerMain" ui-view></div>
+<div id="containerMain" ng-class="'page_'+state.current.name" ui-view></div>

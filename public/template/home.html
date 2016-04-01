@@ -1,8 +1,9 @@
-<p>authenticated-home: {{ authenticated }}</p>
+<!-- <p>authenticated-home: {{ authenticated }}</p> -->
 
-<section id="landingPage">
+<section id="containerLandingPage">
 	
 
+<!--
 	<section class="sign-up">
 		<h2>Registrieren</h2>
 		Username OK: {{ registerInfo.usernameOk }}
@@ -13,15 +14,17 @@
 			<button type="submit">Registrieren</button>
 		</form>
 	</section>
+-->
 	
 	<section class="login">
 		<h2>Anmelden</h2>
 		
 		<form name="login" ng-submit="login.$valid && loginUser()">
-			<input type="text" ng-model="loginInfo.username" placeholder="Username" ng-minlength="3" required>
-			<input type="password" ng-model="loginInfo.password" placeholder="Password" required>
+			<input type="text" ng-model="loginInfo.username" placeholder="Benutzername (Mail)" ng-minlength="3" required>
+			<input type="password" ng-model="loginInfo.password" placeholder="Passwort" required>
 			<button type="submit">Anmelden</button>
 		</form>
 	</section>
 		
 </section>
+<div class="clear"></div>

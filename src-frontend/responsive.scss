@@ -1,0 +1,47 @@
+/**
+* RESPONSIVE DESIGN
+*/
+@media all and (max-width: 1200px) {
+	#containerMain {
+		width: 1024px;
+		left: calc(50vw - 512px);
+	}
+	
+	
+}
+
+@media all and (max-width: 1024px) {
+	#containerMain {
+		width: 768px;
+		left: calc(50vw - (768px/2));
+	}
+	
+	
+}
+
+@media all and (max-width: 768px) {
+	#containerMain {
+		width: 667px;
+		left: calc(50vw - (667px/2));
+	}
+	
+	
+}
+
+@media all and (max-width: 666px) {
+	#containerMain {
+		width: 375px;
+		left: calc(50vw - (375px/2));
+	}
+	
+	
+}
+
+@media all and (max-width: 375px) {
+	#containerMain {
+		width: 100%;
+		left: 0;
+	}
+	
+	
+}

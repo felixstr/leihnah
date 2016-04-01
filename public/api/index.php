@@ -5,6 +5,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
+use Imagine\Image\ImageInterface;
 
 require 'src/vendor/autoload.php';
 
@@ -34,16 +35,6 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
-$app->get('/objects', function (Request $request, Response $response) {
-    $this->logger->addInfo("header", $request->getHeaders());
-    
-    $mapper = new ObjectMapper($this->db, $this->logger);
-    $objects = $mapper->getObjects();
-
-	$newResponse = $response->withJson($objects);
-	
-    return $newResponse;
-});
 
 
 /**
@@ -116,6 +107,33 @@ $app->post('/register', function (Request $request, Response $response) {
 });
 
 /**
+* new password and username
+*/
+$app->put('/user', function (Request $request, Response $response) {
+	$this->logger->addInfo("body", $request->getParsedBody());
+	$requestBody = $request->getParsedBody();
+	
+	Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+    $result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    $result['ok'] = UserEntity::factory($this->db)
+			->setId(Authentication::getUser()->getId())
+			->load()
+			->setPasswordNew($requestBody['passwordNew'])
+			->setPasswordNewRepeat($requestBody['passwordNewRepeat'])
+			->setPasswordOld($requestBody['passwordOld'])
+			->update();
+    }
+	
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+/**
 * login mit username und passwort
 */
 $app->post('/login', function (Request $request, Response $response) {
@@ -125,6 +143,8 @@ $app->post('/login', function (Request $request, Response $response) {
     Authentication::initialize($this->db, $this->logger);
     Authentication::setCredentials($requestBody['username'], $requestBody['password']);
     Authentication::login();
+    
+    
     
 	$userinfo = Authentication::getUserInfo();
 		
@@ -179,7 +199,7 @@ $app->get('/neighbor[/{id}]', function (Request $request, Response $response, $a
 	    
 	    $neighbor = NeighborEntity::factory($this->db)
 			->setUserId($id)
-			->initialize()
+			->load()
 			->toArray();
 			
 		if (is_array($neighbor)) {
@@ -204,7 +224,7 @@ $app->post('/neighbor[/{id}]', function (Request $request, Response $response, $
     $requestBody = $request->getParsedBody();
     $body = $request->getBody();
     $this->logger->addInfo("requestBody", array($requestBody));
-    $this->logger->addInfo("body", array($body));
+//     $this->logger->addInfo("body", array($body));
     
     Authentication::initialize($this->db, $this->logger);
     Authentication::setToken($request->getHeader('auth-token'));
@@ -222,14 +242,30 @@ $app->post('/neighbor[/{id}]', function (Request $request, Response $response, $
 		
 		$filename = false;
 		if (isset($_FILES['file'])) {
-			$filename = $_FILES['file']['name'];
+			$filename = $id.rand(10,1000).$_FILES['file']['name'];
 			$tmp_name = $_FILES['file']['tmp_name'];
 			$destination = '../assets/img/'.$filename;
 			$imagine = new Imagine\Gd\Imagine();
-			$image = $imagine->open($tmp_name);
-			$image
-				->resize(new Box(200, 200))
-				->save($destination);
+			$img = $imagine->open($tmp_name)
+				->thumbnail(new Box(400,400), ImageInterface::THUMBNAIL_OUTBOUND); // THUMBNAIL_INSET
+			
+			$exif = exif_read_data($tmp_name);	
+			$this->logger->addInfo("orientation", array($exif['Orientation']));
+			if (!empty($exif['Orientation'])) {
+				switch ($exif['Orientation']) {
+					case 3:
+						$img->rotate(180);
+					break;
+					case 6:
+						$img->rotate(90);
+					break;
+					case 8:
+						$img->rotate(-90);
+					break;
+				}
+			}
+			
+			$img->save($destination);
 		}
 		
 		
@@ -238,9 +274,12 @@ $app->post('/neighbor[/{id}]', function (Request $request, Response $response, $
 	    
 	    $neighbor = NeighborEntity::factory($this->db)
 			->setUserId($id)
-			->initialize()
+			->load()
 			->setAccountName($requestBody['accountName'])
 			->setAccountImage($filename)
+			->setAddress($requestBody['address'])
+			->setFixnetPhone($requestBody['fixnetPhone'])
+			->setDescription($requestBody['description'])
 			->update()
 			->toArray();
 			
@@ -257,5 +296,165 @@ $app->post('/neighbor[/{id}]', function (Request $request, Response $response, $
     return $newResponse;
 });
 
+/**
+* falls angemeldet, wird aktueller oder anch id aufgelöstes objekt zurückgegeben.
+*/
+$app->get('/object[/{id}]', function (Request $request, Response $response, $args) {
+    $this->logger->addInfo("header", $request->getHeader('auth-token'));
+//     $this->logger->addInfo("method", array($request->getMethod()));
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+    $result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    if (isset($args['id'])) {
+		    if ($args['id'] == 'own') {
+			    // eigene gegenstände
+			    $objects = ObjectMapper::factory($this->db)->getByUserId(Authentication::getUser()->getId());
+			    
+			    
+		    } else {
+			    
+			    // bestimmtes objekt zurückgeben
+
+			    $objects = ObjectEntity::factory($this->db)
+					->setId($args['id'])
+					->load()
+					->toArray();
+		    }
+	    } else {
+		    // alle objekte zurückgeben
+		    $objects = ObjectMapper::factory($this->db)->get();
+	    }
+
+	    
+			
+		if (is_array($objects)) {
+			$result['objects'] = $objects;
+			$result['ok'] = true;
+		}
+		
+    }
+
+		
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+/**
+* falls angemeldet, wird aktueller oder anch id aufgelöstes objekt updated.
+*/
+$app->post('/object[/{id}]', function (Request $request, Response $response, $args) {
+//     $this->logger->addInfo("header", $request->getHeader('auth-token'));
+//     $this->logger->addInfo("method", array($request->getMethod()));
+    $requestBody = $request->getParsedBody();
+    $this->logger->addInfo("requestBody", array($requestBody));
+//     $this->logger->addInfo("body", array($body));
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+    $result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    if (isset($args['id'])) {
+		    // update
+	    } else {
+		    // add
+		    $id = Authentication::getUser()->getId();
+		    
+		    $object = ObjectEntity::factory($this->db)
+		    	->setUserId($id)
+		    	->add();
+		    
+	    }
+// 	    $this->logger->addInfo("id", array($id));
+		
+		$filename = false;
+		if (isset($_FILES['file1'])) {
+			$filename = $object->getId().rand(10,1000).$_FILES['file1']['name'];
+			$tmp_name = $_FILES['file1']['tmp_name'];
+			$destination = '../assets/img/'.$filename;
+			$imagine = new Imagine\Gd\Imagine();
+			$img = $imagine->open($tmp_name)
+				->thumbnail(new Box(400,400), ImageInterface::THUMBNAIL_OUTBOUND); // THUMBNAIL_INSET
+			
+			$exif = exif_read_data($tmp_name);	
+// 			$this->logger->addInfo("orientation", array($exif['Orientation']));
+			if (!empty($exif['Orientation'])) {
+				switch ($exif['Orientation']) {
+					case 3:
+						$img->rotate(180);
+					break;
+					case 6:
+						$img->rotate(90);
+					break;
+					case 8:
+						$img->rotate(-90);
+					break;
+				}
+			}
+			
+			$img->save($destination);
+		}
+
+	    
+	    $object
+			->setCategoryId($requestBody['categoryId'])
+			->setImage_1($filename)
+			->setName($requestBody['name'])
+			->setDescription($requestBody['description'])
+			->setDamage($requestBody['damage'])
+			->setGift($requestBody['gift'])
+			->update()
+			->load()
+			->toArray();
+			
+		if (is_array($object)) {
+			$result['object'] = $object;
+			$result['ok'] = true;
+		}
+		
+    }
+
+	$this->logger->addInfo("result", $result);	
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+/**
+* falls angemeldet, werden alle kategorien zurück gegeben.
+*/
+$app->get('/category', function (Request $request, Response $response, $args) {
+//     $this->logger->addInfo("header", $request->getHeader('auth-token'));
+//     $this->logger->addInfo("method", array($request->getMethod()));
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+    $result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    $categories = CategoryMapper::factory($this->db)->get();
+			
+		if (is_array($categories)) {
+			$result['categories'] = $categories;
+			$result['ok'] = true;
+		}
+		
+    }
+
+		
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
 
 $app->run();

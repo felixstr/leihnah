@@ -1,28 +1,24 @@
 <?php
-class ObjectMapper extends Mapper {
+class CategoryMapper extends Mapper {
 	
 	public static function factory($db) {
-		return new ObjectMapper($db);
+		return new CategoryMapper($db);
 	}
 	
-	public function getByUserId($userId) {
+	public function get() {
 		$sql = "
 			SELECT 
 				*,
-				pk_object AS id,
-				fk_user AS userId,
-				fk_category AS categoryId
-			FROM object
-			WHERE fk_user = :userId
+				pk_category AS id
+			FROM category
 		";
 		$stmt = $this->db->prepare($sql);
-		$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
 		$stmt->execute();
 		
 		
 		$results = array();
 		while($row = $stmt->fetch()) {
-			$results[] = ObjectEntity::factory($this->db)
+			$results[] = CategoryEntity::factory($this->db)
 				->loadRow($row)
 				->toArray();
 		}

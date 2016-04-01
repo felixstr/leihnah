@@ -6,7 +6,7 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 	
 	$scope.profilImage = {
 		uploadedImage: undefined,
-		picFile: undefined
+		file: undefined
 	}
 	
 	
@@ -14,34 +14,50 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 		console.log('save: load');
 		
 		var data = $scope.currentNeighbor;
-		data.file = $scope.profilImage.file;
-
-		$scope.profilImage.file.upload = Upload.upload({
-			url: 'api/neighbor',
-			method: 'POST', // PUT funktioniert nicht mit slim
-			headers: { 'auth-token': AuthenticationService.getLocalToken() },
-			data: {
-				file: $scope.profilImage.file
-			}
-		})
-		.then(
-			function(response) {
-				console.log(response);
+		console.log('scope.profilImage.file', $scope.profilImage.file)
+		if ($scope.profilImage.file == undefined) {
+			
+			$http.post('api/neighbor', data, {
+				headers: { 'auth-token': AuthenticationService.getLocalToken() }
+			})
+			.success(function(response) {
 				
-				$scope.currentNeighbor = response.data.neighbor;
-				$uibModalInstance.close(response.data.neighbor);
+				$scope.currentNeighbor = response.neighbor;
+				$uibModalInstance.close(response.neighbor);
 				
-			}, 
-			function(response) {
-				if (response.status > 0) {
-					$scope.errorMsg = response.status+': '+response.data;
+			})
+			.error(function(error) {
+				console.log(error);
+			});
+			
+		} else {
+			
+			data.file = $scope.profilImage.file;
+			
+			$scope.profilImage.file.upload = Upload.upload({
+				url: 'api/neighbor',
+				method: 'POST', // PUT funktioniert nicht mit slim
+				headers: { 'auth-token': AuthenticationService.getLocalToken() },
+				data: data
+			})
+			.then(
+				function(response) {
+					console.log(response);
+					
+					$scope.currentNeighbor = response.data.neighbor;
+					$uibModalInstance.close(response.data.neighbor);
+					
+				}, 
+				function(response) {
+					if (response.status > 0) {
+						$scope.errorMsg = response.status+': '+response.data;
+					}
+				}, 
+				function(progress) {
+					$scope.profilImage.file.progress = Math.min(100, parseInt(100.0 * progress.loaded / progress.total));
 				}
-			}, 
-			function(progress) {
-				$scope.profilImage.file.progress = Math.min(100, parseInt(100.0 * progress.loaded / progress.total));
-			}
-		);
-		
+			);
+		}
 // 		
 	};
 	

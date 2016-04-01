@@ -1,5 +1,6 @@
 require('./index.scss');
 require('./modal.scss');
+require('./responsive.scss');
 
 require('angular');
 require('ui-router');
@@ -15,9 +16,12 @@ require('./controller/neighborController.js');
 require('./controller/wishlistController.js');
 require('./controller/profilController.js');
 require('./controller/profilBaseController.js');
+require('./controller/profilObjectsController.js');
 require('./controller/modal/editProfilController.js');
-require('./controller/addItemController.js');
+require('./controller/modal/editObjectController.js');
+require('./controller/modal/editPasswordController.js');
 require('./service/authenticationService.js');
+require('./service/categoryService.js');
 
 angular.element(document).ready(function () {  
   angular.bootstrap(document, [appModule.name], {

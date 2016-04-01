@@ -64,28 +64,37 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 			controller: 'ProfilBaseController',
 			templateUrl: 'template/profilBase.html',
 			parent: 'profil'
+		})
+		.state('profil.objects', {
+			url: '/objects',
+			controller: 'ProfilObjectsController',
+			templateUrl: 'template/profilObjects.html',
+			parent: 'profil'
 		});
 });
 
 app.run(function($rootScope, $state, $transitions, AuthenticationService) {
-	console.log('run');
+	console.log('run, state', $state.current);
+	
 	
 	$transitions.onBefore({ to: 'home' }, function($state) {								
 		return AuthenticationService.isAuthenticated() ? $state.target('objects') : true;
 	});
 	
 	var toHome = function($state) {	
+		console.log('toHome', AuthenticationService.authenticationChecked);
 		var result = true;
-		if (AuthenticationService.authenticationChecked && !AuthenticationService.isAuthenticated()) {
+		if (!AuthenticationService.isAuthenticated()) {
 			result = $state.target('home');
 		}
 				
 		return result;
 	};
-	
+
 	$transitions.onBefore({ to: 'objects' }, toHome);
 	$transitions.onBefore({ to: 'neighbor' }, toHome);
 	$transitions.onBefore({ to: 'wishlist' }, toHome);
 	$transitions.onBefore({ to: 'profil' }, toHome);
-
+	$transitions.onBefore({ to: 'profil.base' }, toHome);
+	
 });

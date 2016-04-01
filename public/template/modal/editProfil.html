@@ -1,22 +1,39 @@
-<div class="modal-footer">
-	
-	
-    <form name="editProfil" ng-submit="editProfil.$valid && save()">
+<form name="editProfil" ng-submit="editProfil.$valid && save()">
+    <div class="formRow">
+		<label>Profilbild</label>
+		<input type="file" ngf-select ng-model="profilImage.file" name="image" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
+		<i ng-show="editProfil.image.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
+		<img ng-show="editProfil.image.$valid" ngf-thumbnail="profilImage.file" class="thumb"> 
+		<img ng-show="currentNeighbor.AccountImage != '' && profilImage.file === undefined" ng-src="assets/img/{{ currentNeighbor.accountImage }}" class="thumb"> 
+    </div>
+    
+    <div class="formRow">
 	    <label>Anzeige Name</label>
 		<input type="text" name="accountName" ng-model="currentNeighbor.accountName" ng-minlength="3" required>
 		<i ng-show="editProfil.accountName.$error.required">*required</i>
-		
-		<label>Profilbild</label>
-		<input type="file" ngf-select ng-model="profilImage.file" name="image" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFiles">
-		<i ng-show="editProfil.image.$error.required">*required</i><br>
-		<i ng-show="editProfil.image.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
-		<img ng-show="editProfil.image.$valid && !profilImage.uploadedImage" ngf-thumbnail="profilImage.file" class="thumb"> 
-		
-		
-		<input type="button" class="btNormal" ng-click="cancel()" value="Abbrechen">
-		<input type="submit" class="btPrimary" type="submit" value="Speichern">
-		
-		
-	</form>
-		
-</div>
+    </div>
+    
+    <div class="formRow">
+		<label>Strasse, Nr</label>
+		<input type="text" name="address" ng-model="currentNeighbor.address" ng-minlength="3" required>
+		<i ng-show="editProfil.address.$error.required">*required</i>
+	</div>
+	
+	<div class="formRow">
+		<label>Festnetz Telefon</label>
+		<input type="text" name="fixnetPhone" ng-model="currentNeighbor.fixnetPhone" ng-minlength="10" ng-maxlength="15" ng-pattern="/^\d+$/">
+		<i ng-show="editProfil.fixnetPhone.$error.pattern">nur Zahlen sind erlaubt</i>
+		<i ng-show="editProfil.fixnetPhone.$error.minlength">minestens 10 Zeichen sind nötig</i>
+		<i ng-show="editProfil.fixnetPhone.$error.maxlength">zuviele Zeichen in der Nummer</i>
+	</div>
+	
+	<div class="formRow">
+		<label>Beschreibung</label>
+		<textarea name="description" ng-model="currentNeighbor.description" ng-minlength="3"></textarea>
+	</div>
+	
+	<input type="button" class="btNormal" ng-click="cancel()" value="Abbrechen">
+	<input type="submit" class="btPrimary" type="submit" value="Speichern">
+	
+	
+</form>

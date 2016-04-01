@@ -1,7 +1,17 @@
-<p>authenticated-profil-base: {{ authenticated }}</p>
+<!-- <p>authenticated-profil-base: {{ authenticated }}</p> -->
 
 <img ng-src="assets/img/{{ currentNeighbor.accountImage }}">
 <h1>{{ currentNeighbor.accountName }}</h1>
+<div class="address">{{ currentNeighbor.address }}</div>
+<div class="mail">{{ currentNeighbor.person1_mail }}</div>
+<div class="phone">{{ currentNeighbor.fixnetPhone }}</div>
+<div class="phone">{{ currentNeighbor.person1_phone }}</div>
 
-<a href ng-click="openModalProfilEdit()">ProfilEdit</a>
+<div class="description">
+	<p>{{ currentNeighbor.description }}</p>
+</div>
+
+
+<a href ng-click="openModalProfilEdit()">Profil bearbeiten</a>
+<a href ng-click="openModalPasswordEdit()">Passwort ändern</a>
 
