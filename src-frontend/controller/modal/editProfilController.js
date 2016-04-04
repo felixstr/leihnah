@@ -32,7 +32,7 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 			
 		} else {
 			
-			data.file = $scope.profilImage.file;
+			data.upload = $scope.profilImage.file;
 			
 			$scope.profilImage.file.upload = Upload.upload({
 				url: 'api/neighbor',

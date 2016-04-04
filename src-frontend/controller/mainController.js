@@ -1,7 +1,9 @@
-angular.module('Leihnah').controller('MainController', function($scope, $http, $state, AuthenticationService, auth) {
+angular.module('Leihnah').controller('MainController', function($scope, $http, $state, AuthenticationService, ContextmenuService, auth) {
 	console.log('MainController', $state.current);
 	
 	$scope.state = $state;
+	
+	$scope.contextmenu = ContextmenuService;
 	
 	
 	if (AuthenticationService.authenticated && $state.is("home")) {
@@ -15,7 +17,33 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	$scope.$watch(function() { return AuthenticationService.authenticated; }, function(newVal, oldVal) {
 		console.log('changed');
 		$scope.authenticated = AuthenticationService.authenticated;
+		$scope.loadCurrentNeighbor();
 	});
+	
+	$scope.$watch(function() { return ContextmenuService.current; }, function(newVal, oldVal) {
+		console.log('current changed');
+		$scope.contextmenu = ContextmenuService;
+	});
+	
+	
+	$scope.currentNeighbor = '';
+	
+	$scope.loadCurrentNeighbor = function() {
+		$http.get('api/neighbor', {
+				headers: { 'auth-token': AuthenticationService.getLocalToken() }
+			})
+			.success(function(response) {
+				console.log('loadCurrentNeighbor', response);
+				if (response.ok) {
+					$scope.currentNeighbor = response;
+				}
+			})
+			.error(function(error) {
+				console.log(error);
+			});
+	}
+	
+	$scope.loadCurrentNeighbor();
 	
 	
 	$scope.logoutUser = function() {
@@ -35,6 +63,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 				console.log(error);
 			});
 	}
+	
 	
 	
 });

@@ -4,7 +4,7 @@
 		<input type="file" ngf-select ng-model="profilImage.file" name="image" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
 		<i ng-show="editProfil.image.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
 		<img ng-show="editProfil.image.$valid" ngf-thumbnail="profilImage.file" class="thumb"> 
-		<img ng-show="currentNeighbor.AccountImage != '' && profilImage.file === undefined" ng-src="assets/img/{{ currentNeighbor.accountImage }}" class="thumb"> 
+		<img ng-show="currentNeighbor.AccountImage != '' && profilImage.file === undefined" ng-src="assets/img/profil/{{ currentNeighbor.accountImage }}" class="thumb"> 
     </div>
     
     <div class="formRow">

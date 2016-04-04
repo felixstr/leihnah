@@ -1,17 +1,22 @@
 <!-- <p>authenticated-profil-base: {{ authenticated }}</p> -->
 
-<img ng-src="assets/img/{{ currentNeighbor.accountImage }}">
-<h1>{{ currentNeighbor.accountName }}</h1>
-<div class="address">{{ currentNeighbor.address }}</div>
-<div class="mail">{{ currentNeighbor.person1_mail }}</div>
-<div class="phone">{{ currentNeighbor.fixnetPhone }}</div>
-<div class="phone">{{ currentNeighbor.person1_phone }}</div>
+<div class="profilImage large" ng-style="{'background-image':'url(assets/img/profil/{{ currentNeighbor.accountImage }})'}"></div>
+
+<div class="contact">
+	<h3>{{ currentNeighbor.accountName }}</h3>
+	<div class="address">{{ currentNeighbor.address }}</div>
+	<div class="mail">{{ currentNeighbor.person1_mail }}</div>
+	<div class="phone">{{ currentNeighbor.fixnetPhone }}</div>
+	<div class="phone">{{ currentNeighbor.person1_phone }}</div>
+</div>
 
 <div class="description">
 	<p>{{ currentNeighbor.description }}</p>
 </div>
 
-
-<a href ng-click="openModalProfilEdit()">Profil bearbeiten</a>
-<a href ng-click="openModalPasswordEdit()">Passwort ändern</a>
+<a class="bt_profilEdit" href ng-click="contextmenu.show('profilEdit')">Bearbeiten</a>
+<div class="contextmenu small profilEdit" ng-show="contextmenu.current == 'profilEdit'">
+	<a href ng-click="contextmenu.hide(); openModalProfilEdit()">Profil bearbeiten</a>
+	<a href ng-click="contextmenu.hide(); openModalPasswordEdit()">Passwort ändern</a>
+</div>
 

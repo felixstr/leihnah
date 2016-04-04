@@ -21,7 +21,7 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 	}
 	
 
-	$scope.openModalObjectAdd = function() {
+	$scope.openModalObject = function(object) {
 		var modalInstance = $uibModal.open({
 			backdrop: 'static',
 			keyboard: false,
@@ -30,7 +30,7 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 			controller: 'EditObjectController',
 			resolve: {
 				currentObject: function () {
-					return null;
+					return object;
 				},
 				categories: function($q, CategoryService){
 					var deferred = $q.defer();

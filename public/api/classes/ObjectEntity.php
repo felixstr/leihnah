@@ -99,7 +99,8 @@ class ObjectEntity {
 				gift = :gift,
 				image_1 = :image_1,
 				image_2 = :image_2,
-				image_3 = :image_3
+				image_3 = :image_3,
+				createDate = NOW()
 		";
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':userId', $this->userId, PDO::PARAM_INT);
@@ -136,7 +137,8 @@ class ObjectEntity {
 				gift = :gift,
 				image_1 = :image_1,
 				image_2 = :image_2,
-				image_3 = :image_3
+				image_3 = :image_3,
+				changeDate = NOW()
 			WHERE
 				pk_object = :id
 		";
@@ -186,6 +188,8 @@ class ObjectEntity {
 	
 	
 	public function toArray() { 
+		
+		
 		$array = array(
 			'id' => $this->id,	
 			'name' => $this->name,	
@@ -198,6 +202,11 @@ class ObjectEntity {
 			'neighbor' => $this->neighborEntity->toArray(),
 			'category' => $this->categoryEntity->toArray()
 		);
+		
+/*
+		echo 'asdf';
+		echo print_r($array);
+*/
 		
 		return $array;
 	}

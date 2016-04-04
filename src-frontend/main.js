@@ -73,9 +73,15 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 		});
 });
 
-app.run(function($rootScope, $state, $transitions, AuthenticationService) {
+app.run(function($rootScope, $state, $transitions, AuthenticationService, ContextmenuService) {
 	console.log('run, state', $state.current);
 	
+/*
+	$rootScope.$on('$locationChangeSuccess', function(evt) {
+		ContextmenuService.hide()
+	});
+*/
+
 	
 	$transitions.onBefore({ to: 'home' }, function($state) {								
 		return AuthenticationService.isAuthenticated() ? $state.target('objects') : true;

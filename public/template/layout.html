@@ -4,12 +4,15 @@
 		<a ui-sref="neighbor">Nachbarn</a>
 <!-- 		<a ui-sref="wishlist">Wunschliste</a> -->
 	</nav>
-	
-	<button id="bt_logout" ng-click="logoutUser()" ng-show="authenticated">logout</button>
-	<a class="profil" href ui-sref="profil.base">Beni Hunziker (profil)</a>
-	
-</header>
 
+	<a class="profil" href ng-click="contextmenu.show('profil')">{{ currentNeighbor.accountName }}</a>
+
+</header>
+<div class="contextmenu small profil" ng-show="contextmenu.current == 'profil'">
+	<a ui-sref="profil.base" ng-click="contextmenu.hide()">Dein Profil</a>
+	<a ui-sref="profil.objects" ng-click="contextmenu.hide()">Deine Gegenstände</a>
+	<a href ng-click="contextmenu.hide(); logoutUser()" ng-click="">Abmelden</a>
+</div>
 
 <!--
 <p>logged in: {{ authenticated }}</p>
@@ -18,4 +21,6 @@
 
 
 
-<div id="containerMain" ng-class="'page_'+state.current.name" ui-view></div>
+<div id="containerMain" ng-class="'page_'+state.current.name.replace('.', '-')" ui-view></div>
+
+<div id="contextmenuOverlay" ng-click="contextmenu.hide()" ng-show="contextmenu.current != null"></div>

@@ -5,7 +5,7 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 	$scope.objects = '';
 	
 	$scope.loadObjects = function() {
-		$http.get('api/object/1', {
+		$http.get('api/object', {
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {

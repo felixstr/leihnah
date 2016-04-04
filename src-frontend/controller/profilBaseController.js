@@ -2,22 +2,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 
 	console.log('ProfilBaseController');
 
-	$scope.currentNeighbor = '';
 	
-	$scope.loadCurrentNeighbor = function() {
-		$http.get('api/neighbor', {
-				headers: { 'auth-token': AuthenticationService.getLocalToken() }
-			})
-			.success(function(response) {
-				console.log('loadCurrentNeighbor', response);
-				if (response.ok) {
-					$scope.currentNeighbor = response;
-				}
-			})
-			.error(function(error) {
-				console.log(error);
-			});
-	}
 	
 	$scope.openModalProfilEdit = function() {
 		var modalInstance = $uibModal.open({
@@ -67,6 +52,6 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 	}
 	
 	
-	$scope.loadCurrentNeighbor();
+	
 
 });

@@ -22,6 +22,7 @@ require('./controller/modal/editObjectController.js');
 require('./controller/modal/editPasswordController.js');
 require('./service/authenticationService.js');
 require('./service/categoryService.js');
+require('./service/contextmenuService.js');
 
 angular.element(document).ready(function () {  
   angular.bootstrap(document, [appModule.name], {

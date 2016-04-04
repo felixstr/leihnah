@@ -1,9 +1,13 @@
 <h1>Deine Gegenstände für die Nachbarn</h1>
 <p>Hier sind alle deine Gegenstände, die du der Nachbarschaft zur Verfügung stellst zu sehen. Du kannst neue erfassen und bestehende anpassen, deaktivieren und löschen.</p>
 
-<a href ng-click="openModalObjectAdd()">Neu</a>
+<a href ng-click="openModalObject()">Neu</a>
 
 <div ng-repeat="object in objects">
-	<img ng-src="assets/img/{{ object.image_1 }}">
+	<img ng-src="assets/img/object/tn_{{ object.image_1 }}">
 	{{ object.name }}
+	
+	<div class="menu">
+		<a href ng-click="openModalObject(object)">Bearbeiten</a>
+	</div>
 </div>

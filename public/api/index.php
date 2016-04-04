@@ -3,14 +3,14 @@
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use Imagine\Image\Box;
-use Imagine\Image\Point;
-use Imagine\Image\ImageInterface;
 
 require 'src/vendor/autoload.php';
 
 spl_autoload_register(function ($classname) {
-    require ("classes/" . $classname . ".php");
+// 	echo $classname.' '.class_exists($classname);
+	if ($classname != 'Box') {
+    	require ("classes/" . $classname . ".php");
+    }
 });
 
 require 'config.inc.php';
@@ -239,38 +239,10 @@ $app->post('/neighbor[/{id}]', function (Request $request, Response $response, $
 		    $id = Authentication::getUser()->getId();
 	    }
 // 	    $this->logger->addInfo("id", array($id));
+		ImageMapper::initialize(new Imagine\Gd\Imagine(), $_FILES, 'profil', $id);
+		$filename = ImageMapper::make();
 		
-		$filename = false;
-		if (isset($_FILES['file'])) {
-			$filename = $id.rand(10,1000).$_FILES['file']['name'];
-			$tmp_name = $_FILES['file']['tmp_name'];
-			$destination = '../assets/img/'.$filename;
-			$imagine = new Imagine\Gd\Imagine();
-			$img = $imagine->open($tmp_name)
-				->thumbnail(new Box(400,400), ImageInterface::THUMBNAIL_OUTBOUND); // THUMBNAIL_INSET
-			
-			$exif = exif_read_data($tmp_name);	
-			$this->logger->addInfo("orientation", array($exif['Orientation']));
-			if (!empty($exif['Orientation'])) {
-				switch ($exif['Orientation']) {
-					case 3:
-						$img->rotate(180);
-					break;
-					case 6:
-						$img->rotate(90);
-					break;
-					case 8:
-						$img->rotate(-90);
-					break;
-				}
-			}
-			
-			$img->save($destination);
-		}
-		
-		
-// 		
-		
+// 		echo $filename;
 	    
 	    $neighbor = NeighborEntity::factory($this->db)
 			->setUserId($id)
@@ -364,6 +336,10 @@ $app->post('/object[/{id}]', function (Request $request, Response $response, $ar
 	    
 	    if (isset($args['id'])) {
 		    // update
+		    $object = ObjectEntity::factory($this->db)
+		    	->setId($args['id'])
+		    	->load();
+		    
 	    } else {
 		    // add
 		    $id = Authentication::getUser()->getId();
@@ -373,50 +349,28 @@ $app->post('/object[/{id}]', function (Request $request, Response $response, $ar
 		    	->add();
 		    
 	    }
-// 	    $this->logger->addInfo("id", array($id));
-		
-		$filename = false;
-		if (isset($_FILES['file1'])) {
-			$filename = $object->getId().rand(10,1000).$_FILES['file1']['name'];
-			$tmp_name = $_FILES['file1']['tmp_name'];
-			$destination = '../assets/img/'.$filename;
-			$imagine = new Imagine\Gd\Imagine();
-			$img = $imagine->open($tmp_name)
-				->thumbnail(new Box(400,400), ImageInterface::THUMBNAIL_OUTBOUND); // THUMBNAIL_INSET
-			
-			$exif = exif_read_data($tmp_name);	
-// 			$this->logger->addInfo("orientation", array($exif['Orientation']));
-			if (!empty($exif['Orientation'])) {
-				switch ($exif['Orientation']) {
-					case 3:
-						$img->rotate(180);
-					break;
-					case 6:
-						$img->rotate(90);
-					break;
-					case 8:
-						$img->rotate(-90);
-					break;
-				}
-			}
-			
-			$img->save($destination);
-		}
-
+// 	    echo print_r($_FILES);
 	    
-	    $object
+		ImageMapper::initialize(new Imagine\Gd\Imagine(), $_FILES, 'object', $object->getId());
+		$filenames = ImageMapper::make();
+		
+		$this->logger->addInfo("id", array($filenames));
+	    
+	    $object_arr = $object
 			->setCategoryId($requestBody['categoryId'])
-			->setImage_1($filename)
+			->setImage_1(isset($filenames['image_1']) ? $filenames['image_1'] : false)
+			->setImage_2(isset($filenames['image_2']) ? $filenames['image_2'] : false)
+			->setImage_3(isset($filenames['image_3']) ? $filenames['image_3'] : false)
 			->setName($requestBody['name'])
 			->setDescription($requestBody['description'])
 			->setDamage($requestBody['damage'])
-			->setGift($requestBody['gift'])
+			->setGift(isset($requestBody['gift']))
 			->update()
 			->load()
 			->toArray();
-			
-		if (is_array($object)) {
-			$result['object'] = $object;
+		
+		if (is_array($object_arr)) {
+			$result['object'] = $object_arr;
 			$result['ok'] = true;
 		}
 		

@@ -1,10 +1,32 @@
+currentObject.image_1: {{ currentObject.image_1 == '' }}<br>
+currentObject.image_2: {{ currentObject.image_2 == '' }}<br>
+objectImage.image_1: {{ objectImage.image_1 === undefinded }}<br>
+<!-- editObject.category: {{ editObject.category }}<br> -->
+currentObject.categoryId : {{ currentObject.categoryId }}
+
 <form name="editObject" ng-submit="editObject.$valid && save()">
     <div class="formRow">
-		<label>Bild</label>
-		<input type="file" ngf-select ng-model="objectImage.file1" name="image_1" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
+		<label>Bild 1</label>
+		<input type="file" ngf-select ng-model="objectImage.image_1" name="image_1" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
 		<i ng-show="editObject.image_1.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
-		<img ng-show="editObject.image_1.$valid" ngf-thumbnail="objectImage.file1" class="thumb"> 
-		<img ng-show="currentObject.image_1 != '' && objectImage.file1 === undefined" ng-src="assets/img/{{ currentObject.image_1 }}" class="thumb"> 
+		<img ng-show="editObject.image_1.$valid" ngf-thumbnail="objectImage.image_1" class="thumb"> 
+		<img ng-show="currentObject.image_1 != '' && objectImage.image_1 === undefined" ng-src="assets/img/object/{{ currentObject.image_1 }}" class="thumb"> 
+    </div>
+    
+    <div class="formRow" ng-show="objectImage.image_1 !== undefined || currentObject.image_1 != ''">
+		<label>Bild 2</label>
+		<input type="file" ngf-select ng-model="objectImage.image_2" name="image_2" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
+		<i ng-show="editObject.image_2.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 2000000|number:1}}MB: max 2MB</i>
+		<img ng-show="editObject.image_2.$valid" ngf-thumbnail="objectImage.image_2" class="thumb"> 
+		<img ng-show="currentObject.image_2 != '' && objectImage.image_2 === undefined" ng-src="assets/img/object/{{ currentObject.image_2 }}" class="thumb"> 
+    </div>
+    
+    <div class="formRow" ng-show="objectImage.image_2 !== undefined || currentObject.image_2 != ''">
+		<label>Bild 3</label>
+		<input type="file" ngf-select ng-model="objectImage.image_3" name="image_3" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
+		<i ng-show="editObject.image_3.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 3000000|number:1}}MB: max 3MB</i>
+		<img ng-show="editObject.image_3.$valid" ngf-thumbnail="objectImage.image_3" class="thumb"> 
+		<img ng-show="currentObject.image_3 != '' && objectImage.image_3 === undefined" ng-src="assets/img/object/{{ currentObject.image_3 }}" class="thumb"> 
     </div>
     
     <div class="formRow">
@@ -26,9 +48,11 @@
 	
 	<div class="formRow">
 		<label>Kategorie</label>
-		<select name="category" ng-model="currentObject.category" ng-options="option.name for option in categories track by option.id">
+		<select name="category" ng-model="currentObject.categoryId" ng-change="updateCategory()" required>
 			<option ng-repeat="option in categories" value="{{option.id}}">{{option.name}}</option>
+			
 		</select>
+		<i ng-show="currentObject.categoryId == '0' || editObject.category.$error.notSelected">Wähle eine Kategorie</i>
 		
 		
 	</div>

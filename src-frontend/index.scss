@@ -1,3 +1,24 @@
+/**
+* spacing
+*/
+$space: 25px;
+
+/**
+* colors
+*/
+$border: grey;
+$color-border-contextmenu: $border;
+$color-border-submenu: $border;
+
+/**
+* z-index
+*/
+$zIndex-topbar: 5;
+$zIndex-contextmenuOverlay: 9;
+$zIndex-contextmenu: 10;
+
+
+
 
 * {
 	margin: 0;
@@ -28,18 +49,17 @@ header {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 60px;
+	height: 70px;
 	background: white;
-	z-index: 10;
+	z-index: $zIndex-topbar;
 	
-	nav {
-		float: left;
-		margin-left: 10px;
-	}
+	
 	
 	a.profil {
 		float: right;
-		margin-right: 10px;
+		margin-right: $space;
+		
+		line-height: 70px;
 	}
 	#bt_logout {
 		float: right;
@@ -60,7 +80,7 @@ header {
 	left: calc(50vw - 600px);
 	top: 80px;
 	background: #ffffff;
-	z-index: 0;
+// 	z-index: 0;
 }
 #containerLandingPage {
 	float: left;
@@ -68,7 +88,72 @@ header {
 	
 }
 #containerProfil {
-	border: 1px solid black;
+// 	border: 1px solid black;
+}
+
+/**
+* Navigation
+*/
+header {
+	nav {
+		float: left;
+		margin-left: $space;
+		
+		a {
+			line-height: 70px;
+			float: left;
+			margin-right: $space;
+		}
+	}
+}
+
+/**
+* kontext-menu
+*/
+.contextmenu {
+	position: absolute;
+	background: white;
+	border: 1px solid $color-border-contextmenu;
+	z-index: $zIndex-contextmenu;
+	
+	a {
+		padding: 15px 15px;
+		border-top: 1px solid $color-border-contextmenu;
+		margin-top: -1px;
+		display: inline-block;
+		width: 100%;
+		
+	}
+	
+	&.small {
+		width: 250px;
+	}
+	
+	&.profil {
+		right: $space;
+		top: 60px;
+	}
+}
+#contextmenuOverlay {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	background: white;
+	opacity: 0;
+	z-index: $zIndex-contextmenuOverlay;
+}
+
+/**
+* profilImage
+*/
+.profilImage {
+	border-radius: 50%;
+	background-size: contain;
+	
+	&.large {
+		width: 150px;
+		height: 150px;
+	}
 }
 
 
@@ -80,6 +165,13 @@ img.thumb {
 }
 button {
 	cursor: pointer;
+}
+
+/**
+* text
+*/
+h3 {
+	font-size: 24px;
 }
 
 
@@ -96,4 +188,55 @@ button {
 	background: #333;
 	color: white;
 	padding: 4px;
+}
+
+/**
+* profil
+*/
+nav.sub {
+	float: left;
+	width: calc((100% / 4) - ($space));
+// 	background: green;
+	
+	a {
+		padding: 15px 15px;
+		border-bottom: 1px solid $color-border-submenu;
+		display: inline-block;
+		width: 100%;
+		
+	}
+}
+#containerProfil {
+	float: right;
+	width: calc((100% / 4 * 3) - ($space / 2));
+// 	background: yellow;
+	margin-left: $space;
+	padding-top: $space;
+}
+
+.page_profil-base #containerProfil {
+	.profilImage {
+		float: left;
+	}
+	
+	.contact {
+		width: calc(100% - 150px);
+		float: left;
+	}
+	
+	.description {
+		float: left;
+		width: 100%;
+	}
+	
+	.bt_profilEdit {
+		position: absolute;
+		right: $space;
+		top: $space;
+	}
+	
+	.contextmenu.profilEdit {
+		right: $space;
+		top: calc($space + 30px);
+	}
 }
