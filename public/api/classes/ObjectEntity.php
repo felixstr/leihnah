@@ -3,6 +3,7 @@ class ObjectEntity {
 	protected $id = 0;
 	protected $userId = 0;
 	protected $categoryId = 0;
+	protected $active = 0;
 	protected $name = '';
 	protected $description = '';
 	protected $damage = '';
@@ -33,6 +34,7 @@ class ObjectEntity {
 				pk_object AS id,
 				fk_user AS userId,
 				fk_category AS categoryId,
+				active,
 				name,
 				description,
 				damage,
@@ -41,7 +43,9 @@ class ObjectEntity {
 				image_2,
 				image_3
 			FROM object
-			WHERE pk_object = :id
+			WHERE 
+				pk_object = :id AND
+				deleted = 0
 		";
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
@@ -66,6 +70,7 @@ class ObjectEntity {
 		$this->id = $row['id'];
 		$this->userId = $row['userId'];
 		$this->categoryId = $row['categoryId'];
+		$this->active = $row['active'];
 		$this->name = $row['name'];
 		$this->description = $row['description'];
 		$this->damage = $row['damage'];
@@ -93,6 +98,7 @@ class ObjectEntity {
 			SET
 				fk_user = :userId,
 				fk_category = :categoryId,
+				active = :active,
 				name = :name,
 				description = :description,
 				damage = :damage,
@@ -100,15 +106,17 @@ class ObjectEntity {
 				image_1 = :image_1,
 				image_2 = :image_2,
 				image_3 = :image_3,
-				createDate = NOW()
+				createDate = NOW(),
+				deleted = 0
 		";
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':userId', $this->userId, PDO::PARAM_INT);
 		$stmt->bindParam(':categoryId', $this->categoryId, PDO::PARAM_STR);
+		$stmt->bindParam(':active', $this->active, PDO::PARAM_INT);
 		$stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
 		$stmt->bindParam(':description', $this->description, PDO::PARAM_STR);
 		$stmt->bindParam(':damage', $this->damage, PDO::PARAM_STR);
-		$stmt->bindParam(':gift', $this->gift, PDO::PARAM_STR);
+		$stmt->bindParam(':gift', $this->gift, PDO::PARAM_INT);
 		$stmt->bindParam(':image_1', $this->image_1, PDO::PARAM_STR);
 		$stmt->bindParam(':image_2', $this->image_2, PDO::PARAM_STR);
 		$stmt->bindParam(':image_3', $this->image_3, PDO::PARAM_STR);
@@ -131,6 +139,7 @@ class ObjectEntity {
 				object
 			SET
 				fk_category = :categoryId,
+				active = :active,
 				name = :name,
 				description = :description,
 				damage = :damage,
@@ -138,7 +147,8 @@ class ObjectEntity {
 				image_1 = :image_1,
 				image_2 = :image_2,
 				image_3 = :image_3,
-				changeDate = NOW()
+				changeDate = NOW(),
+				deleted = 0
 			WHERE
 				pk_object = :id
 		";
@@ -151,6 +161,7 @@ class ObjectEntity {
 		$stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 		$stmt->bindParam(':categoryId', $this->categoryId, PDO::PARAM_INT);
 		$stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+		$stmt->bindParam(':active', $this->active, PDO::PARAM_INT);
 		$stmt->bindParam(':description', $this->description, PDO::PARAM_STR);
 		$stmt->bindParam(':damage', $this->damage, PDO::PARAM_STR);
 		$stmt->bindParam(':gift', $this->gift, PDO::PARAM_STR);
@@ -167,7 +178,36 @@ class ObjectEntity {
 			
 	}
 	
+	public function delete() {
+		$result = false;
+
+		if ($this->userId == Authentication::getUser()->getId()) {
+		
+			$sql = "
+				UPDATE
+					object
+				SET
+					deleted = 1,
+					deleteDate = NOW()
+				WHERE
+					pk_object = :id
+			";
+			
+			$stmt = $this->db->prepare($sql);
+			$stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+			$result = $stmt->execute();
+			
+			if ($result === false) {
+				$this->error = true;
+			}
+		}
+		
+		return $result;
+			
+	}
+	
 	public function getId() { return $this->id; }
+	public function getUserId() { return $this->userId; }
 	public function getCategoryId() { return $this->categoryId; }
 	public function getName() { return $this->name; }
 	public function getDescription() { return $this->description; }
@@ -177,10 +217,11 @@ class ObjectEntity {
 	public function setId($value){ $this->id = $value; return $this;	}
 	public function setUserId($value){ $this->userId = $value; return $this; }
 	public function setCategoryId($value){ $this->categoryId = $value; return $this; }
+	public function setActive($value){ $this->active = $value ? 1 : 0; return $this; }
 	public function setName($value){ $this->name = $value; return $this; }
 	public function setDescription($value){ $this->description = $value; return $this; }
 	public function setDamage($value){ $this->damage = $value; return $this; }
-	public function setGift($value){$this->gift = $value; return $this;}
+	public function setGift($value){$this->gift = $value ? 1 : 0; return $this;}
 	public function setImage_1($value){ if ($value !== false) { $this->image_1 = $value; } return $this;}
 	public function setImage_2($value){ if ($value !== false) { $this->image_2 = $value; } return $this;}
 	public function setImage_3($value){ if ($value !== false) { $this->image_3 = $value; } return $this;}
@@ -193,20 +234,18 @@ class ObjectEntity {
 		$array = array(
 			'id' => $this->id,	
 			'name' => $this->name,	
+			'active' => $this->active == 1,	
 			'description' => $this->description,	
 			'damage' => $this->damage,
 			'gift' => $this->gift == 1,
 			'image_1' => $this->image_1,	
 			'image_2' => $this->image_2,
 			'image_3' => $this->image_3,
+			'categoryId' => $this->categoryId,
 			'neighbor' => $this->neighborEntity->toArray(),
 			'category' => $this->categoryEntity->toArray()
 		);
 		
-/*
-		echo 'asdf';
-		echo print_r($array);
-*/
 		
 		return $array;
 	}

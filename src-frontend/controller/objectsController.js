@@ -3,6 +3,7 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 	console.log('ObjectsController')	
 	
 	$scope.objects = '';
+	$scope.state = $state;
 	
 	$scope.loadObjects = function() {
 		$http.get('api/object', {
@@ -11,7 +12,8 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 			.success(function(response) {
 				console.log('loadObjects', response);
 				if (response.ok) {
-					$scope.objects = response;
+					$scope.objects = response.objects;
+					console.log('scope.objects', $scope.objects);
 				}
 			})
 			.error(function(error) {

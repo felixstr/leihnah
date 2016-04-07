@@ -41,6 +41,12 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 			templateUrl: 'template/objects.html',
 			parent: 'layout'
 		})
+		.state('object', {
+			url: '/object/:objectId',
+			controller: 'ObjectDetailController',
+			templateUrl: 'template/objectDetail.html',
+			parent: 'layout'
+		})
 		.state('neighbor', {
 			url: '/neighbor',
 			controller: 'NeighborController',
@@ -70,19 +76,19 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 			controller: 'ProfilObjectsController',
 			templateUrl: 'template/profilObjects.html',
 			parent: 'profil'
+		})
+		.state('register', {
+			url: '/register',
+			controller: 'RegisterController',
+			templateUrl: 'template/register.html',
+			parent: 'layout'
 		});
 });
 
 app.run(function($rootScope, $state, $transitions, AuthenticationService, ContextmenuService) {
-	console.log('run, state', $state.current);
-	
-/*
-	$rootScope.$on('$locationChangeSuccess', function(evt) {
-		ContextmenuService.hide()
-	});
-*/
 
 	
+
 	$transitions.onBefore({ to: 'home' }, function($state) {								
 		return AuthenticationService.isAuthenticated() ? $state.target('objects') : true;
 	});
@@ -96,11 +102,12 @@ app.run(function($rootScope, $state, $transitions, AuthenticationService, Contex
 				
 		return result;
 	};
-
+	
 	$transitions.onBefore({ to: 'objects' }, toHome);
+// 	$transitions.onBefore({ to: 'object' }, toHome);
 	$transitions.onBefore({ to: 'neighbor' }, toHome);
 	$transitions.onBefore({ to: 'wishlist' }, toHome);
 	$transitions.onBefore({ to: 'profil' }, toHome);
-	$transitions.onBefore({ to: 'profil.base' }, toHome);
+// 	$transitions.onBefore({ to: 'profil.base' }, toHome);
 	
 });

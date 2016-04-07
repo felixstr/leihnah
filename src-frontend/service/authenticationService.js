@@ -16,21 +16,7 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 		} else {
 // 			console.log('check authentication - token: ', self.getLocalToken());
 		
-			var currentUser = null;
-		
-			$http.get('api/userinfo', {
-				headers: { 'auth-token': self.getLocalToken() }
-			})
-			.success(function(response) {
-				console.log('userinfo-response', response);
-				if (response.authenticated) {
-					self.currentUser = response.user;
-					self.authenticated = true;
-					callback(true, self.currentUser);
-				} else {
-					callback(false);
-				}
-			});
+			self.loadUserInfo(callback)
 		
 		}
 
@@ -50,6 +36,29 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 		
 		
 		return token;
+	}
+	
+	self.loadUserInfo = function(callback) {
+		$http.get('api/userinfo', {
+			headers: { 'auth-token': self.getLocalToken() }
+		})
+		.success(function(response) {
+			console.log('userinfo-response', response);
+			if (response.authenticated) {
+				self.currentUser = response.user;
+				self.authenticated = true;
+				if (callback !== undefined) {
+					callback(true, self.currentUser);
+				}
+			} else {
+				self.currentUser = null;
+				self.authenticated = false;
+				
+				if (callback !== undefined) {
+					callback(false);
+				}
+			}
+		});
 	}
 	
 	self.getUser = function() {

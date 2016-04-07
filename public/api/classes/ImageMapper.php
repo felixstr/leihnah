@@ -49,16 +49,19 @@ class ImageMapper {
 		if (isset(self::$files[$name])) {
 			
 			$filename = self::$prefix.rand(10,1000).self::$files[$name]['name'];
+			$filename = str_replace(' ', '', $filename);
+			
 			$tmp_name = self::$files[$name]['tmp_name'];
 			
 			if (self::$kind == 'object') {
 				
 				$destination = '../assets/img/object/'.$filename;
 				$img = self::$imagine->open($tmp_name)->thumbnail(new Box(1500, 1500), ImageInterface::THUMBNAIL_INSET); // THUMBNAIL_INSET
+				self::changeOrientation($tmp_name, $img);
 				$img->save($destination);
 				
 				$destination = '../assets/img/object/tn_'.$filename;
-				$img = self::$imagine->open($tmp_name)->thumbnail(new Box(400,400), ImageInterface::THUMBNAIL_INSET); // THUMBNAIL_INSET
+				$img = self::$imagine->open($tmp_name)->thumbnail(new Box(600,600), ImageInterface::THUMBNAIL_INSET); // THUMBNAIL_INSET
 				self::changeOrientation($tmp_name, $img);
 				$img->save($destination);
 				
@@ -76,19 +79,23 @@ class ImageMapper {
 	}
 	
 	private static function changeOrientation($file, $img) {
-		$exif = exif_read_data($file);
-		if (!empty($exif['Orientation'])) {
-			switch ($exif['Orientation']) {
-				case 3:
-					$img->rotate(180);
-				break;
-				case 6:
-					$img->rotate(90);
-				break;
-				case 8:
-					$img->rotate(-90);
-				break;
+		if(exif_imagetype($file) == IMAGETYPE_JPEG){
+
+			$exif = exif_read_data($file);
+			if (!empty($exif['Orientation'])) {
+				switch ($exif['Orientation']) {
+					case 3:
+						$img->rotate(180);
+					break;
+					case 6:
+						$img->rotate(90);
+					break;
+					case 8:
+						$img->rotate(-90);
+					break;
+				}
 			}
+			
 		}
 	}
 	

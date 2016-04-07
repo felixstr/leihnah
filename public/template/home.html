@@ -3,25 +3,18 @@
 <section id="containerLandingPage">
 	
 
-<!--
-	<section class="sign-up">
-		<h2>Registrieren</h2>
-		Username OK: {{ registerInfo.usernameOk }}
-		<form name="register" ng-submit="register.$valid && registerUser()">
-			<input name="username" type="text" ng-model="registerInfo.username" placeholder="Deine Mail Adresse" ng-change="checkUsername()" ng-minlength="3" required>
-			<input type="password" ng-model="registerInfo.password" placeholder="Wähle ein Passwort" ng-minlength="4" required>
-			<input type="text" ng-model="registerInfo.person1_firstName" placeholder="Dein Vorname" ng-minlength="3" required>
-			<button type="submit">Registrieren</button>
-		</form>
-	</section>
--->
-	
+
 	<section class="login">
 		<h2>Anmelden</h2>
+		<div class="message" ng-if="fail != null">
+			<div ng-if="fail == 'unkown'">Der Benutzername exisitert nicht</div>
+			<div ng-if="fail == 'credentials'">Das Passwort ist nicht korrekt</div>
+			<div ng-if="fail == 'inactive'">Dein Benutzerkonto ist nicht freigeschaltet</div>
+		</div>
 		
 		<form name="login" ng-submit="login.$valid && loginUser()">
-			<input type="text" ng-model="loginInfo.username" placeholder="Benutzername (Mail)" ng-minlength="3" required>
-			<input type="password" ng-model="loginInfo.password" placeholder="Passwort" required>
+			<input type="text" ng-model="loginInfo.username" placeholder="Benutzername" ng-minlength="3" required>
+			<input class="elPassword" type="password" ng-model="loginInfo.password" placeholder="Passwort" required>
 			<button type="submit">Anmelden</button>
 		</form>
 	</section>

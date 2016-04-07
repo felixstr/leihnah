@@ -1,5 +1,9 @@
+<div class="modalHead">
+	<a href class="close" ng-click="cancel()">schliessen (X)</a>
+</div>
+
 <form name="editProfil" ng-submit="editProfil.$valid && save()">
-    <div class="formRow">
+    <div class="formRowImage">
 		<label>Profilbild</label>
 		<input type="file" ngf-select ng-model="profilImage.file" name="image" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
 		<i ng-show="editProfil.image.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
@@ -32,8 +36,9 @@
 		<textarea name="description" ng-model="currentNeighbor.description" ng-minlength="3"></textarea>
 	</div>
 	
-	<input type="button" class="btNormal" ng-click="cancel()" value="Abbrechen">
-	<input type="submit" class="btPrimary" type="submit" value="Speichern">
 	
+	<div class="buttonContainer">
+		<input type="submit" class="btPrimary" type="submit" value="Ändern">
+	</div>
 	
 </form>

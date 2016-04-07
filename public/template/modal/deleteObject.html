@@ -1,0 +1,21 @@
+<div class="modalHead">
+	<a href class="close" ng-click="cancel()">schliessen (X)</a>
+</div>
+
+<form name="deleteObject" ng-submit="delete()">
+	
+    <div class="formRowImage">
+	    <img ng-show="currentObject.image_1 != ''" ng-src="assets/img/object/{{ currentObject.image_1 }}" class="thumb"> 
+    </div>
+    
+    <div class="formText">
+	    Möchtest du den Gegenstand <span>{{ object.name }}</span> wirklich löschen?		    
+    </div>
+    	
+	<div class="buttonContainer">
+		<input type="submit" class="btPrimary" type="submit" value="{{currentObject.name}} Löschen">
+	</div>
+	
+	
+	
+</form>

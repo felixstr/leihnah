@@ -1,11 +1,15 @@
-<header ng-if="!state.is('home')">
+<header ng-if="!state.is('home') && !state.is('register')">
 	<nav class="pages">
 		<a ui-sref="objects">Gegenstände</a>
 		<a ui-sref="neighbor">Nachbarn</a>
 <!-- 		<a ui-sref="wishlist">Wunschliste</a> -->
 	</nav>
 
-	<a class="profil" href ng-click="contextmenu.show('profil')">{{ currentNeighbor.accountName }}</a>
+
+	<a class="profil" href ng-click="contextmenu.show('profil')">
+		<span class="profilImage small" ng-style="{'background-image':'url(assets/img/profil/'+currentNeighbor.accountImage+')'}"></span>
+		{{ currentNeighbor.accountName }}
+	</a>
 
 </header>
 <div class="contextmenu small profil" ng-show="contextmenu.current == 'profil'">

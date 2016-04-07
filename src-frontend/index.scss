@@ -78,9 +78,9 @@ header {
 	position: absolute;
 	width: 1200px;
 	left: calc(50vw - 600px);
-	top: 80px;
+	top: 95px;
 	background: #ffffff;
-// 	z-index: 0;
+	padding: $space;
 }
 #containerLandingPage {
 	float: left;
@@ -88,7 +88,7 @@ header {
 	
 }
 #containerProfil {
-// 	border: 1px solid black;
+
 }
 
 /**
@@ -148,23 +148,110 @@ header {
 */
 .profilImage {
 	border-radius: 50%;
-	background-size: contain;
+	background-size: cover;
+	display: inline-block;
 	
 	&.large {
 		width: 150px;
 		height: 150px;
 	}
+	
+	&.small {
+		width: 47px;
+		height: 47px;
+	}
 }
+
+/**
+* Modal
+*/
+.modalHead {
+	float: left;
+	width: 100%;
+	padding: $space;
+	
+	a.close {
+		float: right;
+	}
+}
+
 
 
 /**
 * Form	
 */
 img.thumb {
-	width: 50px;
+	max-width: 100px;
+	max-height: 100px;
 }
 button {
 	cursor: pointer;
+}
+.formRowImage {
+	float:left;
+	width: 100%;
+	padding-top: $space;
+	padding-bottom: $space;
+	background: #f9f9f9;
+	margin-bottom: 15px;
+}
+.formRow {
+	position: relative;
+	float: left;
+	width: calc(100% - (4*$space));
+	margin-bottom: 6px;
+	padding-bottom: 16px;
+	margin-left: calc(2*$space);
+	
+	label {
+		display: block;
+		font-size: 14px;
+		margin-bottom: 4px;
+		color: #606060;
+	}
+	
+	input[type=text],
+	input[type=password],
+	textarea {
+		font-size: 16px;
+		border: 1px solid #e4e4e4;
+		padding: 8px;
+		width: 100%;
+	}
+	
+	.warning {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		font-size: 12px;
+		color: #800a02;
+	}
+}
+.formMessage {
+	float: left;
+	width: 100%;
+	font-size: 12px;
+	text-align: center;
+	padding: calc($space/2);
+	margin-bottom: $space;
+	background: #800a02;
+	color: white;
+}
+.buttonContainer {
+	float: left;
+	width: calc(100% - (4*$space));
+	margin-left: calc(2*$space);
+	margin-bottom: calc(2*$space);
+	margin-top: 16px;
+	
+	input {
+		line-height: 45px;
+		font-size: 14px;
+		background: black;
+		color: white;
+		width: 100%;
+		cursor: pointer;
+	}
 }
 
 /**
@@ -172,6 +259,86 @@ button {
 */
 h3 {
 	font-size: 24px;
+}
+
+/**
+* object item
+*/
+
+.itemObject {
+	float: left;
+	width: calc((100% / 4) - $space);
+	
+	
+	&:nth-child(n+2) {
+		margin-left: $space;
+	}
+	
+	.imageWrap {
+		float: left;
+		width: 100%;
+		position: relative;
+		cursor: pointer;
+		
+		.height {
+			float: left;
+			width: 1px;
+			padding-top: 75%;
+		}
+			
+		.img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-size: cover;
+			background-position: center center;
+		}
+	}
+	
+	.info {
+		float:left;
+		width: 100%;
+		background: white;
+		padding: 10px;
+		position: relative;
+		
+		
+		
+		.profilImage {
+			float: left;
+			margin-right: 10px;
+		}
+		.objectName,
+		.accountName {
+			float: left;
+			width: calc(100% - 47px - 10px);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			line-height: 16px;
+			
+			font-size: 13px;
+		}
+		.objectName {
+			font-weight: bold;
+		}
+		
+		a.edit {
+			position: absolute;
+			right: 10px;
+			font-size: 13px;
+		}
+	}
+	
+	&.deactivated {
+		.imageWrap,
+		.objectName {
+			opacity: 0.5;
+		}
+		
+	}
 }
 
 
@@ -196,7 +363,7 @@ h3 {
 nav.sub {
 	float: left;
 	width: calc((100% / 4) - ($space));
-// 	background: green;
+
 	
 	a {
 		padding: 15px 15px;
@@ -209,9 +376,8 @@ nav.sub {
 #containerProfil {
 	float: right;
 	width: calc((100% / 4 * 3) - ($space / 2));
-// 	background: yellow;
+
 	margin-left: $space;
-	padding-top: $space;
 }
 
 .page_profil-base #containerProfil {
@@ -220,13 +386,31 @@ nav.sub {
 	}
 	
 	.contact {
-		width: calc(100% - 150px);
-		float: left;
+		width: calc(100% - 150px - $space);
+		float: right;
+		
+		.group {
+			.base {
+				float: left;
+				width: 100%;
+			}
+			.person1,
+			.person2 {
+				float: left;
+				width: 50%;
+			}
+		}
+		
+		.name {
+			font-weight: bold;
+		}
 	}
 	
 	.description {
 		float: left;
 		width: 100%;
+		margin-top: $space;
+		padding-left: calc(150px + $space);
 	}
 	
 	.bt_profilEdit {
@@ -238,5 +422,55 @@ nav.sub {
 	.contextmenu.profilEdit {
 		right: $space;
 		top: calc($space + 30px);
+	}
+}
+
+
+/**
+* object-detail
+*/
+.page_object {
+	.objectInfo {
+		float: left;
+		width: 65%;
+		
+		.containerImages {
+			float: left;
+			width: 100%;
+			
+			img {
+				width: 100%;
+			}
+		}
+		
+		.containerText {
+			float: left;
+			width: 100%;
+		}
+	}
+	
+	.requestInfo {
+		float: right;
+		width: calc(35% - ($space*2));
+		margin-right: $space;
+		
+		.containerContact {
+			float: left;
+			width: 100%;
+			background: #eaeaea;
+			
+			.info {
+				float: right;
+				width: calc(100% - 10px - 150px);
+			}
+		}
+		
+		.containerRequest {
+			float: right;
+			width: 100%;
+			margin-top: $space;
+			padding: $space;
+			background: #eaeaea;
+		}
 	}
 }

@@ -3,11 +3,26 @@
 
 <a href ng-click="openModalObject()">Neu</a>
 
-<div ng-repeat="object in objects">
-	<img ng-src="assets/img/object/tn_{{ object.image_1 }}">
-	{{ object.name }}
-	
-	<div class="menu">
-		<a href ng-click="openModalObject(object)">Bearbeiten</a>
+
+<div class="objectContainer">
+	<div ng-repeat="object in objects" class="itemObject" ng-class="object.active ? '' : 'deactivated'">
+		<div class="imageWrap" ng-click="state.go('object', {objectId: object.id})">
+			<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+object.image_1+')'}"></div>
+			<div class="height"></div>
+		</div>
+		
+		<div class="info">
+			<div class="objectName">{{ object.name }}</div>
+			
+			
+			<a class="edit" href ng-click="contextmenu.show('object_'+object.id)">Menu</a>
+			<div class="contextmenu small" ng-class="'object_'+object.id" ng-show="contextmenu.current == 'object_'+object.id">
+				<a href ng-click="contextmenu.hide(); openModalObject(object)">Bearbeiten</a>
+				<a href ng-click="contextmenu.hide(); openModalObjectActivation(object)">{{ object.active ? 'Deaktivieren' : 'Aktivieren' }}</a>
+				<a href ng-click="contextmenu.hide(); openModalObjectDelete(object)">Löschen</a>
+			</div>
+			
+			
+		</div>
 	</div>
 </div>

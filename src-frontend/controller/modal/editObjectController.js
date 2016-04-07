@@ -4,6 +4,7 @@ angular.module('Leihnah').controller('EditObjectController', function($scope, $u
 	
 	$scope.currentObject = {
 		categoryId: '0',
+		active: true,
 		image_1: '',
 		image_2: '',
 		image_3: '',

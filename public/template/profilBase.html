@@ -1,13 +1,34 @@
-<!-- <p>authenticated-profil-base: {{ authenticated }}</p> -->
-
-<div class="profilImage large" ng-style="{'background-image':'url(assets/img/profil/{{ currentNeighbor.accountImage }})'}"></div>
+<div class="profilImage large" ng-style="{'background-image':'url(assets/img/profil/'+currentNeighbor.accountImage+')'}"></div>
 
 <div class="contact">
 	<h3>{{ currentNeighbor.accountName }}</h3>
-	<div class="address">{{ currentNeighbor.address }}</div>
-	<div class="mail">{{ currentNeighbor.person1_mail }}</div>
-	<div class="phone">{{ currentNeighbor.fixnetPhone }}</div>
-	<div class="phone">{{ currentNeighbor.person1_phone }}</div>
+	
+	<div class="single" ng-if="currentNeighbor.person2_firstName == ''">
+		<div class="address">{{ currentNeighbor.address }}</div>
+		<div class="phone">{{ currentNeighbor.fixnetPhone }}</div>
+		
+		<div class="mail">{{ currentNeighbor.person1_mail }}</div>
+		<div class="phone">{{ currentNeighbor.person1_phone }}</div>
+	</div>
+	
+	<div class="group" ng-if="currentNeighbor.person2_firstName != ''">
+		<div class="base">
+			<div class="address">{{ currentNeighbor.address }}</div>
+			<div class="phone">{{ currentNeighbor.fixnetPhone }}</div>
+		</div>
+		
+		<div class="person1">
+			<div class="name">{{ currentNeighbor.person1_firstName }} {{ currentNeighbor.person1_lastName }}</div>	
+			<div class="mail">{{ currentNeighbor.person1_mail }}</div>
+			<div class="phone">{{ currentNeighbor.person1_phone }}</div>
+		</div>
+		
+		<div class="person2">
+			<div class="name">{{ currentNeighbor.person2_firstName }} {{ currentNeighbor.person2_lastName }}</div>	
+			<div class="mail">{{ currentNeighbor.person2_mail }}</div>
+			<div class="phone">{{ currentNeighbor.person2_phone }}</div>
+		</div>
+	</div>
 </div>
 
 <div class="description">
@@ -17,6 +38,8 @@
 <a class="bt_profilEdit" href ng-click="contextmenu.show('profilEdit')">Bearbeiten</a>
 <div class="contextmenu small profilEdit" ng-show="contextmenu.current == 'profilEdit'">
 	<a href ng-click="contextmenu.hide(); openModalProfilEdit()">Profil bearbeiten</a>
-	<a href ng-click="contextmenu.hide(); openModalPasswordEdit()">Passwort ändern</a>
+	<a href ng-click="contextmenu.hide(); openModalProfilPerson(1)">{{ currentNeighbor.person1_firstName == '' && currentNeighbor.person1_lastName == '' ? '1. Bewohner bearbeiten' : currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName+' bearbeiten' }}</a>
+	<a href ng-click="contextmenu.hide(); openModalProfilPerson(2)">{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? '2. Bewohner bearbeiten' : currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName+' bearbeiten' }}</a>
+	<a href ng-click="contextmenu.hide(); openModalPasswordEdit()">Zugangsdaten ändern</a>
 </div>
 

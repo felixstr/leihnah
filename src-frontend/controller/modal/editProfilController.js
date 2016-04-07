@@ -21,7 +21,7 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				
+				console.log(response);
 				$scope.currentNeighbor = response.neighbor;
 				$uibModalInstance.close(response.neighbor);
 				

@@ -1,44 +1,53 @@
+<!--
 currentObject.image_1: {{ currentObject.image_1 == '' }}<br>
 currentObject.image_2: {{ currentObject.image_2 == '' }}<br>
 objectImage.image_1: {{ objectImage.image_1 === undefinded }}<br>
-<!-- editObject.category: {{ editObject.category }}<br> -->
 currentObject.categoryId : {{ currentObject.categoryId }}
+-->
+
+<div class="modalHead">
+	<a href class="close" ng-click="cancel()">schliessen (X)</a>
+</div>
 
 <form name="editObject" ng-submit="editObject.$valid && save()">
-    <div class="formRow">
-		<label>Bild 1</label>
-		<input type="file" ngf-select ng-model="objectImage.image_1" name="image_1" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
-		<i ng-show="editObject.image_1.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
-		<img ng-show="editObject.image_1.$valid" ngf-thumbnail="objectImage.image_1" class="thumb"> 
-		<img ng-show="currentObject.image_1 != '' && objectImage.image_1 === undefined" ng-src="assets/img/object/{{ currentObject.image_1 }}" class="thumb"> 
-    </div>
+    <div class="formRowImage">
+	    
+	    <div class="elementImage">
+			<label>Bild 1</label>
+			<input type="file" ngf-select ng-model="objectImage.image_1" name="image_1" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
+			<i ng-show="editObject.image_1.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
+			<img ng-show="editObject.image_1.$valid" ngf-thumbnail="objectImage.image_1" class="thumb"> 
+			<img ng-show="currentObject.image_1 != '' && objectImage.image_1 === undefined" ng-src="assets/img/object/{{ currentObject.image_1 }}" class="thumb"> 
+	    </div>
     
-    <div class="formRow" ng-show="objectImage.image_1 !== undefined || currentObject.image_1 != ''">
-		<label>Bild 2</label>
-		<input type="file" ngf-select ng-model="objectImage.image_2" name="image_2" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
-		<i ng-show="editObject.image_2.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 2000000|number:1}}MB: max 2MB</i>
-		<img ng-show="editObject.image_2.$valid" ngf-thumbnail="objectImage.image_2" class="thumb"> 
-		<img ng-show="currentObject.image_2 != '' && objectImage.image_2 === undefined" ng-src="assets/img/object/{{ currentObject.image_2 }}" class="thumb"> 
-    </div>
-    
-    <div class="formRow" ng-show="objectImage.image_2 !== undefined || currentObject.image_2 != ''">
-		<label>Bild 3</label>
-		<input type="file" ngf-select ng-model="objectImage.image_3" name="image_3" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
-		<i ng-show="editObject.image_3.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 3000000|number:1}}MB: max 3MB</i>
-		<img ng-show="editObject.image_3.$valid" ngf-thumbnail="objectImage.image_3" class="thumb"> 
-		<img ng-show="currentObject.image_3 != '' && objectImage.image_3 === undefined" ng-src="assets/img/object/{{ currentObject.image_3 }}" class="thumb"> 
+	    <div class="elementImage" ng-show="objectImage.image_1 !== undefined || currentObject.image_1 != ''">
+			<label>Bild 2</label>
+			<input type="file" ngf-select ng-model="objectImage.image_2" name="image_2" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
+			<i ng-show="editObject.image_2.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 2000000|number:1}}MB: max 2MB</i>
+			<img ng-show="editObject.image_2.$valid" ngf-thumbnail="objectImage.image_2" class="thumb"> 
+			<img ng-show="currentObject.image_2 != '' && objectImage.image_2 === undefined" ng-src="assets/img/object/{{ currentObject.image_2 }}" class="thumb"> 
+	    </div>
+	    
+	    <div class="elementImage" ng-show="objectImage.image_2 !== undefined || currentObject.image_2 != ''">
+			<label>Bild 3</label>
+			<input type="file" ngf-select ng-model="objectImage.image_3" name="image_3" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
+			<i ng-show="editObject.image_3.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 3000000|number:1}}MB: max 3MB</i>
+			<img ng-show="editObject.image_3.$valid" ngf-thumbnail="objectImage.image_3" class="thumb"> 
+			<img ng-show="currentObject.image_3 != '' && objectImage.image_3 === undefined" ng-src="assets/img/object/{{ currentObject.image_3 }}" class="thumb"> 
+	    </div>
+	    
     </div>
     
     <div class="formRow">
 	    <label>Name des Gegenstandes</label>
 		<input type="text" name="name" ng-model="currentObject.name" ng-minlength="3" required>
-		<i ng-show="editObject.name.$error.required">*Pflichtfeld</i>
+		<div class="warning" ng-show="editObject.name.$error.required">*Pflichtfeld</div>
     </div>
     
     <div class="formRow">
 		<label>Beschreibung</label>
 		<textarea name="description" ng-model="currentObject.description" ng-minlength="3" required></textarea>
-		<i ng-show="editObject.description.$error.required">*Pflichtfeld</i>
+		<div class="warning" ng-show="editObject.description.$error.required">*Pflichtfeld</div>
 	</div>
 	
 	<div class="formRow">
@@ -52,21 +61,22 @@ currentObject.categoryId : {{ currentObject.categoryId }}
 			<option ng-repeat="option in categories" value="{{option.id}}">{{option.name}}</option>
 			
 		</select>
-		<i ng-show="currentObject.categoryId == '0' || editObject.category.$error.notSelected">Wähle eine Kategorie</i>
+		<div class="warning" ng-show="currentObject.categoryId == '0' || editObject.category.$error.notSelected">Wähle eine Kategorie</div>
 		
 		
 	</div>
 	
+<!--
 	<div class="formRow">
-		<label>Zu Verschenken<input type="checkbox" ng-model="currentObject.gift"></label>
+		<label><input type="checkbox" ng-model="currentObject.gift"> Zu Verschenken</label>
+	</div>
+-->
 		
-		
+	<div class="buttonContainer">
+		<input type="submit" class="btPrimary" type="submit" value="{{currentObject.name}} {{ currentObject.id == null ? 'Hinzufügen' : 'Ändern'}}">
+<!-- 	<input type="button" class="btNormal" ng-click="cancel()" value="Abbrechen"> -->
 	</div>
 	
-
-	
-	<input type="button" class="btNormal" ng-click="cancel()" value="Abbrechen">
-	<input type="submit" class="btPrimary" type="submit" value="Speichern">
 	
 	
 </form>

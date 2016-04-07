@@ -1,0 +1,30 @@
+<h1>{{ object.name }}</h1>
+
+<div class="objectInfo">
+	<div class="containerImages">
+		<img ng-src="assets/img/object/{{object.image_1}}" />
+	</div>
+	
+	<div class="containerText">
+		{{ object.description }}
+		
+		<h2 ng-show="object.damage != ''">Zustand</h2>
+		{{ object.damage }}
+	</div>
+</div>
+
+<div class="requestInfo">
+	<div class="containerContact">
+		<div class="profilImage large" ng-style="{'background-image':'url(assets/img/profil/'+object.neighbor.accountImage+')'}"></div>
+		<div class="info">
+			<div class="accountName">{{ object.neighbor.accountName }}</div>
+			<div class="address">{{ object.neighbor.address }}</div>
+			<div class="fixnetPhone" ng-if="object.neighbor.fixnetPhone != ''">{{ object.neighbor.fixnetPhone }}</div>
+		</div>
+	</div>
+	
+	
+	<div class="containerRequest">
+		request
+	</div>
+</div>

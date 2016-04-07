@@ -52,6 +52,50 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 		});
 	}
 	
+	$scope.openModalObjectDelete = function(object) {
+		var modalInstance = $uibModal.open({
+			backdrop: 'static',
+			keyboard: false,
+			size: 'medium',
+			templateUrl: 'template/modal/deleteObject.html',
+			controller: 'DeleteObjectController',
+			resolve: {
+				currentObject: function () {
+					return object;
+				}
+			}
+		});
+		
+		modalInstance.result.then(function () {
+			$scope.loadObjects();
+			
+		}, function () {
+			console.log('Modal dismissed at: ' + new Date());
+		});
+	}
+	
+	$scope.openModalObjectActivation = function(object) {
+		var modalInstance = $uibModal.open({
+			backdrop: 'static',
+			keyboard: false,
+			size: 'medium',
+			templateUrl: 'template/modal/activationObject.html',
+			controller: 'ActivationObjectController',
+			resolve: {
+				currentObject: function () {
+					return object;
+				}
+			}
+		});
+		
+		modalInstance.result.then(function () {
+			$scope.loadObjects();
+			
+		}, function () {
+			console.log('Modal dismissed at: ' + new Date());
+		});
+	}
+	
 	
 	$scope.loadObjects();
 

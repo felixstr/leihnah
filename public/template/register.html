@@ -1,0 +1,17 @@
+<section id="containerLandingPage">
+	
+
+	<section class="sign-up">
+		<h2>Registrieren</h2>
+		<form name="register" ng-submit="register.$valid && registerUser()">
+			<input name="username" type="text" ng-model="registerInfo.username" placeholder="Benutzernamen" ng-change="checkUsername()" ng-minlength="3" required>
+			<div class="warning" ng-show="register.username.$error.exists">Benutzername wird bereits verwendet</div>
+			<input type="password" ng-model="registerInfo.password" placeholder="Wähle ein Passwort" ng-minlength="4" required>
+			<input type="text" ng-model="registerInfo.person1_firstName" placeholder="Dein Anzeige Name" ng-minlength="3" required>
+			<button type="submit">Registrieren</button>
+		</form>
+	</section>
+
+
+</section>
+<div class="clear"></div>

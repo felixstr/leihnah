@@ -1,4 +1,16 @@
 <h1>Hallo {{ currentNeighbor.accountName }}!</h1>
 
-<!-- <p>authenticated-object: {{ authenticated }}</p> -->
-
+<div class="objectContainer">
+	<div ng-repeat="object in objects" class="itemObject">
+		<div class="imageWrap" ng-click="state.go('object', {objectId: object.id})">
+			<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+object.image_1+')'}"></div>
+			<div class="height"></div>
+		</div>
+		
+		<div class="info">
+			<div class="profilImage small" ng-style="{'background-image':'url(assets/img/profil/'+object.neighbor.accountImage+')'}"></div>
+			<div class="objectName">{{ object.name }}</div>
+			<div class="accountName">von {{ object.neighbor.accountName }}</div>
+		</div>
+	</div>
+</div>
