@@ -1,10 +1,21 @@
-var app = angular.module('Leihnah', ["ui.router", 'ui.bootstrap', "ngFileUpload"]); 
+var app = angular.module('Leihnah', ["ui.router", 'ui.bootstrap', "ngFileUpload", 'piwik', 'ngSanitize', 'angular-carousel', 'ngTouch', 'angularMoment', 'ngAnimate']); 
 module.exports = app;
  
  
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $logProvider, $windowProvider) {
+/*
 	
-	$urlRouterProvider.otherwise("/home");
+	$analyticsProvider.firstPageview(true); 
+	$analyticsProvider.withAutoBase(true);
+	$analyticsProvider.virtualPageviews(false);
+*/
+	
+	if ($windowProvider.$get().location.host != 'localhost' && $windowProvider.$get().location.host != '192.168.1.101') {
+		$logProvider.debugEnabled(false);
+	}
+	
+	
+	$urlRouterProvider.otherwise("/landingpage");
 
 	$stateProvider
 		.state('layout', {
@@ -34,6 +45,11 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 			controller: 'HomeController',
 			templateUrl: 'template/home.html',
 			parent: 'layout'		
+		})
+		.state('landingpage', {
+			url: '/landingpage',
+			controller: 'LandingPageController',
+			templateUrl: 'template/landingPage.html'
 		})
 		.state('objects', {
 			url: '/objects',
@@ -77,6 +93,30 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 			templateUrl: 'template/profilObjects.html',
 			parent: 'profil'
 		})
+		.state('profil.borrow', {
+			url: '/borrow',
+			controller: 'ProfilBorrowController',
+			templateUrl: 'template/profilBorrow.html',
+			parent: 'profil'
+		})
+		.state('profil.lend', {
+			url: '/lend',
+			controller: 'ProfilLendController',
+			templateUrl: 'template/profilLend.html',
+			parent: 'profil'
+		})
+		.state('borrow', {
+			url: '/borrow/:borrowId',
+			controller: 'BorrowController',
+			templateUrl: 'template/borrow.html',
+			parent: 'layout'
+		})
+		.state('lend', {
+			url: '/lend/:lendId',
+			controller: 'LendController',
+			templateUrl: 'template/lend.html',
+			parent: 'layout'
+		})
 		.state('register', {
 			url: '/register',
 			controller: 'RegisterController',
@@ -85,16 +125,28 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 		});
 });
 
-app.run(function($rootScope, $state, $transitions, AuthenticationService, ContextmenuService) {
-
+app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache, AuthenticationService, ContextmenuService, Piwik, amMoment) {
 	
+	amMoment.changeLocale('de');
+/*
+	
+
+	$transitions.onBefore({to: '**'}, function($window, Piwik, $state) {
+		$log.debug('state-current', $state.current);
+// 		
+		
+		
+	});
+	
+*/
 
 	$transitions.onBefore({ to: 'home' }, function($state) {								
 		return AuthenticationService.isAuthenticated() ? $state.target('objects') : true;
 	});
 	
+/*
 	var toHome = function($state) {	
-		console.log('toHome', AuthenticationService.authenticationChecked);
+		$log.debug('toHome', AuthenticationService.authenticationChecked);
 		var result = true;
 		if (!AuthenticationService.isAuthenticated()) {
 			result = $state.target('home');
@@ -102,12 +154,31 @@ app.run(function($rootScope, $state, $transitions, AuthenticationService, Contex
 				
 		return result;
 	};
+*/
+	
+	var toHome = function($q){
+		var deferred = $q.defer();
+				
+		AuthenticationService.checkAuthentication(function(authenticated, user) {
+			if (authenticated) {
+				deferred.resolve(true);
+			} else {
+				deferred.resolve($state.target('home'));
+			}
+		}); 
+		
+		return deferred.promise;
+	}
 	
 	$transitions.onBefore({ to: 'objects' }, toHome);
-// 	$transitions.onBefore({ to: 'object' }, toHome);
+	$transitions.onBefore({ to: 'object' }, toHome);
 	$transitions.onBefore({ to: 'neighbor' }, toHome);
 	$transitions.onBefore({ to: 'wishlist' }, toHome);
 	$transitions.onBefore({ to: 'profil' }, toHome);
-// 	$transitions.onBefore({ to: 'profil.base' }, toHome);
+	$transitions.onBefore({ to: 'profil.base' }, toHome);
+	$transitions.onBefore({ to: 'profil.objects' }, toHome);
+	
+	
+	
 	
 });

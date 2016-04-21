@@ -1,16 +1,138 @@
-<h1>Hallo {{ currentNeighbor.accountName }}!</h1>
+<div class="topContainer" ng-class="{ filtered: (filter.search.length > 0 || filter.category != null) }" ng-style="{'background-image':'url(assets/img/static/'+headerImage+')'}">
 
-<div class="objectContainer">
-	<div ng-repeat="object in objects" class="itemObject">
-		<div class="imageWrap" ng-click="state.go('object', {objectId: object.id})">
-			<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+object.image_1+')'}"></div>
-			<div class="height"></div>
+	<h1 ng-show="!(filter.search.length > 0 || filter.category != null)">Hallo {{ currentNeighbor.accountName }}</h1>
+	
+	<div class="searchContainer">
+		<input type="text" ng-model="filter.search" placeholder="Was möchtest du leihen?">
+		
+		<div class="buttons">
+			
+			<a href class="bt_light close" ng-click="filter.search = ''; setFilterCategory(null)" ng-show="filter.search.length > 0 || filter.category != null">X</a>
+			
+			<a href class="bt_light arrowDown" ng-click="contextmenu.show('categories')" ng-class="{active: contextmenu.current == 'categories'}">{{ filter.categoryName == '' ? 'Kategorien' : 'Kategorie: '+filter.categoryName }}</a>
 		</div>
 		
-		<div class="info">
-			<div class="profilImage small" ng-style="{'background-image':'url(assets/img/profil/'+object.neighbor.accountImage+')'}"></div>
-			<div class="objectName">{{ object.name }}</div>
-			<div class="accountName">von {{ object.neighbor.accountName }}</div>
+		<div class="categoryContainer" ng-show="contextmenu.current == 'categories'">
+			<div ng-repeat="category in categories" class="itemCategory" ng-click="setFilterCategory(category.id)">
+				<div class="imageWrap" >
+					<div class="img" ng-style="{'background-image':'url(assets/img/static/'+category.image+')'}"></div>
+					<div class="height"></div>
+				</div>
+				
+				<div class="info">
+					<div class="categoryName">{{ category.name }}</div>
+					<div class="count">{{ category.count }}</div>
+				</div>
+			</div>
+			
+			<div class="footer"><a href ng-click="setFilterCategory('all')">Alle Kategorien</a></div>
 		</div>
+	</div>
+	
+</div>
+
+<div class="contextmenuOverlay" ng-click="contextmenu.hide()" ng-show="contextmenu.current == 'order' || contextmenu.current == 'categories'" ng-class="'overlay_'+contextmenu.current"></div>
+	
+<div class="contentContainer">
+	
+	
+	<div class="objectResultContainer" ng-show="filter.search.length > 0 || filter.category != null">
+		<div class="topBar">
+			<div class="text"><b>{{ filtered.length }}</b> {{ filtered.length == 1 ? 'Gegenstand' : 'Gegenstände' }} in {{ filter.category == 'all' ? 'allen Kategorien' : 'der Kategorie' }} <b ng-show="filter.categoryName != 'Alle'">{{filter.categoryName}}</b> <span ng-show="filter.search != ''">mit <b>{{filter.search}}</b></span></div>
+			
+			<a ng-click="contextmenu.show('order')" ng-class="{active: contextmenu.current == 'order'}" class="bt_light small">{{ order.current.name }}</a>
+			
+			<div class="contextmenu medium order" ng-show="contextmenu.current == 'order'">
+				<a href ng-repeat="orderItem in order.items" ng-click="contextmenu.hide(); changeOrder(orderItem.id)" ng-class="{current: order.current.id == orderItem.id }">{{ orderItem.name }}</a>
+			</div>
+			
+			
+		</div>
+		<div class="results">
+			<div ng-repeat="object in objects | orderBy:order.current.field:order.current.reverse | filter:filterResults as filtered" class="itemObject" id="object_{{object.id}}">
+				<div class="imageWrap" ng-click="state.go('object', {objectId: object.id})">
+					<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+object.image_1+')'}"></div>
+					<div class="height"></div>
+				</div>
+				
+				<div class="info">
+					<span class="profilImage small" ng-style="{'background-image':'url('+(object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+object.neighbor.accountImage)+')'}"></span>
+					<div class="objectName">{{ object.name }}</div>
+					<div class="accountName">von {{ object.neighbor.accountName }}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="objectPreviewContainer" ng-show="!(filter.search.length > 0 || filter.category != null)">
+		<div class="previewRow">
+			<h2>Neue Gegenstände</h2>
+			
+			<div class="objectContainer">
+				<div ng-repeat="object in objectsNew" class="itemObject" ng-click="state.go('object', {objectId: object.id})">
+					<div class="imageWrap">
+						<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+object.image_1+')'}"></div>
+						<div class="height"></div>
+					</div>
+					
+					<div class="info">
+						<span class="profilImage small" ng-style="{'background-image':'url('+(object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+object.neighbor.accountImage)+')'}"></span>
+						<div class="objectName">{{ object.name }}</div>
+						<div class="accountName">von {{ object.neighbor.accountName }}</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="buttons">
+				<a class="bt_light arrowRight" href ng-click="changeOrder('newest'); setFilterCategory('all')">Mehr neue Gegenstände</a>
+			</div>
+		</div>
+		
+		<div class="previewRow">
+			<h2>Beliebte Gegenstände</h2>
+			
+			<div class="objectContainer">
+				<div ng-repeat="object in objectsPopular" class="itemObject" ng-click="state.go('object', {objectId: object.id})">
+					<div class="imageWrap">
+						<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+object.image_1+')'}"></div>
+						<div class="height"></div>
+					</div>
+					
+					<div class="info">
+						<span class="profilImage small" ng-style="{'background-image':'url('+(object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+object.neighbor.accountImage)+')'}"></span>
+						<div class="objectName">{{ object.name }}</div>
+						<div class="accountName">von {{ object.neighbor.accountName }}</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="buttons">
+				<a class="bt_light arrowRight" href ng-click="changeOrder('popular'); setFilterCategory('all')">Mehr beliebte Gegenstände</a>
+			</div>
+		</div>
+		<!--
+		<div class="previewRow">
+			<h2>Deine Favoriten</h2>
+			
+			<div class="objectContainer">
+				<div ng-repeat="object in objectsFavorites" class="itemObject" ng-click="state.go('object', {objectId: object.id})">
+					<div class="imageWrap">
+						<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+object.image_1+')'}"></div>
+						<div class="height"></div>
+					</div>
+					
+					<div class="info">
+						<span class="profilImage small" ng-style="{'background-image':'url('+(object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+object.neighbor.accountImage)+')'}"></span>
+						<div class="objectName">{{ object.name }}</div>
+						<div class="accountName">von {{ object.neighbor.accountName }}</div>
+					</div>
+				</div>
+			</div>
+			
+
+			
+		</div>
+		
+		-->
 	</div>
 </div>

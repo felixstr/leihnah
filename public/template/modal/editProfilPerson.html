@@ -1,38 +1,46 @@
 <div class="modalHead">
-	<a href class="close" ng-click="cancel()">schliessen (X)</a>
+	<a href class="close" ng-click="cancel()">schliessen</a>
 </div>
-
-<form name="editPerson" ng-submit="editPerson.$valid && save()">
-    
-    <div class="formRow">
-	    <label>Vorname</label>
-		<input type="text" name="firstName" ng-model="person.firstName" ng-minlength="3" required>
-		<div class="warning" ng-show="editPerson.firstName.$error.required">*required</div>
-    </div>
-    
-    <div class="formRow">
-	    <label>Nachname</label>
-		<input type="text" name="lastName" ng-model="person.lastName" ng-minlength="3" required>
-		<div class="warning" ng-show="editPerson.lastName.$error.required">*required</div>
-    </div>
-    
-    <div class="formRow">
-	    <label>eMail</label>
-		<input type="text" name="mail" ng-model="person.mail" ng-minlength="3" required>
-		<div class="warning" ng-show="editPerson.mail.$error.required">*required</div>
-    </div>
-	
-	<div class="formRow">
-		<label>Mobile Nummer</label>
-		<input type="text" name="phone" ng-model="person.phone" ng-minlength="10" ng-maxlength="15" ng-pattern="/^\d+$/">
-		<i ng-show="editPerson.phone.$error.pattern">nur Zahlen sind erlaubt</i>
-		<i ng-show="editPerson.phone.$error.minlength">minestens 10 Zeichen sind nötig</i>
-		<i ng-show="editPerson.phone.$error.maxlength">zuviele Zeichen in der Nummer</i>
-	</div>
-	
-	
-	<div class="buttonContainer">
-		<input type="submit" class="btPrimary" type="submit" value="Ändern">
-	</div>
-	
-</form>
+<div class="modalBody space">
+	<form name="editPerson" ng-submit="editPerson.$valid && save()">
+	    
+	    <div class="formRow" ng-class="{ error: editPerson.firstName.$error.required }">
+		    <label>Vorname</label>
+			<input type="text" name="firstName" ng-model="person.firstName" ng-minlength="3" ng-required="person.number == 1" autocomplete="off">
+			<div class="warning" ng-show="editPerson.firstName.$error.required">Pflichtfeld</div>
+	    </div>
+	    
+	    <div class="formRow" ng-class="{ error: editPerson.lastName.$error.required }">
+		    <label>Nachname</label>
+			<input type="text" name="lastName" ng-model="person.lastName" ng-minlength="3"  ng-required="person.number == 1" autocomplete="off">
+			<div class="warning" ng-show="editPerson.lastName.$error.required">Pflichtfeld</div>
+	    </div>
+	    
+	    <div class="formRow" ng-class="{ error: editPerson.mail.$error.required }">
+		    <label>eMail</label>
+			<input type="email" name="mail" ng-model="person.mail" ng-minlength="3"  ng-required="person.number == 1" autocomplete="off">
+			<div class="warning" ng-show="editPerson.mail.$error.required">Pflichtfeld</div>
+			<div class="warning" ng-show="editPerson.mail.$error.email">Keine Gültige eMail-Adresse</div>
+			<label class="checkbox" ng-show="person.mail != '' && !editPerson.mail.$error.required"><input  type="checkbox" ng-model="person.mailPublic"> Immer sichtbar für alle angemeldeten Nachbarn</label>
+	    </div>
+		
+		<div class="formRow" ng-class="{ error: editPerson.phone.$error.required }">
+			<label>Mobile Nummer</label>
+			<input type="text" name="phone" ng-model="person.phone" ng-minlength="10" ng-maxlength="15" ng-pattern="/^[\d ]*$/" autocomplete="off" placeholder="z.B. 079 123 45 67">
+			<div class="warning" ng-show="editPerson.phone.$error.pattern || editPerson.phone.$error.minlength || editPerson.phone.$error.maxlength">			
+				<span ng-show="editPerson.phone.$error.pattern">Nur Zahlen und Leerzeichen sind erlaubt. </span>
+				<span ng-show="editPerson.phone.$error.minlength">Mindestens 10 Zeichen sind nötig. </span>
+				<span ng-show="editPerson.phone.$error.maxlength">Zuviele Zeichen. </span>
+			</div>
+			
+			<label class="checkbox" ng-show="person.phone != '' && !editPerson.phone.$error.required"><input type="checkbox" ng-model="person.phonePublic"> Immer sichtbar für alle angemeldeten Nachbarn</label>
+		</div>
+		
+		
+		<div class="buttonContainer">
+			<input type="submit" class="bt_dark" type="submit" value="Ändern" ng-class="{inactive: !editPerson.$valid}">
+		</div>
+		
+	</form>
+</div>
+<div class="clear"></div>

@@ -1,0 +1,59 @@
+<h1>Von den Nachbarn geliehene Gegenstände</h1>
+<p>Hier sind alle deine offenen Anfragen und geliehenen Gegenstände ersichtlich.</p>
+
+<h3 ng-if="!borrows.past && !borrows.current">Du hast noch keinen Gegenstand von einem Nachbarn über Leihnah geliehen.</h3>
+
+<div class="listContainer" ng-if="borrows.past || borrows.current">
+	
+	<div ng-repeat="item in borrows.current" class="itemLend" >
+		<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+item.object.image_1+')'}"></div>
+		<div class="owner">
+			<span class="profilImage small" ng-style="{'background-image':'url(assets/img/profil/'+item.neighborLend.accountImage+')'}"></span>
+			<div class="name">{{ item.neighborLend.accountName }}</div>
+		</div>
+		<div class="von">
+			<div class="title">Von</div>
+			<div class="date">{{ item.getDatetime }}</div>
+		</div>
+		<div class="bis">
+			<div class="title">Bis</div>
+			<div class="date">{{ item.backDatetime }}</div>
+		</div>
+		<div class="toolbar">
+			<div class="status">
+				<div ng-if="item.state == 'request'">Auf Antwort warten</div>
+				<div ng-if="item.state == 'answered'">Anfrage beantwortet, jetzt bestätigen!</div>
+				<div ng-if="item.state == 'confirmed'">Ausleihe findet statt</div>
+			</div>
+			
+			
+			<a href ng-click="state.go('borrow', {borrowId: item.id})">Details öffnen</a>		
+			
+		</div>
+	</div>
+	
+	<h2>Vergangene Leihungen</h2>
+	<div ng-repeat="item in borrows.past" class="itemLend">
+		<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+item.object.image_1+')'}"></div>
+		<div class="owner">
+			<span class="profilImage small" ng-style="{'background-image':'url(assets/img/profil/'+item.neighborLend.accountImage+')'}"></span>
+			<div class="name">{{ item.neighborLend.accountName }}</div>
+		</div>
+		<div class="von">
+			<div class="title">Von</div>
+			<div class="date">{{ item.getDatetime }}</div>
+		</div>
+		<div class="bis">
+			<div class="title">Bis</div>
+			<div class="date">{{ item.backDatetime }}</div>
+		</div>
+		<div class="toolbar">
+			<div class="postit">postit anzeigen</div>
+			
+			<a href ng-click="state.go('borrow', {borrowId: item.id})">Details öffnen</a>		
+			<a href>Löschen</a>		
+			
+		</div>
+	</div>
+	
+</div>

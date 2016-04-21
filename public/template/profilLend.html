@@ -1,0 +1,55 @@
+<h1>An die Nachbarn verliehene Gegenstände</h1>
+<p>Hier sind alle offenen Anfragen deiner Nachbarn sowie aktuell oder vergangene verliehene Gegenstände ersichtlich.</p>
+
+<h3 ng-if="!lends.past && !lends.current">Du hast noch keinen Gegenstand an einen Nachbarn über Leihnah verliehen.</h3>
+
+
+<div class="listContainer" ng-if="lends.past || lends.current">
+	
+	<div ng-repeat="item in lends.current" class="itemLend" >
+		<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+item.object.image_1+')'}"></div>
+		<div class="owner">
+			<span class="profilImage small" ng-style="{'background-image':'url(assets/img/profil/'+item.neighborBorrow.accountImage+')'}"></span>
+			<div class="name">{{ item.neighborBorrow.accountName }}</div>
+		</div>
+		<div class="von">
+			<div class="title">Von</div>
+			<div class="date">{{ item.suggestions.get[0].formatted }}</div>
+		</div>
+		<div class="bis">
+			<div class="title">Bis</div>
+			<div class="date">{{ item.suggestions.bring[0].formatted }}</div>
+		</div>
+		<div class="toolbar">
+			<div class="status">Offene Anfrage</div>
+			
+			
+			<a href ng-click="state.go('lend', {lendId: item.id})">Anfrage beantworten</a>		
+			
+		</div>
+	</div>
+	
+	<h2>Vergangene Verleihungen</h2>
+	<div ng-repeat="item in lends.past" class="itemLend" ng-click="state.go('lend', {lendId: item.id})">
+		<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+item.object.image_1+')'}"></div>
+		<div class="owner">
+			<span class="profilImage small" ng-style="{'background-image':'url(assets/img/profil/'+item.neighborBorrow.accountImage+')'}"></span>
+			<div class="name">{{ item.neighborBorrow.accountName }}</div>
+		</div>
+		<div class="von">
+			<div class="title">Von</div>
+			<div class="date">{{ item.getDatetime }}</div>
+		</div>
+		<div class="bis">
+			<div class="title">Bis</div>
+			<div class="date">{{ item.backDatetime }}</div>
+		</div>
+		<div class="toolbar">
+			<div class="status">Auf Bestätigung warten</div>
+			
+			<a href ng-click="state.go('lend', {lendId: item.id})">Details öffnen</a>		
+			
+		</div>
+	</div>
+	
+</div>

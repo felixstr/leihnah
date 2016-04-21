@@ -1,13 +1,13 @@
-angular.module('Leihnah').controller('ActivationObjectController', function($scope, $uibModalInstance, $http, currentObject, AuthenticationService) {
+angular.module('Leihnah').controller('ActivationObjectController', function($scope, $uibModalInstance, $http, $log, currentObject, AuthenticationService) {
 	
-	console.log('currentobject', currentObject);
+	$log.debug('currentobject', currentObject);
 	
 	$scope.currentObject = angular.copy(currentObject);
 	
 	$scope.activation = function () {
 
 		var url = 'api/object/'+currentObject.id;
-// 		console.log(url);
+// 		$log.debug(url);
 		
 		var data = $scope.currentObject;
 		data.active = !$scope.currentObject.active;
@@ -21,7 +21,7 @@ angular.module('Leihnah').controller('ActivationObjectController', function($sco
 			
 		})
 		.error(function(error) {
-			console.log(error);
+			$log.debug(error);
 		});
 	
 	};

@@ -1,13 +1,13 @@
-angular.module('Leihnah').controller('DeleteObjectController', function($scope, $uibModalInstance, $http, currentObject, AuthenticationService) {
+angular.module('Leihnah').controller('DeleteObjectController', function($scope, $uibModalInstance, $http, $log, currentObject, AuthenticationService) {
 	
-	console.log('currentobject', currentObject);
+	$log.debug('currentobject', currentObject);
 	
 	$scope.currentObject = angular.copy(currentObject);
 	
 	$scope.delete = function () {
 
 		var url = 'api/object/'+currentObject.id;
-// 		console.log(url);
+// 		$log.debug(url);
 			
 		$http.delete(url, {
 			headers: { 'auth-token': AuthenticationService.getLocalToken() }
@@ -18,7 +18,7 @@ angular.module('Leihnah').controller('DeleteObjectController', function($scope, 
 			
 		})
 		.error(function(error) {
-			console.log(error);
+			$log.debug(error);
 		});
 	
 	};

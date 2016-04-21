@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('EditPasswordController', function($scope, $uibModalInstance, $http, AuthenticationService) {
+angular.module('Leihnah').controller('EditPasswordController', function($scope, $uibModalInstance, $http, $log, AuthenticationService) {
 	
 	$scope.message = null;
 	
@@ -8,10 +8,10 @@ angular.module('Leihnah').controller('EditPasswordController', function($scope, 
 	$scope.user.passwordNew = '';
 	$scope.user.passwordNewRepeat = '';
 	
-	console.log('user', $scope.user);
+	$log.debug('user', $scope.user);
 	
 	$scope.checkPasswords = function() {
-		console.log($scope.user.passwordNew);
+		$log.debug($scope.user.passwordNew);
 		if (($scope.user.passwordNew == '' && $scope.user.passwordNewRepeat == '') || ($scope.user.passwordNew == $scope.user.passwordNewRepeat)) {
 			$scope.editUser.passwordNewRepeat.$setValidity("same", true);
 		} else {
@@ -20,32 +20,38 @@ angular.module('Leihnah').controller('EditPasswordController', function($scope, 
 	}
 	
 	$scope.checkUsername = function() {
-		console.log('check username: ', $scope.user.name);
+		$log.debug('check username: ', $scope.user.name);
 		
-		$http.post('api/usernameexists', {
-				username: $scope.user.name
-			},{
-				headers: { 'auth-token': AuthenticationService.getLocalToken() }
-			})
-			.success(function(response) {
-				console.log(response);
-				if (response.usernameExists) {
-					$scope.editUser.name.$setValidity("exists", false);
-				} else {
-					$scope.editUser.name.$setValidity("exists", true);
-				}
-// 				$scope.registerInfo.usernameOk = !response.usernameExists;
-			})
-			.error(function(error) {
-				console.log(error);
-			});
-		
+		if ($scope.user.name == undefined || $scope.user.name.length < 3) {
+			$scope.editUser.name.$setValidity("minlength", false);
+			$scope.editUser.name.$setValidity("exists", true);
+		} else {
+			$scope.editUser.name.$setValidity("minlength", true);
+			
+			$http.post('api/usernameexists', {
+					username: $scope.user.name
+				},{
+					headers: { 'auth-token': AuthenticationService.getLocalToken() }
+				})
+				.success(function(response) {
+					$log.debug(response);
+					if (response.usernameExists) {
+						$scope.editUser.name.$setValidity("exists", false);
+					} else {
+						$scope.editUser.name.$setValidity("exists", true);
+					}
+	// 				$scope.registerInfo.usernameOk = !response.usernameExists;
+				})
+				.error(function(error) {
+					$log.debug(error);
+				});
+		}
 		
 	}
 	
 	
 	$scope.save = function () {
-		console.log('save: load');
+		$log.debug('save: load');
 		
 		var data = $scope.user;
 			
@@ -53,7 +59,7 @@ angular.module('Leihnah').controller('EditPasswordController', function($scope, 
 			headers: { 'auth-token': AuthenticationService.getLocalToken() }
 		})
 		.success(function(response) {
-			console.log('save paswword', response);
+			$log.debug('save paswword', response);
 			if (response.ok) {
 				AuthenticationService.loadUserInfo();
 				
@@ -70,7 +76,7 @@ angular.module('Leihnah').controller('EditPasswordController', function($scope, 
 			
 		})
 		.error(function(error) {
-			console.log(error);
+			$log.debug(error);
 		});
 			
 		

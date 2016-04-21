@@ -1,5 +1,6 @@
-angular.module('Leihnah').controller('ProfilController', function($scope, $http, $state, AuthenticationService, auth) {
+angular.module('Leihnah').controller('ProfilController', function($scope, $http, $state, $log, AuthenticationService, auth) {
 
-	console.log('ProfilContainer')	
+	$log.debug('ProfilContainer');
+	
 
 });

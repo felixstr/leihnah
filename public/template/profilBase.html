@@ -1,7 +1,7 @@
-<div class="profilImage large" ng-style="{'background-image':'url(assets/img/profil/'+currentNeighbor.accountImage+')'}"></div>
+<span class="profilImage large" ng-style="profilImageBG"></span>
 
 <div class="contact">
-	<h3>{{ currentNeighbor.accountName }}</h3>
+	<h2>{{ currentNeighbor.accountName }}</h2>
 	
 	<div class="single" ng-if="currentNeighbor.person2_firstName == ''">
 		<div class="address">{{ currentNeighbor.address }}</div>
@@ -32,14 +32,18 @@
 </div>
 
 <div class="description">
-	<p>{{ currentNeighbor.description }}</p>
+	<p ng-bind-html="currentNeighbor.descriptionFormatted"></p>
+	<h3 ng-if="currentNeighbor.descriptionAvailableFormatted">Bevorzugte Zeit für Übergabetermine</h3>
+	<p ng-bind-html="currentNeighbor.descriptionAvailableFormatted"></p>
 </div>
 
-<a class="bt_profilEdit" href ng-click="contextmenu.show('profilEdit')">Bearbeiten</a>
-<div class="contextmenu small profilEdit" ng-show="contextmenu.current == 'profilEdit'">
-	<a href ng-click="contextmenu.hide(); openModalProfilEdit()">Profil bearbeiten</a>
-	<a href ng-click="contextmenu.hide(); openModalProfilPerson(1)">{{ currentNeighbor.person1_firstName == '' && currentNeighbor.person1_lastName == '' ? '1. Bewohner bearbeiten' : currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName+' bearbeiten' }}</a>
-	<a href ng-click="contextmenu.hide(); openModalProfilPerson(2)">{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? '2. Bewohner bearbeiten' : currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName+' bearbeiten' }}</a>
+<a id="btProfilEdit" class="bt_light arrowDown" ng-class="{active: contextmenu.current == 'profilEdit'}" href ng-click="contextmenu.show('profilEdit')"><span class="mark" ng-show="currentNeighbor.address == '' || currentNeighbor.person1_firstName == ''"></span>Bearbeiten</a>
+<div class="editMessage" ng-if="currentNeighbor.person1_firstName == ''">Vervollständige deine Kontaktdaten, damit du diese den einzelnen Gegenständen zuordnen kannst.</div>
+
+<div class="contextmenu medium profilEdit" ng-show="contextmenu.current == 'profilEdit'">
+	<a href ng-click="contextmenu.hide(); openModalProfilEdit()"><span class="mark" ng-show="currentNeighbor.address == ''"></span>Profil bearbeiten</a>
+	<a href ng-click="contextmenu.hide(); openModalProfilPerson(1)"><span class="mark" ng-show="currentNeighbor.person1_firstName == ''"></span>{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? 'Kontaktdaten bearbeiten' : currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName+' bearbeiten' }}</a>
+	<a href ng-click="contextmenu.hide(); openModalProfilPerson(2)">{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? '2. Bewohner hinzufügen' : currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName+' bearbeiten' }}</a>
 	<a href ng-click="contextmenu.hide(); openModalPasswordEdit()">Zugangsdaten ändern</a>
 </div>
 

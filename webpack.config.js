@@ -17,6 +17,9 @@ module.exports = {
 		loaders: [{
 			test: /\.scss$/,
 			loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader")
+		},{
+		  test: /\.(png|jpg|gif|svg)$/,
+		  loader: "file-loader?name=../assets/img/static/[name].[ext]"
 		}]
 	},
 	plugins: [

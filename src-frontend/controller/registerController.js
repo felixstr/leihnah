@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('RegisterController', function($scope, $http, $state, AuthenticationService, auth) {
+angular.module('Leihnah').controller('RegisterController', function($scope, $http, $state, $log, AuthenticationService, auth) {
 	
 	// Variables
 	$scope.registerInfo = {
@@ -9,14 +9,14 @@ angular.module('Leihnah').controller('RegisterController', function($scope, $htt
 	
 	// Function
 	$scope.checkUsername = function() {
-		console.log('check username: ', $scope.registerInfo.username);
+		$log.debug('check username: ', $scope.registerInfo.username);
 		
 		if ($scope.registerInfo.username != undefined) {
 			$http.post('api/usernameexists', {
 					username: $scope.registerInfo.username
 				})
 				.success(function(response) {
-					console.log(response);
+					$log.debug(response);
 					if (response.usernameExists) {
 						$scope.register.username.$setValidity("exists", false);
 					} else {
@@ -25,7 +25,7 @@ angular.module('Leihnah').controller('RegisterController', function($scope, $htt
 					$scope.registerInfo.usernameOk = !response.usernameExists;
 				})
 				.error(function(error) {
-					console.log(error);
+					$log.debug(error);
 				});
 		}
 		
@@ -40,7 +40,7 @@ angular.module('Leihnah').controller('RegisterController', function($scope, $htt
 		
 		$http.post('api/register', data)
 			.success(function(response) {
-				console.log(response);
+				$log.debug(response);
 				
 				
 				
@@ -61,7 +61,7 @@ angular.module('Leihnah').controller('RegisterController', function($scope, $htt
 				
 			})
 			.error(function(error) {
-				console.log(error);
+				$log.debug(error);
 			});
 	}
 		

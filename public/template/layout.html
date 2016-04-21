@@ -1,30 +1,56 @@
-<header ng-if="!state.is('home') && !state.is('register')">
+<header class="site" ng-if="!state.is('home') && !state.is('register')">
+	
+
+	<div class="containerLogo" ng-click="state.go('landingpage')">
+		<img class="logo" src="assets/img/static/leihnah-logo.svg" />
+		{{ currentNeighbor.settlement.name }}
+	</div>
+
+	
+	
+	<a class="profil" ng-class="state.includes('profil') ? 'current' : ''" href ng-click="contextmenu.show('profil')">
+		<span class="name">{{ currentNeighbor.accountName }}</span>
+		<span class="profilImage small" ng-style="profilImageBG"><span ng-show="lends.mark > 0 || borrows.mark > 0" class="mark"></span></span>
+		
+		
+	</a>
+	
 	<nav class="pages">
-		<a ui-sref="objects">Gegenstände</a>
-		<a ui-sref="neighbor">Nachbarn</a>
+		<a ng-class="{current: state.is('objects') || state.includes('object')}" ng-click="resetFilter()" ui-sref="objects">Gegenstände</a>
+<!-- 		<a ui-sref="neighbor">Nachbarn</a> -->
 <!-- 		<a ui-sref="wishlist">Wunschliste</a> -->
 	</nav>
 
-
-	<a class="profil" href ng-click="contextmenu.show('profil')">
-		<span class="profilImage small" ng-style="{'background-image':'url(assets/img/profil/'+currentNeighbor.accountImage+')'}"></span>
-		{{ currentNeighbor.accountName }}
-	</a>
-
 </header>
-<div class="contextmenu small profil" ng-show="contextmenu.current == 'profil'">
-	<a ui-sref="profil.base" ng-click="contextmenu.hide()">Dein Profil</a>
-	<a ui-sref="profil.objects" ng-click="contextmenu.hide()">Deine Gegenstände</a>
+<div class="contextmenu medium profil" ng-show="contextmenu.current == 'profil'">
+	<a ui-sref="profil.base" ng-click="contextmenu.hide()" ng-class="{current: state.is('profil.base')}">Dein Profil</a>
+	<a ui-sref="profil.objects" ng-click="contextmenu.hide()" ng-class="{current: state.is('profil.objects')}">Deine Gegenstände</a>
+	<a ui-sref="profil.lend" ng-click="contextmenu.hide()" ng-class="{current: state.is('profil.lend')}"><span ng-show="lends.mark > 0" class="mark small"></span>An die Nachbarn verliehen</a>
+	<a ui-sref="profil.borrow" ng-click="contextmenu.hide()" ng-class="{current: state.is('profil.borrow')}"><span ng-show="borrows.mark > 0" class="mark small"></span>Von den Nachbarn geliehen</a>
 	<a href ng-click="contextmenu.hide(); logoutUser()" ng-click="">Abmelden</a>
 </div>
-
-<!--
-<p>logged in: {{ authenticated }}</p>
-<p>state: {{ state.current }}</p>
--->
+<div class="contextmenuOverlay" ng-click="contextmenu.hide()" ng-show="contextmenu.current == 'profil'" ng-class="'overlay_'+contextmenu.current"></div>
 
 
 
-<div id="containerMain" ng-class="'page_'+state.current.name.replace('.', '-')" ui-view></div>
+<div id="containerMain" ng-class="'page_'+state.current.name.replace('.', '-')" ui-view autoscroll='false' onload="contentLoaded()"></div>
 
-<div id="contextmenuOverlay" ng-click="contextmenu.hide()" ng-show="contextmenu.current != null"></div>
+
+<footer>
+	<div class="content">
+		<div class="top">
+			<img class="logo" src="assets/img/static/leihnah-logo-negativ.svg" />
+			<div class="slogan">Mehr Wert in der Nachbarschaft</div>
+		</div>
+		
+		<div class="bottom">
+			Eine Bacholorarbeit von Felix Stricker. <br />
+			Für Fragen oder Anregungen: <a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>
+		</div>
+	</div>
+</footer>
+
+
+
+
+<a class="linkFeedback" href="mailto:felix@leihnah.ch?Subject=LEIHNAH%20Feedback%20von%20{{ currentNeighbor.accountName.replace(' ', '%20').replace('&', '+') }}&Body=Mein%20Feedback hier...%0A%0A------%0APage:%20{{ window.location.hash }}%0A{{ window.navigator.userAgent }}">Feedback oder Fehler melden</a>

@@ -1,6 +1,6 @@
-angular.module('Leihnah').controller('EditProfilController', function($scope, $uibModalInstance, $http, currentNeighbor, AuthenticationService, Upload) {
+angular.module('Leihnah').controller('EditProfilController', function($scope, $uibModalInstance, $http, $log, currentNeighbor, AuthenticationService, Upload) {
 	
-	console.log('currentneighbor', currentNeighbor);
+	$log.debug('currentneighbor', currentNeighbor);
 	
 	$scope.currentNeighbor = angular.copy(currentNeighbor);
 	
@@ -11,23 +11,23 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 	
 	
 	$scope.save = function () {
-		console.log('save: load');
+		$log.debug('save: load');
 		
 		var data = $scope.currentNeighbor;
-		console.log('scope.profilImage.file', $scope.profilImage.file)
+// 		$log.debug('scope.profilImage.file', $scope.profilImage.file)
 		if ($scope.profilImage.file == undefined) {
 			
 			$http.post('api/neighbor', data, {
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				console.log(response);
+				$log.debug(response);
 				$scope.currentNeighbor = response.neighbor;
 				$uibModalInstance.close(response.neighbor);
 				
 			})
 			.error(function(error) {
-				console.log(error);
+				$log.debug(error);
 			});
 			
 		} else {
@@ -42,7 +42,7 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 			})
 			.then(
 				function(response) {
-					console.log(response);
+					$log.debug(response);
 					
 					$scope.currentNeighbor = response.data.neighbor;
 					$uibModalInstance.close(response.data.neighbor);

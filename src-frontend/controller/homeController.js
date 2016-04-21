@@ -1,11 +1,11 @@
-angular.module('Leihnah').controller('HomeController', function($scope, $http, $state, AuthenticationService, auth) {
+angular.module('Leihnah').controller('HomeController', function($scope, $http, $state, $log, AuthenticationService, auth) {
 	
 	// Variables
 	$scope.fail = null;
 	
 	$scope.loginInfo = {
-		username: undefined,
-		password: undefined
+		username: '',
+		password: ''
 	}
 
 	$scope.loginUser = function() {
@@ -28,7 +28,7 @@ angular.module('Leihnah').controller('HomeController', function($scope, $http, $
 					$scope.fail = null;
 					
 				} else {
-					console.log('fail', response.failure);
+					$log.debug('fail', response.failure);
 					
 					$scope.fail = response.failure;
 					if (response.failure == 'credentials') {
@@ -43,7 +43,7 @@ angular.module('Leihnah').controller('HomeController', function($scope, $http, $
 				
 			})
 			.error(function(error) {
-				console.log(error);
+				$log.debug(error);
 			});
 	}
 

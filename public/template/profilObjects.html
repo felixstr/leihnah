@@ -1,8 +1,7 @@
 <h1>Deine Gegenstände für die Nachbarn</h1>
-<p>Hier sind alle deine Gegenstände, die du der Nachbarschaft zur Verfügung stellst zu sehen. Du kannst neue erfassen und bestehende anpassen, deaktivieren und löschen.</p>
+<p>Hier sind alle deine Gegenstände, die du der Nachbarschaft zur Verfügung stellst, zu sehen.<br>Du kannst neue erfassen und bestehende anpassen, deaktivieren und löschen.</p>
 
-<a href ng-click="openModalObject()">Neu</a>
-
+<div class="btContainer"><a class="bt_light add" href ng-click="openModalObject()">Gegenstand hinzufügen</a></div>
 
 <div class="objectContainer">
 	<div ng-repeat="object in objects" class="itemObject" ng-class="object.active ? '' : 'deactivated'">
@@ -18,7 +17,7 @@
 			<a class="edit" href ng-click="contextmenu.show('object_'+object.id)">Menu</a>
 			<div class="contextmenu small" ng-class="'object_'+object.id" ng-show="contextmenu.current == 'object_'+object.id">
 				<a href ng-click="contextmenu.hide(); openModalObject(object)">Bearbeiten</a>
-				<a href ng-click="contextmenu.hide(); openModalObjectActivation(object)">{{ object.active ? 'Deaktivieren' : 'Aktivieren' }}</a>
+				<a href ng-click="contextmenu.hide(); activation(object)">{{ object.active ? 'Deaktivieren' : 'Aktivieren' }}</a>
 				<a href ng-click="contextmenu.hide(); openModalObjectDelete(object)">Löschen</a>
 			</div>
 			

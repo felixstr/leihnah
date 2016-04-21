@@ -1,6 +1,4 @@
 <?php
-
-
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -38,6 +36,23 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
+$container['mailer'] = function ($c) {
+    $mailer = $c['settings']['mail'];
+    
+    $phpMailer = new PHPMailer();
+    
+// 	$phpMailer->SMTPDebug = 2;                               // Enable verbose debug output
+
+	$phpMailer->isSMTP();                                      // Set mailer to use SMTP
+	$phpMailer->Host = 'mail.cyon.ch';  // Specify main and backup SMTP servers
+	$phpMailer->SMTPAuth = true;                               // Enable SMTP authentication
+	$phpMailer->Username = 'mailer@leihnah.ch';                 // SMTP username
+	$phpMailer->Password = $mailer['pass'];                           // SMTP password
+// 	$phpMailer->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+	$phpMailer->Port = 587;  
+    
+    return $phpMailer;
+};
 
 
 /**
@@ -68,9 +83,11 @@ $app->post('/usernameexists', function (Request $request, Response $response) {
     Authentication::initialize($this->db, $this->logger);
     Authentication::setToken($request->getHeader('auth-token'));
     Authentication::login();
-
+	
+// 	echo empty($requestBody['username']);
+	
     $usernameOk = false;
-    if (isset($requestBody['username'])) {
+    if (isset($requestBody['username']) && !empty($requestBody['username'])) {
     	$usernameOk = Authentication::usernameOk($requestBody['username']);
     }
     
@@ -101,7 +118,6 @@ $app->post('/register', function (Request $request, Response $response) {
 		$neighborAdded = NeighborEntity::factory($this->db)
 			->setUserId($userId)
 			->setAccountName($requestBody['person1_firstName'])
-			->setPerson1_firstName($requestBody['person1_firstName'])
 			->add();
 		
 /*
@@ -269,6 +285,7 @@ $app->post('/neighbor[/{id}]', function (Request $request, Response $response, $
 				->setAccountImage($filename)
 				->setAddress($requestBody['address'])
 				->setFixnetPhone($requestBody['fixnetPhone'])
+				->setDescriptionAvailable($requestBody['descriptionAvailable'])
 				->setDescription($requestBody['description']);
 				
 		} else if (isset($requestBody['person1_firstName'])) {
@@ -276,13 +293,17 @@ $app->post('/neighbor[/{id}]', function (Request $request, Response $response, $
 				->setPerson1_firstName($requestBody['person1_firstName'])
 				->setPerson1_lastName($requestBody['person1_lastName'])
 				->setPerson1_mail($requestBody['person1_mail'])
-				->setPerson1_phone($requestBody['person1_phone']);
+				->setPerson1_mailPublic($requestBody['person1_mailPublic'])
+				->setPerson1_phone($requestBody['person1_phone'])
+				->setPerson1_phonePublic($requestBody['person1_phonePublic']);
 		} else if (isset($requestBody['person2_firstName'])) {
 			$neighbor
 				->setPerson2_firstName($requestBody['person2_firstName'])
 				->setPerson2_lastName($requestBody['person2_lastName'])
 				->setPerson2_mail($requestBody['person2_mail'])
-				->setPerson2_phone($requestBody['person2_phone']);
+				->setPerson2_mailPublic($requestBody['person2_mailPublic'])
+				->setPerson2_phone($requestBody['person2_phone'])
+				->setPerson2_phonePublic($requestBody['person2_phonePublic']);
 		}
 		$neighbor_array = $neighbor
 			->update()
@@ -318,7 +339,8 @@ $app->get('/object[/{id}]', function (Request $request, Response $response, $arg
 	    if (isset($args['id'])) {
 		    if ($args['id'] == 'own') {
 			    // eigene gegenstände
-			    $objects = ObjectMapper::factory($this->db)->getByUserId(Authentication::getUser()->getId());
+			    $objects = ObjectMapper::factory($this->db)
+			    	->getByUserId(Authentication::getUser()->getId());
 			    
 			    
 		    } else {
@@ -332,7 +354,28 @@ $app->get('/object[/{id}]', function (Request $request, Response $response, $arg
 		    }
 	    } else {
 		    // alle objekte zurückgeben
-		    $objects = ObjectMapper::factory($this->db)->get();
+		    $objects = ObjectMapper::factory($this->db)
+		    	->setSortDESC()
+		    	->get();
+		    
+		    $result['objectsNew'] = ObjectMapper::factory($this->db)
+		    	->setLimit(8)
+		    	->setSortDESC()
+		    	->get();
+		    
+
+		    $result['objectsPopular'] = ObjectMapper::factory($this->db)
+		    	->setLimit(8)
+		    	->setOrderByViewCount()
+		    	->setSortDESC()
+		    	->get();
+		    
+		    $result['objectsFavorites'] = ObjectMapper::factory($this->db)
+		    	->setOrderByName()
+		    	->setLimit(4)
+		    	->setSortDESC()
+		    	->get();
+		    	
 	    }
 
 	    
@@ -345,7 +388,7 @@ $app->get('/object[/{id}]', function (Request $request, Response $response, $arg
     }
 
 		
-	$newResponse = $response->withJson($result);
+	$newResponse = $response->withJson($result, null, JSON_NUMERIC_CHECK);
 	
     return $newResponse;
 });
@@ -359,6 +402,8 @@ $app->post('/object[/{id}]', function (Request $request, Response $response, $ar
     $requestBody = $request->getParsedBody();
 //     $this->logger->addInfo("requestBody", array($requestBody));
 //     $this->logger->addInfo("body", array($body));
+    
+//     echo print_r($requestBody);
     
     Authentication::initialize($this->db, $this->logger);
     Authentication::setToken($request->getHeader('auth-token'));
@@ -400,18 +445,37 @@ $app->post('/object[/{id}]', function (Request $request, Response $response, $ar
 		    ImageMapper::initialize(new Imagine\Gd\Imagine(), $_FILES, 'object', $object->getId());
 			$filenames = ImageMapper::make();
 			
+// 			echo print_r($filenames);
+/*
+			echo '<br>test'.((isset($requestBody['directContact_fixnetPhone']) && $requestBody['directContactFlag'] == 1) ? 'true' : 'false');
+			echo '<br>test'.(($requestBody['directContactFlag'] == true) ? 'true' : 'false');
+*/
 			
-			
-		    $object_arr = $object
+		    $object
 				->setActive($requestBody['active'])
 				->setCategoryId($requestBody['categoryId'])
-				->setImage_1(isset($filenames['image_1']) ? $filenames['image_1'] : false)
-				->setImage_2(isset($filenames['image_2']) ? $filenames['image_2'] : false)
-				->setImage_3(isset($filenames['image_3']) ? $filenames['image_3'] : false)
+				->setImage_1(isset($filenames['image_1']) && !empty($filenames['image_1']) ? $filenames['image_1'] : $requestBody['image_1'])
+				->setImage_2(isset($filenames['image_2']) && !empty($filenames['image_2']) ? $filenames['image_2'] : $requestBody['image_2'])
+				->setImage_3(isset($filenames['image_3']) && !empty($filenames['image_3']) ? $filenames['image_3'] : $requestBody['image_3'])
 				->setName($requestBody['name'])
+				->setNameAlternatives($requestBody['nameAlternatives'])
 				->setDescription($requestBody['description'])
 				->setDamage($requestBody['damage'])
-				->setGift(isset($requestBody['gift']))
+				->setGift(isset($requestBody['gift']));
+			
+			if (isset($requestBody['directContactFlag'])) {
+				
+				$directFlag = ($requestBody['directContactFlag'] == 'yes');
+
+				$object
+					->setDirectContact_fixnetPhone(isset($requestBody['directContact_fixnetPhone']) && $directFlag ? $requestBody['directContact_fixnetPhone'] : false)
+					->setDirectContact_person1_mail(isset($requestBody['directContact_person1_mail']) && $directFlag ? $requestBody['directContact_person1_mail'] : false)
+					->setDirectContact_person1_phone(isset($requestBody['directContact_person1_phone']) && $directFlag ? $requestBody['directContact_person1_phone'] : false)
+					->setDirectContact_person2_mail(isset($requestBody['directContact_person2_mail']) && $directFlag ? $requestBody['directContact_person2_mail'] : false)
+					->setDirectContact_person2_phone(isset($requestBody['directContact_person2_phone']) && $directFlag ? $requestBody['directContact_person2_phone'] : false);
+			}
+			
+			$object_arr = $object
 				->update()
 				->load()
 				->toArray();
@@ -487,7 +551,295 @@ $app->get('/category', function (Request $request, Response $response, $args) {
     }
 
 		
+	$newResponse = $response->withJson($result, null, JSON_NUMERIC_CHECK);
+	
+    return $newResponse;
+});
+
+
+$app->get('/mail', function (Request $request, Response $response, $args) {
+
+    
+    $result['ok'] = false;
+    
+/*
+    $mailer = MailMapper::factory($this->mailer)
+    	->addAddress('fexfix@bluewin.ch', 'Felxi')
+    	->setSubject('test')
+    	->setBody('blaalbaa <b>asdfs</b> aslfddjs');
+        
+	
+	if(!$mailer->send()) {
+		$result['error'] = $mailer->getErrorInfo();
+	} else {
+		$result['ok'] = true;
+	}
+*/
+	
+	
 	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+$app->post('/trackobject/{id}', function (Request $request, Response $response, $args) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+	
+// 	echo Authentication::getUser()->isSuperUser() ? 'ja' : 'nein';
+	
+	$result['ok'] = false;
+    if (Authentication::isAuthenticated() && !Authentication::getUser()->isSuperUser()) {
+	    
+	    $object = ObjectEntity::factory($this->db)
+	    	->setId($args['id'])
+	    	->load();
+	    
+	    if (Authentication::getUser()->getId() != $object->getUserId()) {
+		    ObjectViewEntity::factory($this->db)
+		    	->set($object)
+		    	->track();
+			$result['tracked'] = true;
+	    } else {
+		    $result['tracked'] = false;
+	    }
+	    		
+		$result['ok'] = true;
+    }
+	
+
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+$app->post('/lend/start', function (Request $request, Response $response, $args) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+	$requestBody = $request->getParsedBody();
+// 	echo Authentication::getUser()->isSuperUser() ? 'ja' : 'nein';
+// 	echo print_r($requestBody);
+	
+	$result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    $userLendId = ObjectEntity::factory($this->db)
+	    	->setId($requestBody['objectId'])
+	    	->load()
+	    	->getUserId();
+	    
+	    $borrowId = LendEntity::factory($this->db)
+		    ->setUserBorrowId(Authentication::getUser()->getId())
+		    ->setUserLendId($userLendId)
+	    	->setObjectId($requestBody['objectId'])
+	    	->setRequestText($requestBody['message'])
+	    	->setTimeSuggestions($requestBody['suggestions'])
+	    	->setPreferredContact_fixnetPhone(isset($requestBody['preferredContact_fixnetPhone']) ? $requestBody['preferredContact_fixnetPhone'] : false)
+			->setPreferredContact_person1_mail(isset($requestBody['preferredContact_person1_mail']) ? $requestBody['preferredContact_person1_mail'] : false)
+			->setPreferredContact_person1_phone(isset($requestBody['preferredContact_person1_phone']) ? $requestBody['preferredContact_person1_phone'] : false)
+			->setPreferredContact_person2_mail(isset($requestBody['preferredContact_person2_mail']) ? $requestBody['preferredContact_person2_mail'] : false)
+			->setPreferredContact_person2_phone(isset($requestBody['preferredContact_person2_phone']) ? $requestBody['preferredContact_person2_phone'] : false)
+	    	->request();
+	    	
+	    if ($borrowId > 0) {
+			$result['ok'] = true;
+			$result['borrowId'] = $borrowId;
+	    } 
+    }
+	
+
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+$app->post('/lend/answer/{id}', function (Request $request, Response $response, $args) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+	$requestBody = $request->getParsedBody();
+// 	echo Authentication::getUser()->isSuperUser() ? 'ja' : 'nein';
+// 	echo print_r($requestBody);
+	
+	$result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    $lendEntity = LendEntity::factory($this->db)
+	    	->setId($args['id'])
+	    	->load();
+	    	
+	    if ($lendEntity->getUserLendId() == Authentication::getUser()->getId()) {
+	    
+		    $answer = $lendEntity
+			    ->setAnswerText($requestBody['message'])
+			    ->setGetDatetime($requestBody['getDatetime'])
+			    ->setBackDatetime($requestBody['backDatetime'])
+		    	->answer()
+		    	->load();
+		    	
+		    if (!$lendEntity->getError()) {
+				$result['ok'] = true;
+				$result['lend'] = $answer->toArray();
+		    } 
+		}
+    }
+	
+
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+$app->post('/lend/confirm/{id}', function (Request $request, Response $response, $args) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+	$requestBody = $request->getParsedBody();
+// 	echo Authentication::getUser()->isSuperUser() ? 'ja' : 'nein';
+// 	echo print_r($requestBody);
+	
+	$result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    $lendEntity = LendEntity::factory($this->db)
+	    	->setId($args['id'])
+	    	->load();
+	    	
+	    if ($lendEntity->getUserBorrowId() == Authentication::getUser()->getId()) {
+	    
+		    $confirm = $lendEntity
+		    	->confirm()
+		    	->load();
+		    	
+		    if (!$lendEntity->getError()) {
+				$result['ok'] = true;
+				$result['lend'] = $confirm->toArray();
+		    } 
+		}
+    }
+	
+
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+$app->post('/lend/close/{id}', function (Request $request, Response $response, $args) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+	$requestBody = $request->getParsedBody();
+// 	echo Authentication::getUser()->isSuperUser() ? 'ja' : 'nein';
+/* 	echo print_r($requestBody); */
+	
+	$result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    $lendEntity = LendEntity::factory($this->db)
+	    	->setId($args['id'])
+	    	->load();
+	    
+	    
+	    if ($requestBody['type'] == 'successful' && $lendEntity->getUserLendId() == Authentication::getUser()->getId()) {
+	    
+		    $close = $lendEntity
+		    	->setClosedType('successful')
+		    	->setClosedText($requestBody['feedback'])
+		    	->close()
+		    	->load();
+		    	
+		    
+		} else if ($requestBody['type'] == 'stopped' && $lendEntity->getUserBorrowId() == Authentication::getUser()->getId()) {
+			
+			$close = $lendEntity
+		    	->setClosedType('stopped')
+		    	->setClosedText($requestBody['feedback'])
+		    	->close()
+		    	->load();
+		    	
+		} else if ($requestBody['type'] == 'refused' && $lendEntity->getUserLendId() == Authentication::getUser()->getId()) {
+			
+			$close = $lendEntity
+		    	->setClosedType('refused')
+		    	->setClosedText($requestBody['feedback'])
+		    	->close()
+		    	->load();
+		    	
+		} else if ($requestBody['type'] == 'canceled' && $lendEntity->getUserLendId() == Authentication::getUser()->getId()) {
+			
+			$close = $lendEntity
+		    	->setClosedType('canceled')
+		    	->setClosedText($requestBody['feedback'])
+		    	->close()
+		    	->load();
+		    	
+		}
+		
+		if (!$lendEntity->getError()) {
+			$result['ok'] = true;
+			$result['lend'] = $close->toArray();
+	    } 
+    }
+	
+
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+$app->get('/lend[/{id}]', function (Request $request, Response $response, $args) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+// 	echo Authentication::getUser()->isSuperUser() ? 'ja' : 'nein';
+// 	echo print_r($requestBody);
+	
+	$result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    if (isset($args['id'])) {
+	    
+		    $lendEntity = LendEntity::factory($this->db)
+			    ->setId($args['id'])
+			    ->load();
+			   
+// 			echo $lendEntity->getError() == true ? 'error' : 'kein error';
+			
+			
+			   
+			if (!$lendEntity->getError() && ($lendEntity->getUserBorrowId() == Authentication::getUser()->getId() || $lendEntity->getObjectEntity()->getUserId() == Authentication::getUser()->getId())) {
+				$result['ok'] = true;
+				$result['lend'] = $lendEntity->toArray();
+			}
+		} else {
+			
+			$result['lends'] = LendMapper::factory($this->db)
+		    	->setUserId(Authentication::getUser()->getId())
+		    	->getLends();
+		    
+		    $result['borrows'] = LendMapper::factory($this->db)
+		    	->setUserId(Authentication::getUser()->getId())
+		    	->getBorrows();
+			
+			$result['ok'] = true;
+		}
+    }
+	
+
+	$newResponse = $response->withJson($result, null, JSON_NUMERIC_CHECK);
 	
     return $newResponse;
 });

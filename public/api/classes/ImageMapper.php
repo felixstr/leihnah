@@ -49,7 +49,12 @@ class ImageMapper {
 		if (isset(self::$files[$name])) {
 			
 			$filename = self::$prefix.rand(10,1000).self::$files[$name]['name'];
+			$filename = strtolower($filename);
 			$filename = str_replace(' ', '', $filename);
+			$filename = str_replace('#', '', $filename);
+			$filename = str_replace('ä', 'a', $filename);
+			$filename = str_replace('ö', 'o', $filename);
+			$filename = str_replace('ü', 'u', $filename);
 			
 			$tmp_name = self::$files[$name]['tmp_name'];
 			

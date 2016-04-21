@@ -1,82 +1,108 @@
-<!--
-currentObject.image_1: {{ currentObject.image_1 == '' }}<br>
-currentObject.image_2: {{ currentObject.image_2 == '' }}<br>
-objectImage.image_1: {{ objectImage.image_1 === undefinded }}<br>
-currentObject.categoryId : {{ currentObject.categoryId }}
--->
-
 <div class="modalHead">
-	<a href class="close" ng-click="cancel()">schliessen (X)</a>
+	<a href class="close" ng-click="cancel()">schliessen</a>
 </div>
 
-<form name="editObject" ng-submit="editObject.$valid && save()">
-    <div class="formRowImage">
-	    
-	    <div class="elementImage">
-			<label>Bild 1</label>
-			<input type="file" ngf-select ng-model="objectImage.image_1" name="image_1" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
-			<i ng-show="editObject.image_1.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
-			<img ng-show="editObject.image_1.$valid" ngf-thumbnail="objectImage.image_1" class="thumb"> 
-			<img ng-show="currentObject.image_1 != '' && objectImage.image_1 === undefined" ng-src="assets/img/object/{{ currentObject.image_1 }}" class="thumb"> 
-	    </div>
-    
-	    <div class="elementImage" ng-show="objectImage.image_1 !== undefined || currentObject.image_1 != ''">
-			<label>Bild 2</label>
-			<input type="file" ngf-select ng-model="objectImage.image_2" name="image_2" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
-			<i ng-show="editObject.image_2.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 2000000|number:1}}MB: max 2MB</i>
-			<img ng-show="editObject.image_2.$valid" ngf-thumbnail="objectImage.image_2" class="thumb"> 
-			<img ng-show="currentObject.image_2 != '' && objectImage.image_2 === undefined" ng-src="assets/img/object/{{ currentObject.image_2 }}" class="thumb"> 
-	    </div>
-	    
-	    <div class="elementImage" ng-show="objectImage.image_2 !== undefined || currentObject.image_2 != ''">
-			<label>Bild 3</label>
-			<input type="file" ngf-select ng-model="objectImage.image_3" name="image_3" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
-			<i ng-show="editObject.image_3.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 3000000|number:1}}MB: max 3MB</i>
-			<img ng-show="editObject.image_3.$valid" ngf-thumbnail="objectImage.image_3" class="thumb"> 
-			<img ng-show="currentObject.image_3 != '' && objectImage.image_3 === undefined" ng-src="assets/img/object/{{ currentObject.image_3 }}" class="thumb"> 
-	    </div>
-	    
-    </div>
-    
-    <div class="formRow">
-	    <label>Name des Gegenstandes</label>
-		<input type="text" name="name" ng-model="currentObject.name" ng-minlength="3" required>
-		<div class="warning" ng-show="editObject.name.$error.required">*Pflichtfeld</div>
-    </div>
-    
-    <div class="formRow">
-		<label>Beschreibung</label>
-		<textarea name="description" ng-model="currentObject.description" ng-minlength="3" required></textarea>
-		<div class="warning" ng-show="editObject.description.$error.required">*Pflichtfeld</div>
-	</div>
-	
-	<div class="formRow">
-		<label>Wie ist der Zustand? Gibt es Defekte?</label>
-		<textarea name="damage" ng-model="currentObject.damage"></textarea>
-	</div>
-	
-	<div class="formRow">
-		<label>Kategorie</label>
-		<select name="category" ng-model="currentObject.categoryId" ng-change="updateCategory()" required>
-			<option ng-repeat="option in categories" value="{{option.id}}">{{option.name}}</option>
+<div class="modalBody">
+	<form name="editObject" ng-submit="editObject.$valid && save()">
+	    <div class="formRowImage">
+		    
+		    <div class="picAdd">
+			    
+				<div class="image" ng-show="editObject.image_1.$valid" ngf-background="objectImage.image_1"></div>
+				<div class="image" ng-show="currentObject.image_1 != '' && objectImage.image_1 === undefined" ng-style="{'background-image':'url(assets/img/object/'+currentObject.image_1+')'}"> </div>
+				
+				<a class="new" href>{{ (objectImage.image_1 || currentObject.image_1) ? 'Bild ersetzen' : 'Bild hinzufügen' }}</a>
+				
+				<input type="file" ngf-select ng-model="objectImage.image_1" name="image_1" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
+				
+				<a class="delete" ng-show="(objectImage.image_1 || currentObject.image_1) && (objectImage.image_2 || currentObject.image_2)" href ng-click="deletePic(1)">löschen</a>
+			</div>
 			
-		</select>
-		<div class="warning" ng-show="currentObject.categoryId == '0' || editObject.category.$error.notSelected">Wähle eine Kategorie</div>
+			<i ng-show="editObject.image_1.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 3MB</i>
+			
+			<div class="picAdd" ng-show="objectImage.image_1 !== undefined || currentObject.image_1 != ''">
+				
+				<div class="image" ng-show="editObject.image_2.$valid" ngf-background="objectImage.image_2"></div>
+				<div class="image" ng-show="currentObject.image_2 != '' && objectImage.image_2 === undefined" ng-style="{'background-image':'url(assets/img/object/'+currentObject.image_2+')'}"> </div>
+				
+				<a class="new" href>{{ (objectImage.image_2 || currentObject.image_2) ? 'Bild ersetzen' : 'Bild hinzufügen' }}</a>
+				
+				<input type="file" ngf-select ng-model="objectImage.image_2" name="image_2" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
+				
+				<a class="delete" ng-show="objectImage.image_2 || currentObject.image_2" href ng-click="deletePic(2)">löschen</a>
+			</div>
+			
+		    <i ng-show="editObject.image_2.$error.maxSize">Die Datei ist zu Gross {{errorFiles[1].size / 1000000|number:1}}MB: max 3MB</i>
+		    
+		    <div class="picAdd" ng-show="objectImage.image_2 !== undefined || currentObject.image_2 != ''">		    
+				<div class="image" ng-show="editObject.image_3.$valid" ngf-background="objectImage.image_3"></div>
+				<div class="image" ng-show="currentObject.image_3 != '' && objectImage.image_3 === undefined" ng-style="{'background-image':'url(assets/img/object/'+currentObject.image_3+')'}"> </div>
+				
+				<a class="new" href>{{ (objectImage.image_3 || currentObject.image_3) ? 'Bild ersetzen' : 'Bild hinzufügen' }}</a>
+				
+				<input type="file" ngf-select ng-model="objectImage.image_3" name="image_3" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
+				
+				<a class="delete" ng-show="objectImage.image_3 || currentObject.image_3" href ng-click="deletePic(3)">löschen</a>
+			</div>
+			
+		    <i ng-show="editObject.image_3.$error.maxSize">Die Datei ist zu Gross {{errorFiles[2].size / 1000000|number:1}}MB: max 3MB</i>
+	
+	    </div>
+	    
+	    <div class="formRow" ng-class="{ error: editObject.name.$error.required }">
+		    <label>Name des Gegenstandes</label>
+			<input type="text" name="name" ng-model="currentObject.name" ng-minlength="3" required autocomplete="off">
+			<div class="warning" ng-show="editObject.name.$error.required">Pflichtfeld</div>
+	    </div>
+	    <div class="formRow">
+		    <label>Alternative Namen für besseres finden über die Suche</label>
+			<input type="text" name="nameAlternatives" ng-model="currentObject.nameAlternatives" autocomplete="off" placeholder="z.B. Elektrovelo, Flyer, E-Bike, Elektrofahrrad">
+	    </div>
+	    
+	    <div class="formRow" ng-class="{ error: editObject.description.$error.required }">
+			<label>Beschreibung</label>
+			<textarea name="description" ng-model="currentObject.description" ng-minlength="3" required></textarea>
+			<div class="warning" ng-show="editObject.description.$error.required">Pflichtfeld</div>
+		</div>
+		
+		<div class="formRow">
+			<label>Wie ist der Zustand? Gibt es Defekte?</label>
+			<textarea name="damage" ng-model="currentObject.damage"></textarea>
+		</div>
+		
+		<div class="formRow">
+			<label>Kategorie</label>
+			<select name="category" ng-model="currentObject.categoryId" ng-change="updateCategory()" required>
+				<option ng-repeat="option in categories" value="{{option.id}}">{{option.name}}</option>
+			</select>
+			<div class="warning select" ng-show="currentObject.categoryId == '0' || editObject.category.$error.notSelected">Wähle eine Kategorie</div>
+		</div>
+		
+		<div class="formRow">
+			<label>Kontaktaufnahme</label>
+			<label class="checkbox"><input type="checkbox" ng-model="currentObject.directContactFlag" ng-true-value="'yes'" ng-false-value="'no'">Direkte Kontaktaufnahme ermöglichen</label>
+			
+			<div ng-show="currentObject.directContactFlag == 'yes'" class="directContact">
+				<div class="label">Welche Daten sollen für die Kontaktaufnahme sichtbar sein?</div>
+				
+				<label ng-if="currentNeighbor.fixnetPhone" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_fixnetPhone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.fixnetPhone }}</label>
+				<label ng-if="currentNeighbor.person1_mail" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_person1_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_mail }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
+				<label ng-if="currentNeighbor.person1_phone" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_person1_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_phone }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
+				<label ng-if="currentNeighbor.person2_mail" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_person2_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_mail }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
+				<label ng-if="currentNeighbor.person2_phone" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_person2_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_phone }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
+				
+				
+			
+			</div>
+			
+		</div>
+		
+		<div class="buttonContainer">
+			<input type="submit" class="bt_dark" type="submit" value="{{currentObject.name == '' ? 'Gegenstand' : currentObject.name}} {{ currentObject.id == null ? 'hinzufügen' : 'ändern'}}" ng-class="{inactive: !editObject.$valid || formDisabled}" ng-disabled="formDisabled">
+		</div>
 		
 		
-	</div>
-	
-<!--
-	<div class="formRow">
-		<label><input type="checkbox" ng-model="currentObject.gift"> Zu Verschenken</label>
-	</div>
--->
 		
-	<div class="buttonContainer">
-		<input type="submit" class="btPrimary" type="submit" value="{{currentObject.name}} {{ currentObject.id == null ? 'Hinzufügen' : 'Ändern'}}">
-<!-- 	<input type="button" class="btNormal" ng-click="cancel()" value="Abbrechen"> -->
-	</div>
-	
-	
-	
-</form>
+	</form>
+</div>
+<div class="clear"></div>

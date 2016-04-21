@@ -3,6 +3,9 @@ class CategoryEntity {
 	protected $id = 0;
 	protected $name = '';
 	protected $image = false;
+	protected $count = 0;
+	
+	
 	
 	protected $error = false;
 	
@@ -45,6 +48,10 @@ class CategoryEntity {
 		$this->id = $row['id'];
 		$this->name = $row['name'];
 		$this->image = $row['image'];
+		
+		if (isset($row['count'])) {
+			$this->count = $row['count'];
+		}
 			
 		return $this;
 	}
@@ -105,7 +112,8 @@ class CategoryEntity {
 			$result = array(
 				'id' => $this->id,	
 				'name' => $this->name,
-				'image' => $this->image
+				'image' => $this->image,
+				'count' => $this->count
 			);
 		}
 		

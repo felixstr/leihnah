@@ -10,3 +10,7 @@ public/api/classes/Authentication.php
 public/api/classes/NeighborEntity.php
 
 public/api/classes/UserEntity.php
+
+src-frontend/index-alt.scss
+
+*.sql

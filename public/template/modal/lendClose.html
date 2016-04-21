@@ -1,0 +1,29 @@
+<div class="modalHead">
+	<a href class="close" ng-click="cancel()">schliessen</a>
+</div>
+
+<div class="modalBody">
+
+	<form name="lendClose" ng-submit="lendClose.$valid && send()">
+		
+		<div class="title">{{ formInfo.titleText }}</div>
+		
+		<div ng-if="closeData.type == 'successful'">
+		    <div class="formRow">
+				<label><input type="checkbox" ng-model="closeData.objectBack" ng-true-value="'yes'" ng-false-value="'no'">Ich habe den Gegenstand (noch) nicht zurückerhalten, möchte aber trotzdem abschliessen.</label>
+		    </div>
+		</div>
+		
+		<div class="formRow">
+			<label>Feedback an {{ formInfo.otherNeighbor.accountName }}</label>
+			<textarea name="description" ng-model="closeData.feedback" placeholder="{{ formInfo.feedbackPlaceholder }}"></textarea>
+		</div>
+		
+		
+		<div class="buttonContainer">
+			<input type="submit" class="bt_dark" type="submit" value="{{ formInfo.buttonText }}" ng-class="{inactive: !lendClose.$valid}">
+		</div>
+		
+	</form>
+</div>
+<div class="clear"></div>

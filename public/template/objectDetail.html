@@ -1,30 +1,156 @@
-<h1>{{ object.name }}</h1>
+<div class="contentContainer">
 
-<div class="objectInfo">
-	<div class="containerImages">
-		<img ng-src="assets/img/object/{{object.image_1}}" />
-	</div>
+	<h1>{{ object.name }}</h1>
 	
-	<div class="containerText">
-		{{ object.description }}
-		
-		<h2 ng-show="object.damage != ''">Zustand</h2>
-		{{ object.damage }}
-	</div>
-</div>
+	<a id="btEditObject" class="bt_light" ng-if="object.neighbor.id == currentNeighbor.id" href ng-click="openModalObject(object)">Bearbeiten</a>
 
-<div class="requestInfo">
-	<div class="containerContact">
-		<div class="profilImage large" ng-style="{'background-image':'url(assets/img/profil/'+object.neighbor.accountImage+')'}"></div>
-		<div class="info">
-			<div class="accountName">{{ object.neighbor.accountName }}</div>
-			<div class="address">{{ object.neighbor.address }}</div>
-			<div class="fixnetPhone" ng-if="object.neighbor.fixnetPhone != ''">{{ object.neighbor.fixnetPhone }}</div>
+	
+	<div class="objectInfo">
+		
+		<div class="containerImage" ng-if="images.length > 0">
+			<ul rn-carousel rn-carousel-buffered rn-carousel-controls>
+				<li ng-repeat="image in images">
+					<div class="img" ng-style="{'background-image': 'url(assets/img/object/'+image+')'}"></div>
+				</li>
+			</ul>
+			
+			<div class="footer">
+				<span class="profilImage medium" ng-style="profilImageBG"></span>
+				<div class="accountName">{{ object.neighbor.accountName }}</div>
+				<div class="address">{{ object.neighbor.address }}</div>
+				
+			</div>
+		</div>
+		
+		<div class="containerText">
+			<div class="textRow" ng-if="object.descriptionFormatted != ''">
+				<div class="label">Beschreibung</div>
+				<div class="text"><p ng-bind-html="object.descriptionFormatted"></p></div>
+			</div>
+			
+			<div class="textRow" ng-if="object.damage != ''">
+				<div class="label">Zustand</div>
+				<div class="text"><p>{{ object.damage }}</p></div>
+			</div>
 		</div>
 	</div>
 	
-	
-	<div class="containerRequest">
-		request
+	<div class="requestInfo">
+		<h2>Ausleihen</h2>
+		<h4 ng-if="object.neighbor.descriptionAvailable != ''">Bevorzugte Zeit für Übergabetermine</h4>
+		<div class="availableText">{{ object.neighbor.descriptionAvailable }}</div>
+		
+		<div class="containerContact" ng-if="object.directContactTypes.length > 0">
+			<div class="title">Direkt kontaktieren</div>
+			
+			
+			
+			<div class="info">
+				Per <span class="contactType" ng-repeat="type in object.directContactTypes">{{ !$first && object.directContactTypes.length > 2 ? ', ' : ' ' }}{{ $last && object.directContactTypes.length > 1 ? 'oder ' : '' }}{{ type }}</span>.
+				
+				<div class="name" ng-if="object.directContact_fixnetPhone">Festnetz</div>
+				<div class="phone" ng-if="object.directContact_fixnetPhone">{{ object.neighbor.fixnetPhone }}</div>
+				
+				<div class="single" ng-if="!(object.directContact_person2_phone || object.directContact_person2_mail)">
+					<div class="mail" ng-if="object.directContact_person1_mail"><a class="text" href="mailto:{{ object.neighbor.person1_mail }}">{{object.neighbor.person1_mail}}</a></div>
+					<div class="phone" ng-if="object.directContact_person1_phone">{{ object.neighbor.person1_phone }}</div>
+				</div>
+				
+				<div class="group" ng-if="object.directContact_person2_phone || object.directContact_person2_mail">
+					<div class="name" ng-if="object.directContact_person1_mail || object.directContact_person1_phone">{{ object.neighbor.person1_firstName }} {{ object.neighbor.person1_lastName }}</div>
+					<div class="mail" ng-if="object.directContact_person1_mail"><a class="text" href="mailto:{{ object.neighbor.person1_mail }}">{{object.neighbor.person1_mail}}</a></div>
+					<div class="phone" ng-if="object.directContact_person1_phone">{{ object.neighbor.person1_phone }}</div>
+					<div class="name">{{ object.neighbor.person2_firstName }} {{ object.neighbor.person2_lastName }}</div>
+					<div class="mail" ng-if="object.directContact_person2_mail"><a class="text" href="mailto:{{ object.neighbor.person2_mail }}">{{object.neighbor.person2_mail}}</a></div>
+					<div class="phone" ng-if="object.directContact_person2_phone">{{ object.neighbor.person2_phone }}</div>
+				</div>
+			</div>
+			
+			
+		</div>
+					
+		
+		<div class="or" ng-if="systemRequest.active && object.directContactTypes.length > 0">oder</div>
+		
+		
+		<div class="containerRequest" ng-if="systemRequest.active">
+			<div class="title">Anfrage stellen</div>
+			<div class="content">
+				<p>Wähle möglichst unterschiedliche Termine für Übergabe und Rückgabe:</p>
+				
+				<div class="calendar" id="calendar">
+					
+					
+					<uib-datepicker template-url="template/datepicker/datepicker.html" ng-model="$parent.dt" datepicker-options="calendarOptions" ng-change="change()"></uib-datepicker>
+					
+					<p class="warning" ng-show="systemRequest.firstGetSuggestion == ''">Mindestens einen <span>Abholtermin</span> wählen</p>
+					<p class="warning" ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstBackSuggestion == ''">Mindestens einen <span>Rückgabetermin</span> wählen</p>
+					<p class="infoMessage" ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstBackSuggestion != ''">Weitere Terminvorschläge hinzufügen<br>oder Anfrage senden</p>
+					
+					<div id="timepicker" class="contextmenu medium timepicker" ng-show="contextmenu.current == 'timepicker'">
+						<div class="switcher" ng-class="{'chooseGet' : selectedDay.type == 'get', 'chooseBack': selectedDay.type == 'back'}">
+							<button class="get" ng-disabled="!selectedDay.chooseType" ng-click="selectedDay.type == 'back' && switchType()">Abholen</button>
+							<button class="back" ng-disabled="!selectedDay.chooseType" ng-click="selectedDay.type == 'get' && switchType()">Zurückbringen</button>
+						</div>
+						<div class="row" ng-repeat="time in selectedDay.times">
+							<div class="select">
+								<select ng-model="time.from" ng-change="timeSelectChanged(time, 'from');">
+									<option ng-repeat="option in timeOption" value="{{option.time}}" ng-disabled="option.time == 'none' && time.from != 'none'">{{option.label}}</option>
+								</select>
+							</div>	
+							<div class="bis">bis</div>
+							<div class="select">
+								<select ng-model="time.to" ng-change="timeSelectChanged(time, 'to');">
+									<option ng-repeat="option in timeOption" value="{{option.time}}" ng-disabled="option.time == 'none' && time.to != 'none'">{{option.label}}</option>
+								</select>
+							</div>
+							<button class="delete" ng-click="deleteTimeRow($index)">Löschen</button>
+						</div>
+						
+						<button class="add" ng-show="selectedDay.times[selectedDay.times.length-1].to != 'none'" ng-disabled="selectedDay.times[selectedDay.times.length-1].to == 'none'" ng-click="addTimeRow()">Neue Zeitspanne</button>
+						
+						<button class="ok" ng-click="contextmenu.current = ''">OK</button>
+					</div>
+				</div>
+
+				<div class="summary" ng-show="systemRequest.firstGetSuggestion != ''">
+					<div class="get">
+						<h3>Abholen</h3>
+						<div class="day" ng-repeat="day in systemRequest.suggestions | filter: {type:'get'}">
+							<div class="name">{{ day.date | amDateFormat:'dd, DD.MM' }}</div>
+							<div class="time" ng-repeat="time in day.times">{{ time.from }} - {{ time.to }} Uhr</div>
+						</div>
+					</div>
+					<div class="back">
+						<h3>Zurückbringen</h3>
+						<div class="day" ng-repeat="day in systemRequest.suggestions | filter: {type:'back'}">
+							<div class="name">{{ day.date | amDateFormat:'dd, DD.MM' }}</div>
+							<div class="time" ng-repeat="time in day.times">{{ time.from }} - {{ time.to }} Uhr</div>
+						</div>
+					</div>
+				</div>
+				
+				<form ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstBackSuggestion != ''" name="requestForm" ng-submit="validRequest && sendRequest()">
+					<textarea name="message" ng-model="systemRequest.message" placeholder="Nachricht an {{ object.neighbor.accountName }}" ng-change="checkValidRequest()"></textarea>
+					
+					<div class="label">Wie möchtest du kontaktiert werden?</div>
+			
+					<label ng-if="currentNeighbor.fixnetPhone" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_fixnetPhone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.fixnetPhone }}</label>
+					<label ng-if="currentNeighbor.person1_mail" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_person1_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_mail }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
+					<label ng-if="currentNeighbor.person1_phone" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_person1_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_phone }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
+					<label ng-if="currentNeighbor.person2_mail" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_person2_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_mail }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
+					<label ng-if="currentNeighbor.person2_phone" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_person2_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_phone }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
+					
+
+					<input class="bt_dark" ng-class="{inactive: !validRequest }" type="submit" value="Anfrage senden">
+
+				</form>
+			</div>
+			
+			
+		</div>
+		
+		
 	</div>
+
 </div>

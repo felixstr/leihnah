@@ -1,0 +1,23 @@
+<div class="modalHead">
+	<a href class="close" ng-click="cancel()">schliessen</a>
+</div>
+
+<div class="modalBody">
+
+	<form name="lendConfirm" ng-submit="lendConfirm.$valid && send()">
+		
+		<div class="title">Bestätige die Termine für das Abholen und Zurückbringen</div>
+		
+		<div class="confirmData">
+			
+			{{ currentLend.getDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }} Uhr<br>bis<br>{{ currentLend.backDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }} Uhr
+			
+		</div>
+				
+		<div class="buttonContainer">
+			<input type="submit" class="bt_dark" type="submit" value="Termine bestätigen" ng-class="{inactive: !lendConfirm.$valid}">
+		</div>
+		
+	</form>
+</div>
+<div class="clear"></div>

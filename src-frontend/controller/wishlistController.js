@@ -1,5 +1,5 @@
-angular.module('Leihnah').controller('WishlistController', function($scope, $http, $state, AuthenticationService, auth) {
+angular.module('Leihnah').controller('WishlistController', function($scope, $http, $state, $log, AuthenticationService, auth) {
 
-	console.log('WishlistContainer')	
+	$log.debug('WishlistContainer')	
 
 });

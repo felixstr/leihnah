@@ -1,6 +1,7 @@
-angular.module('Leihnah').controller('ProfilBaseController', function($scope, $http, $state, $uibModal, AuthenticationService, auth) {
-
-	console.log('ProfilBaseController');
+angular.module('Leihnah').controller('ProfilBaseController', function($scope, $http, $state, $window, $uibModal, $log, AuthenticationService, auth, Piwik) {
+	Piwik.trackPageView($window.location.origin+'/profil/base');
+	
+	$log.debug('ProfilBaseController');
 
 	
 	
@@ -11,6 +12,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 			size: 'medium',
 			templateUrl: 'template/modal/editProfil.html',
 			controller: 'EditProfilController',
+			animation: true,
 			resolve: {
 				currentNeighbor: function () {
 					return $scope.currentNeighbor;
@@ -20,11 +22,11 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 		
 		modalInstance.result.then(function (neighbor) {
 			$scope.$parent.$parent.currentNeighbor = neighbor;
-			console.log('neighbor', neighbor);
-			console.log('$scope.$parent.$parent', $scope.$parent.$parent);
+			$log.debug('neighbor', neighbor);
+			$log.debug('$scope.$parent.$parent', $scope.$parent.$parent);
 			
 		}, function () {
-			console.log('Modal dismissed at: ' + new Date());
+			$log.debug('Modal dismissed at: ' + new Date());
 		});
 	}
 	
@@ -49,7 +51,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 			$scope.$parent.$parent.currentNeighbor = neighbor;
 			
 		}, function () {
-			console.log('Modal dismissed at: ' + new Date());
+			$log.debug('Modal dismissed at: ' + new Date());
 		});
 	}
 	
@@ -72,7 +74,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 			
 			
 		}, function () {
-			console.log('Modal dismissed at: ' + new Date());
+			$log.debug('Modal dismissed at: ' + new Date());
 		});
 		*/
 	}

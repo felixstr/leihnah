@@ -5,6 +5,7 @@ class ObjectEntity {
 	protected $categoryId = 0;
 	protected $active = 0;
 	protected $name = '';
+	protected $nameAlternatives = '';
 	protected $description = '';
 	protected $damage = '';
 	protected $gift = false;
@@ -14,6 +15,14 @@ class ObjectEntity {
 	
 	protected $categoryEntity = null;
 	protected $neighborEntity = null;
+	
+	protected $directContact_fixnetPhone = false;
+	protected $directContact_person1_mail = false;
+	protected $directContact_person1_phone = false;
+	protected $directContact_person2_mail = false;
+	protected $directContact_person2_phoen = false;
+	
+	protected $viewCount = 0;
 	
 	protected $error = false;
 	
@@ -31,17 +40,10 @@ class ObjectEntity {
 		
 		$sql = "
 			SELECT 
+				*,
 				pk_object AS id,
 				fk_user AS userId,
-				fk_category AS categoryId,
-				active,
-				name,
-				description,
-				damage,
-				gift,
-				image_1,
-				image_2,
-				image_3
+				fk_category AS categoryId
 			FROM object
 			WHERE 
 				pk_object = :id AND
@@ -54,9 +56,6 @@ class ObjectEntity {
 		$results = $stmt->fetchAll();
 		if (count($results) == 1) {
 			$this->loadRow($results[0]);
-			
-			
-			
 			
 		} else {
 			$this->error = true;
@@ -72,12 +71,22 @@ class ObjectEntity {
 		$this->categoryId = $row['categoryId'];
 		$this->active = $row['active'];
 		$this->name = $row['name'];
+		$this->nameAlternatives = $row['nameAlternatives'];
 		$this->description = $row['description'];
 		$this->damage = $row['damage'];
 		$this->gift = $row['gift'];
 		$this->image_1 = $row['image_1'];
 		$this->image_2 = $row['image_2'];
 		$this->image_3 = $row['image_3'];
+		$this->directContact_fixnetPhone = $row['directContact_fixnetPhone'];
+		$this->directContact_person1_mail = $row['directContact_person1_mail'];
+		$this->directContact_person1_phone = $row['directContact_person1_phone'];
+		$this->directContact_person2_mail = $row['directContact_person2_mail'];
+		$this->directContact_person2_phone = $row['directContact_person2_phone'];
+		
+		if (isset($row['viewCount'])) {	
+			$this->viewCount = $row['viewCount'];
+		}
 		
 		$this->neighborEntity = NeighborEntity::factory($this->db)
 			->setUserId($this->userId)
@@ -97,29 +106,13 @@ class ObjectEntity {
 				object
 			SET
 				fk_user = :userId,
-				fk_category = :categoryId,
 				active = :active,
-				name = :name,
-				description = :description,
-				damage = :damage,
-				gift = :gift,
-				image_1 = :image_1,
-				image_2 = :image_2,
-				image_3 = :image_3,
 				createDate = NOW(),
 				deleted = 0
 		";
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':userId', $this->userId, PDO::PARAM_INT);
-		$stmt->bindParam(':categoryId', $this->categoryId, PDO::PARAM_STR);
 		$stmt->bindParam(':active', $this->active, PDO::PARAM_INT);
-		$stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
-		$stmt->bindParam(':description', $this->description, PDO::PARAM_STR);
-		$stmt->bindParam(':damage', $this->damage, PDO::PARAM_STR);
-		$stmt->bindParam(':gift', $this->gift, PDO::PARAM_INT);
-		$stmt->bindParam(':image_1', $this->image_1, PDO::PARAM_STR);
-		$stmt->bindParam(':image_2', $this->image_2, PDO::PARAM_STR);
-		$stmt->bindParam(':image_3', $this->image_3, PDO::PARAM_STR);
 		$execute_result = $stmt->execute();
 		
 		if ($execute_result === false) {
@@ -141,12 +134,18 @@ class ObjectEntity {
 				fk_category = :categoryId,
 				active = :active,
 				name = :name,
+				nameAlternatives = :nameAlternatives,
 				description = :description,
 				damage = :damage,
 				gift = :gift,
 				image_1 = :image_1,
 				image_2 = :image_2,
 				image_3 = :image_3,
+				directContact_fixnetPhone = :directContact_fixnetPhone,
+				directContact_person1_mail = :directContact_person1_mail,
+				directContact_person1_phone = :directContact_person1_phone,
+				directContact_person2_mail = :directContact_person2_mail,
+				directContact_person2_phone = :directContact_person2_phone,
 				changeDate = NOW(),
 				deleted = 0
 			WHERE
@@ -157,17 +156,30 @@ class ObjectEntity {
 		echo $sql;
 		echo $this->name;
 */
+		
+// 		echo 'asdf'.$this->image_3;
+		
 		$stmt = $this->db->prepare($sql);
+		
+		$description = strip_tags($this->description);
+		$damage = strip_tags($this->damage);
+		
 		$stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 		$stmt->bindParam(':categoryId', $this->categoryId, PDO::PARAM_INT);
 		$stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+		$stmt->bindParam(':nameAlternatives', $this->nameAlternatives, PDO::PARAM_STR);
 		$stmt->bindParam(':active', $this->active, PDO::PARAM_INT);
-		$stmt->bindParam(':description', $this->description, PDO::PARAM_STR);
-		$stmt->bindParam(':damage', $this->damage, PDO::PARAM_STR);
+		$stmt->bindParam(':description', $description, PDO::PARAM_STR);
+		$stmt->bindParam(':damage', $damage, PDO::PARAM_STR);
 		$stmt->bindParam(':gift', $this->gift, PDO::PARAM_STR);
 		$stmt->bindParam(':image_1', $this->image_1, PDO::PARAM_STR);
 		$stmt->bindParam(':image_2', $this->image_2, PDO::PARAM_STR);
 		$stmt->bindParam(':image_3', $this->image_3, PDO::PARAM_STR);
+		$stmt->bindParam(':directContact_fixnetPhone', $this->directContact_fixnetPhone, PDO::PARAM_INT);
+		$stmt->bindParam(':directContact_person1_mail', $this->directContact_person1_mail, PDO::PARAM_INT);
+		$stmt->bindParam(':directContact_person1_phone', $this->directContact_person1_phone, PDO::PARAM_INT);
+		$stmt->bindParam(':directContact_person2_mail', $this->directContact_person2_mail, PDO::PARAM_INT);
+		$stmt->bindParam(':directContact_person2_phone', $this->directContact_person2_phone, PDO::PARAM_INT);
 		$execute_result = $stmt->execute();
 		
 		if ($execute_result === false) {
@@ -219,13 +231,19 @@ class ObjectEntity {
 	public function setCategoryId($value){ $this->categoryId = $value; return $this; }
 	public function setActive($value){ $this->active = $value ? 1 : 0; return $this; }
 	public function setName($value){ $this->name = $value; return $this; }
+	public function setNameAlternatives($value){ $this->nameAlternatives = $value; return $this; }
 	public function setDescription($value){ $this->description = $value; return $this; }
 	public function setDamage($value){ $this->damage = $value; return $this; }
 	public function setGift($value){$this->gift = $value ? 1 : 0; return $this;}
-	public function setImage_1($value){ if ($value !== false) { $this->image_1 = $value; } return $this;}
-	public function setImage_2($value){ if ($value !== false) { $this->image_2 = $value; } return $this;}
-	public function setImage_3($value){ if ($value !== false) { $this->image_3 = $value; } return $this;}
+	public function setImage_1($value){ $this->image_1 = $value; return $this;}
+	public function setImage_2($value){  $this->image_2 = $value;  return $this;}
+	public function setImage_3($value){  $this->image_3 = $value;  return $this;}
 
+	public function setDirectContact_fixnetPhone($value) { $this->directContact_fixnetPhone = ($value == 'yes') ? 1 : 0; return $this;}
+	public function setDirectContact_person1_mail($value) { $this->directContact_person1_mail = ($value == 'yes') ? 1 : 0; return $this;}
+	public function setDirectContact_person1_phone($value) { $this->directContact_person1_phone = ($value == 'yes') ? 1 : 0; return $this;}
+	public function setDirectContact_person2_mail($value) { $this->directContact_person2_mail = ($value == 'yes') ? 1 : 0; return $this;}
+	public function setDirectContact_person2_phone($value) { $this->directContact_person2_phone = ($value == 'yes') ? 1 : 0; return $this;}
 	
 	
 	public function toArray() { 
@@ -234,16 +252,24 @@ class ObjectEntity {
 		$array = array(
 			'id' => $this->id,	
 			'name' => $this->name,	
+			'nameAlternatives' => $this->nameAlternatives,	
 			'active' => $this->active == 1,	
 			'description' => $this->description,	
+			'descriptionFormatted' => nl2br($this->description),	
 			'damage' => $this->damage,
 			'gift' => $this->gift == 1,
 			'image_1' => $this->image_1,	
 			'image_2' => $this->image_2,
 			'image_3' => $this->image_3,
 			'categoryId' => $this->categoryId,
+			'directContact_fixnetPhone' => $this->directContact_fixnetPhone == 1,
+			'directContact_person1_mail' => $this->directContact_person1_mail == 1,
+			'directContact_person1_phone' => $this->directContact_person1_phone == 1,
+			'directContact_person2_mail' => $this->directContact_person2_mail == 1,
+			'directContact_person2_phone' => $this->directContact_person2_phone == 1,
 			'neighbor' => $this->neighborEntity->toArray(),
-			'category' => $this->categoryEntity->toArray()
+			'category' => $this->categoryEntity->toArray(),
+			'viewCount' => $this->viewCount
 		);
 		
 		

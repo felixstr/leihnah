@@ -1,21 +1,34 @@
-<!-- <p>authenticated-home: {{ authenticated }}</p> -->
-
-<section id="containerLandingPage">
+<section id="containerLandingPage" class="contentContainer">
+	<img class="logo" src="assets/img/static/leihnah-logo.svg" />
 	
-
-
+	<section class="info">
+		
+		
+		<h1>LEIHNAH am Entstehen...</h1>
+		<p>LEIHNAH ist eine Plattform, welche das kostenlose Leihen und Verleihen in bestehenden Siedlungen vereinfachen und fördern soll.</p>
+		<p>Das Projekt ist meine Bachelorarbeit im Studiengang Interaction Design an der Zürcher Hochschule der Künste (ZHdK). Auf dieser Website soll bis zum 8. Mai ein Prototyp entstehen, mit welchem das gemeinsame Nutzen von Gegenständen mit den Nachbarn versuchsweise getestet werden kann. Der Prototyp wird an der Diplomausstellung im Toni-Areal vom 10. - 19. Juni präsentiert.</p>
+		<p>Während der aktuellen Entwicklungsphase können BewohnerInnen der drei Siedlungen <i>Neubühl</i>, <i>Im Tiergarten</i> und <i>Riedtli</i> ihre Gegenstände erfassen. Zu Beginn werden alle erfassten Gegenstände der drei Siedlungen in denselben Katalog aufgenommen. Das heisst, es sind auch Gegenstände von BewohnerInnen aus anderen Siedlungen ersichtlich. Abhängig von der Anzahl der am Projekt teilnehmenden BewohnerInnen, werden die Siedlungen später getrennt, sodass das Leihen und Verleihen in der realen Nachbarschaft stattfinden kann.</p>
+		<p>Ziel ist es, an der Diplomausstellung eine virtuelle Test-Siedlung aus allen drei Siedlungen demonstrieren zu können. Selbstverständlich werden an der Ausstellung die BewohnerInnen anonymisiert (Name, Kontaktdaten und Adresse).</p>
+		<p><br>Bei Fragen oder Anregungen darfst du mich gerne kontaktieren:<br>Felix Stricker<br>0792220174<br><a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a></p>
+	</section>
+	
 	<section class="login">
 		<h2>Anmelden</h2>
-		<div class="message" ng-if="fail != null">
-			<div ng-if="fail == 'unkown'">Der Benutzername exisitert nicht</div>
-			<div ng-if="fail == 'credentials'">Das Passwort ist nicht korrekt</div>
-			<div ng-if="fail == 'inactive'">Dein Benutzerkonto ist nicht freigeschaltet</div>
-		</div>
+		<p>Wohnst du in einer der Siedlungen <i>Neubühl</i>, <i>Im Tiergarten</i> oder <i>Riedtli</i> und hast noch kein Login? Schreib mir eine eMail, ich werde für dich gerne ein Test-Benutzerlogin einrichten.<br /><a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a></p>
+		<p>Sobald du das Login erhalten hast, kannst du dich hier anmelden.</p>
 		
-		<form name="login" ng-submit="login.$valid && loginUser()">
-			<input type="text" ng-model="loginInfo.username" placeholder="Benutzername" ng-minlength="3" required>
-			<input class="elPassword" type="password" ng-model="loginInfo.password" placeholder="Passwort" required>
-			<button type="submit">Anmelden</button>
+		
+		
+		<form name="login" ng-submit="loginUser()">
+			<div class="message" ng-if="fail != null">
+				<div ng-if="fail == 'unkown'">Der Benutzername existiert nicht</div>
+				<div ng-if="fail == 'credentials'">Das Passwort ist nicht korrekt</div>
+				<div ng-if="fail == 'inactive'">Dein Benutzerkonto ist nicht freigeschaltet</div>
+			</div>
+			
+			<input type="text" ng-model="loginInfo.username" placeholder="Benutzername">
+			<input class="elPassword" type="password" ng-model="loginInfo.password" placeholder="Passwort">
+			<button class="bt_dark" type="submit">Anmelden</button>
 		</form>
 	</section>
 		

@@ -1,44 +1,63 @@
 <div class="modalHead">
-	<a href class="close" ng-click="cancel()">schliessen (X)</a>
+	<a href class="close" ng-click="cancel()">schliessen</a>
 </div>
 
-<form name="editProfil" ng-submit="editProfil.$valid && save()">
-    <div class="formRowImage">
-		<label>Profilbild</label>
-		<input type="file" ngf-select ng-model="profilImage.file" name="image" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
-		<i ng-show="editProfil.image.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
-		<img ng-show="editProfil.image.$valid" ngf-thumbnail="profilImage.file" class="thumb"> 
-		<img ng-show="currentNeighbor.AccountImage != '' && profilImage.file === undefined" ng-src="assets/img/profil/{{ currentNeighbor.accountImage }}" class="thumb"> 
-    </div>
-    
-    <div class="formRow">
-	    <label>Anzeige Name</label>
-		<input type="text" name="accountName" ng-model="currentNeighbor.accountName" ng-minlength="3" required>
-		<i ng-show="editProfil.accountName.$error.required">*required</i>
-    </div>
-    
-    <div class="formRow">
-		<label>Strasse, Nr</label>
-		<input type="text" name="address" ng-model="currentNeighbor.address" ng-minlength="3" required>
-		<i ng-show="editProfil.address.$error.required">*required</i>
-	</div>
-	
-	<div class="formRow">
-		<label>Festnetz Telefon</label>
-		<input type="text" name="fixnetPhone" ng-model="currentNeighbor.fixnetPhone" ng-minlength="10" ng-maxlength="15" ng-pattern="/^\d+$/">
-		<i ng-show="editProfil.fixnetPhone.$error.pattern">nur Zahlen sind erlaubt</i>
-		<i ng-show="editProfil.fixnetPhone.$error.minlength">minestens 10 Zeichen sind nötig</i>
-		<i ng-show="editProfil.fixnetPhone.$error.maxlength">zuviele Zeichen in der Nummer</i>
-	</div>
-	
-	<div class="formRow">
-		<label>Beschreibung</label>
-		<textarea name="description" ng-model="currentNeighbor.description" ng-minlength="3"></textarea>
-	</div>
-	
-	
-	<div class="buttonContainer">
-		<input type="submit" class="btPrimary" type="submit" value="Ändern">
-	</div>
-	
-</form>
+<div class="modalBody">
+
+	<form name="editProfil" ng-submit="editProfil.$valid && save()">
+	    <div class="formRowImage">
+			<div class="picAdd round">
+				<div class="image" ng-show="editProfil.image.$valid" ngf-background="profilImage.file"></div>
+				<div class="image" ng-show="currentNeighbor.accountImage != '' && profilImage.file === undefined" ng-style="{'background-image':'url(assets/img/profil/'+currentNeighbor.accountImage+')'}"> </div>
+				
+				<a class="new" href >Neues Bild</a>
+				
+				<input type="file" ngf-select ng-model="profilImage.file" name="image" accept="image/*" ngf-max-size="2MB" ngf-model-invalid="errorFiles">
+				
+				
+			</div>
+			<i ng-show="editProfil.image.$error.maxSize">Die Datei ist zu Gross {{errorFiles[0].size / 1000000|number:1}}MB: max 2MB</i>
+			 
+			
+	    </div>
+	    
+	    <div class="formRow" ng-class="{ error: editProfil.accountName.$error.required }">
+		    <label>Anzeige Name</label>
+			<input type="text" name="accountName" ng-model="currentNeighbor.accountName" ng-minlength="3" required autocomplete="off">
+			<div class="warning" ng-show="editProfil.accountName.$error.required">Pflichtfeld</div>
+	    </div>
+	    
+	    <div class="formRow" ng-class="{ error: editProfil.address.$error.required }">
+			<label>Strasse, Nr</label>
+			<input type="text" name="address" ng-model="currentNeighbor.address" ng-minlength="3" required autocomplete="off">
+			<div class="warning" ng-show="editProfil.address.$error.required">Pflichtfeld</div>
+		</div>
+
+		<div class="formRow" ng-class="{ error: editProfil.fixnetPhone.$error.pattern || editProfil.fixnetPhone.$error.minlength || editProfil.fixnetPhone.$error.maxlength }">
+			<label>Festnetz Telefon</label>
+			<input type="text" name="fixnetPhone" ng-model="currentNeighbor.fixnetPhone" ng-minlength="10" ng-maxlength="15" ng-pattern="/^[\d ]*$/" autocomplete="off" placeholder="z.B. 044 123 45 67">
+			<div class="warning" ng-show="editProfil.accountName.$error.pattern || editProfil.fixnetPhone.$error.minlength || editProfil.fixnetPhone.$error.maxlength" >
+				<span ng-show="editProfil.fixnetPhone.$error.pattern">Nur Zahlen und Leerzeichen sind erlaubt. </span>
+				<span ng-show="editProfil.fixnetPhone.$error.minlength">Mindestens 10 Zeichen sind nötig. </span>
+				<span ng-show="editProfil.fixnetPhone.$error.maxlength">Zuviele Zeichen. </span>
+			</div>
+		</div>
+		
+		<div class="formRow">
+			<label>Beschreibung</label>
+			<textarea name="description" ng-model="currentNeighbor.description" ng-minlength="3" placeholder="z.B. Wir sind seit über sechs Jahren eine WG und haben in dieser Zeit einige Dinge gekauft, die wir nur selten brauchen. Gerne könnt ihr eine Auswahl davon bei uns ausleihen..."></textarea>
+		</div>
+		
+		<div class="formRow">
+			<label>Bevorzugte Zeit für Übergabetermine</label>
+			<textarea name="descriptionAvailable" ng-model="currentNeighbor.descriptionAvailable" ng-minlength="3" placeholder="z.B. Unter der Woche ab 18 Uhr. Am Wochenende unterschiedlich."></textarea>
+		</div>
+		
+		
+		<div class="buttonContainer">
+			<input type="submit" class="bt_dark" type="submit" value="Ändern" ng-class="{inactive: !editProfil.$valid}">
+		</div>
+		
+	</form>
+</div>
+<div class="clear"></div>

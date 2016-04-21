@@ -1,22 +1,22 @@
-angular.module('Leihnah').controller('ProfilObjectsController', function($scope, $http, $state, $uibModal, AuthenticationService, auth, CategoryService) {
-
-	console.log('ProfilObjectsController');
+angular.module('Leihnah').controller('ProfilObjectsController', function($scope, $http, $state, $window, $uibModal, $log, AuthenticationService, auth, CategoryService, Piwik) {
+	Piwik.trackPageView($window.location.origin+'/profil/objects');
+	
+	$log.debug('ProfilObjectsController');
 	
 	$scope.objects = '';
-	
 	
 	$scope.loadObjects = function() {
 		$http.get('api/object/own', {
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				console.log('loadObjects', response);
+				$log.debug('loadObjects', response);
 				if (response.ok) {
 					$scope.objects = response.objects;
 				}
 			})
 			.error(function(error) {
-				console.log(error);
+				$log.debug(error);
 			});
 	}
 	
@@ -40,15 +40,22 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 					}); 
 									
 					return deferred.promise;
+				},
+				currentNeighbor : function() {
+					return $scope.$parent.$parent.currentNeighbor;
 				}
 			}
 		});
 		
 		modalInstance.result.then(function () {
 			$scope.loadObjects();
+			$scope.$parent.$parent.loadObjects();
+			CategoryService.loadCategories(function(categories) {
+				$scope.$parent.$parent.categories = categories;
+			});
 			
 		}, function () {
-			console.log('Modal dismissed at: ' + new Date());
+			$log.debug('Modal dismissed at: ' + new Date());
 		});
 	}
 	
@@ -68,9 +75,13 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 		
 		modalInstance.result.then(function () {
 			$scope.loadObjects();
+			$scope.$parent.$parent.loadObjects();
+			CategoryService.loadCategories(function(categories) {
+				$scope.$parent.$parent.categories = categories;
+			});
 			
 		}, function () {
-			console.log('Modal dismissed at: ' + new Date());
+			$log.debug('Modal dismissed at: ' + new Date());
 		});
 	}
 	
@@ -90,11 +101,42 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 		
 		modalInstance.result.then(function () {
 			$scope.loadObjects();
+			$scope.$parent.$parent.loadObjects();
+			CategoryService.loadCategories(function(categories) {
+				$scope.$parent.$parent.categories = categories;
+			});
 			
 		}, function () {
-			console.log('Modal dismissed at: ' + new Date());
+			$log.debug('Modal dismissed at: ' + new Date());
 		});
 	}
+	
+	
+	$scope.activation = function (object) {
+
+		var url = 'api/object/'+object.id;
+// 		$log.debug(url);
+		
+		var data = object;
+		data.active = !object.active;
+			
+		$http.post(url, data, {
+			headers: { 'auth-token': AuthenticationService.getLocalToken() }
+		})
+		.success(function(response) {
+			
+			$scope.loadObjects();
+			$scope.$parent.$parent.loadObjects();
+			CategoryService.loadCategories(function(categories) {
+				$scope.$parent.$parent.categories = categories;
+			});
+			
+		})
+		.error(function(error) {
+			$log.debug(error);
+		});
+	
+	};
 	
 	
 	$scope.loadObjects();

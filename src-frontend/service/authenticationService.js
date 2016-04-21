@@ -1,4 +1,4 @@
-angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", function($http, $state) {
+angular.module('Leihnah').service('AuthenticationService', function($http, $log, $state) {
 	var self = this;
 	
 	self.currentUser = null;
@@ -7,14 +7,14 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 	
 	self.checkAuthentication = function(callback) {
 		if (self.authenticationChecked) {
-			console.log('authentication already checked');
+			$log.debug('authentication already checked');
 			if (self.currentUser === null) {
 				callback(false);
 			} else {
 				callback(true, self.currentUser);
 			}
 		} else {
-// 			console.log('check authentication - token: ', self.getLocalToken());
+// 			$log.debug('check authentication - token: ', self.getLocalToken());
 		
 			self.loadUserInfo(callback)
 		
@@ -27,7 +27,7 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 
 		try {
 	        if (localStorage['token']) {
-// 				console.log(localStorage['token']);
+// 				$log.debug(localStorage['token']);
 				token = JSON.parse(localStorage['token']);
 			}
 	    } catch (e) {
@@ -43,7 +43,7 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 			headers: { 'auth-token': self.getLocalToken() }
 		})
 		.success(function(response) {
-			console.log('userinfo-response', response);
+			$log.debug('userinfo-response', response);
 			if (response.authenticated) {
 				self.currentUser = response.user;
 				self.authenticated = true;
@@ -85,4 +85,4 @@ angular.module('Leihnah').service('AuthenticationService', ["$http", "$state", f
 		self.currentUser = null;
 	}
 	
-}]);
+});
