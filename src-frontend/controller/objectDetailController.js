@@ -1,7 +1,7 @@
-angular.module('Leihnah').controller('ObjectDetailController', function($scope, $http, $stateParams, $window, $log, $document, $timeout, $window, AuthenticationService, auth, $uibModal, CategoryService, Piwik, $state, ContextmenuService) {
+angular.module('Leihnah').controller('ObjectDetailController', function($scope, $http, $stateParams, $window, $log, $document, $timeout, $window, AuthenticationService, ContextBoxService, auth, $uibModal, CategoryService, Piwik, $state, ContextmenuService) {
 	Piwik.trackPageView($window.location.origin+'/object/'+$stateParams.objectId);
 	
-	document.body.scrollTop = document.documentElement.scrollTop = 0;
+// 	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	
 	$scope.$parent.lastObjectId = $stateParams.objectId; // @todo: needet?
 	
@@ -64,8 +64,9 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		$log.debug('sendRequest: request', $scope.systemRequest);
 		
 		var data = $scope.systemRequest;
+		data.suggestions = $scope.cleanedSuggestions;
 		data.objectId = $scope.object.id;
-		$log.debug('data', data);
+// 		$log.debug('data', data);
 		
 		var url = 'api/lend/start';
 			
@@ -91,36 +92,25 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		type: 'get',
 		times: [
 			{ from: '', to: '' }
-		],
-		chooseType: true
+		]
 	}
 	
 	$scope.timeOption = [
-		{ time: 'none', label: 'Auswahl' },
-		{ time: '07', label: '07:00' },
-		{ time: '08', label: '08:00' },
-		{ time: '09', label: '09:00' },
-		{ time: '10', label: '10:00' },
-		{ time: '11', label: '11:00' },
-		{ time: '12', label: '12:00' },
-		{ time: '13', label: '13:00' },
-		{ time: '14', label: '14:00' },
-		{ time: '15', label: '15:00' },
-		{ time: '16', label: '16:00' },
-		{ time: '17', label: '17:00' },
-		{ time: '18', label: '18:00' },
-		{ time: '19', label: '19:00' },
-		{ time: '20', label: '20:00' },
-		{ time: '21', label: '21:00' },
-		{ time: '22', label: '22:00' },
-		{ time: '23', label: '23:00' },
-		{ time: '00', label: '00:00' },
-		{ time: '01', label: '01:00' },
-		{ time: '02', label: '02:00' },
-		{ time: '03', label: '03:00' },
-		{ time: '04', label: '04:00' },
-		{ time: '05', label: '05:00' },
-		{ time: '06', label: '06:00' },
+		{ from: '07', to: '08' },
+		{ from: '08', to: '09' },
+		{ from: '09', to: '10' },
+		{ from: '10', to: '11' },
+		{ from: '11', to: '12' },
+		{ from: '12', to: '13' },
+		{ from: '13', to: '14' },
+		{ from: '14', to: '15' },
+		{ from: '15', to: '16' },
+		{ from: '16', to: '17' },
+		{ from: '17', to: '18' },
+		{ from: '18', to: '19' },
+		{ from: '19', to: '20' },
+		{ from: '20', to: '21' },
+		{ from: '21', to: '22' }
 	];
 	
 	
@@ -133,38 +123,19 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		return dateString;
 	}
 	
-	$scope.change = function() {
+	$scope.change = function(type) {
 		var currentDate = $scope.dt;
 		$log.debug('changed2', currentDate);
 		
 		
 		var dateString = getDateString(currentDate);
-		$log.debug(dateString);
-		
-		// type
-		var type = 'get';
-		var chooseType = true;
-		var currentD = new Date(dateString);
-		$log.debug('currentD', currentD);
-		$log.debug('firstGetSuggestion', $scope.systemRequest.firstGetSuggestion);
-		$log.debug('check', (currentD < new Date($scope.systemRequest.firstGetSuggestion)));
-		if ($scope.systemRequest.lastGetSuggestion != '' && currentD < new Date($scope.systemRequest.lastGetSuggestion)) {
-			type = 'get';
-			chooseType = false;
-		}
-		if ($scope.systemRequest.firstBackSuggestion != '' && currentD > new Date($scope.systemRequest.firstBackSuggestion)) {
-			type = 'back';
-			chooseType = false;
-		}
+// 		$log.debug(dateString);
 		
 		// suggestion
 		var suggestion = {
 			date: dateString,
 			type: type,
-			times: [
-				{ from: 'none', to: 'none' }
-			],
-			chooseType: chooseType
+			times: []
 		};
 		
 		$log.debug('suggestion', suggestion);
@@ -180,67 +151,71 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		$scope.selectedDay = suggestion;
 		
 		$timeout(function() {
-			var activeElement = document.querySelector("button.btn.active");
-			var boxDay = activeElement.getBoundingClientRect();
-			var boxCalendar = document.querySelector("#calendar").getBoundingClientRect();
-// 			$log.debug('activeElement', boxDay);
-			var left = (activeElement.offsetWidth/2) + boxDay.left - boxCalendar.left;
-			var top = activeElement.offsetHeight + boxDay.top - boxCalendar.top;
+		
+			$document.scrollToElement($("#calendar-"+type+" button.btn.active"), 20, 500);
 			
-			document.querySelector("#timepicker").setAttribute('style', "left: "+left+"px; top: "+top+"px");
-			
-			ContextmenuService.current = 'timepicker';
+			// timpicker box
+		    ContextBoxService.setTargetElement($("#calendar-"+type+" button.btn.active"));
+		    ContextBoxService.setHorizontalAlign('right');
+		    ContextBoxService.setId('timepicker');	    
+		    ContextBoxService.show();
+		    ContextBoxService.onClose(function() {
+			    var calendar = document.querySelector("#requestContent");
+				$document.scrollToElement(angular.element(calendar), 20, 500);
+		    });
+		    ContextBoxService.dt = $scope.dt;
+		    ContextBoxService.timeOption = $scope.timeOption;
+   
 			
 		}, 5);
 		
 		$log.debug($scope.selectedDay);
+
+		
 	}
 	
-	$scope.switchType = function() {
-		$scope.selectedDay.type = $scope.selectedDay.type == 'get' ? 'back' : 'get';
 	
-		$scope.updateSuggestion();
+	$scope.contextBox.isTimeActive = function(currentTime) {
+		var result = false;
+		angular.forEach($scope.selectedDay.times, function(time, keyT) {
+			if (currentTime.from >= time.from && currentTime.to <= time.to) {
+				result = true;
+			}
+		});
+		
+		return result;
+		
 	}
+
 	
-	$scope.timeSelectChanged = function(time, type) {
-		var intFrom = parseInt(time.from);
-		var intTo = parseInt(time.to);
+	$scope.contextBox.timeClicked = function(clickedTime, type) {
+		$log.debug('time', clickedTime);
+		$log.debug('type', clickedTime);
 		
-		var from = intFrom.toString();
-		var to = intTo.toString();
+		$log.debug('selectedDay1', $scope.selectedDay);
 		
-		
-		if (type == 'from') {
-			if (time.to == 'none' || intTo <= intFrom) {
-				if (intFrom < 23) {
-					to = (intFrom + 1).toString();
-				} else {
-					to = '0';
-				}
+		var add = true;
+		var addPosition = 0;
+		angular.forEach($scope.selectedDay.times, function(time, keyT) {
+			if (time.to == clickedTime.to) {
+				add = false;
+				$scope.selectedDay.times.splice(keyT,1);
 			}
-		} else {
 			
-			$log.debug('intFrom', intFrom);
-			$log.debug('intTo', intTo);
-			
-			if (time.from == 'none' || intTo <= intFrom) {
-				if (intTo < 23 && intTo > 0) {
-					from = (intTo-1).toString();
-				} else if (intTo > 0) {
-					from = '1';
-				} else {
-					from = '23';
-				}
+			if (clickedTime.to > time.to) {
+				addPosition = keyT+1;
 			}
+			
+		});
 		
+		if (add) {
+			$scope.selectedDay.times.splice(addPosition, 0, clickedTime);
 		}
 		
-		time.to = (to.length == 1 ? '0'+to : to);
-		time.from = (from.length == 1 ? '0'+from : from);
-		
-		
-		$log.debug(time);
 		$scope.updateSuggestion();
+		
+		$log.debug('selectedDay2', $scope.selectedDay);
+		
 	}
 	
 	$scope.updateSuggestion = function() {
@@ -249,7 +224,7 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		
 
 		
-		if (selectedDay.times.length > 0 && selectedDay.times[0].from != 'none' && selectedDay.times[0].to != 'none') {
+		if (selectedDay.times.length > 0) {
 			selectedDay.valid = true;
 
 		} else {
@@ -259,30 +234,42 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		
 // 		$log.debug('selectedDay', selectedDay);
 		
-		var newDay = true;
 		
 		
 		$log.debug('systemRequest.suggestions1', $scope.systemRequest);
 		
+		var newDay = true;
+		var newPosition = 0;
 		angular.forEach($scope.systemRequest.suggestions, function(value, key) {
 			$log.debug('sug', value);
-			if (value.date == $scope.selectedDay.date) {
-				$scope.systemRequest.suggestions[key] = selectedDay;
-				
-				if ($scope.selectedDay.times.length == 0 || $scope.selectedDay.times[0] == 'none') {
-					$scope.systemRequest.suggestions.splice(key, 1);
-					$log.debug('delete');
+			
+			if ($scope.selectedDay.type == value.type) {
+			
+				if (value.date == $scope.selectedDay.date) {
+					
+					$scope.systemRequest.suggestions[key] = selectedDay;
+					
+					if ($scope.selectedDay.times.length == 0 || $scope.selectedDay.times[0] == 'none') {
+						$scope.systemRequest.suggestions.splice(key, 1);
+// 						$log.debug('delete');
+					}
+					
+					newDay = false;
 				}
 				
-				newDay = false;
+				if ($scope.selectedDay.date > value.date) {
+					newPosition = key+1;
+				}
+				
 			}
-			
 			
 		});
 		
 		if (newDay && $scope.selectedDay.times.length > 0 && $scope.selectedDay.times[0].to != 'none') {
-			$scope.systemRequest.suggestions.push(selectedDay);
+			$scope.systemRequest.suggestions.splice(newPosition, 0, selectedDay);
 		}
+		
+		cleanSuggestions();
 		
 		calculateEnds();
 		
@@ -291,6 +278,45 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		$scope.checkValidRequest();
 		
 		$log.debug('systemRequest.suggestion2', $scope.systemRequest);
+	}
+	
+	$scope.cleanedSuggestions = [];
+	
+	var cleanSuggestions = function() {
+		var oldOrder = angular.copy($scope.systemRequest.suggestions);
+		$scope.cleanedSuggestions = [];
+		
+		angular.forEach(oldOrder, function(suggestion, key) {
+			$log.debug('befor: ', suggestion);
+			var times = [];
+			angular.forEach(suggestion.times, function(time, keyT) {
+				if (times.length == 0) {
+					times.push(time);
+				} else {
+/*
+					$log.debug('times[times.length-1]', times[times.length-1]);
+					$log.debug('times[times.length-1].to', times[times.length-1].to);
+					$log.debug('time.from', time.from);
+*/
+					
+					if (times[times.length-1].to == time.from) {
+						times[times.length-1].to = time.to;
+					} else {
+						times.push(time);
+					}
+				}
+				
+			});
+			
+			$scope.cleanedSuggestions.push({
+				date: suggestion.date,
+				type: suggestion.type,
+				times: times
+			})
+			
+		});
+		
+		$log.debug('scope.cleanedSuggestions: ', $scope.cleanedSuggestions);
 	}
 	
 	var calculateEnds = function() {
@@ -317,32 +343,7 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 			}
 		});
 	}
-	
-	$scope.addTimeRow = function() {
-		var from = 'none';
-		var to = 'none';
-		
-		if ($scope.selectedDay.times.length > 0) {
-			var lastTo = parseInt($scope.selectedDay.times[$scope.selectedDay.times.length-1].to);
-			
-			
-			if (lastTo < 22) {
-				from = (lastTo+2).toString();
-				to = (lastTo+3).toString();
-			
-			}
-			$log.debug(lastTo);
-		}
-		$scope.selectedDay.times.push({ from: from, to: to });
-		
-		$scope.updateSuggestion();
-	}
-	
-	$scope.deleteTimeRow = function(index) {
-		$scope.selectedDay.times.splice(index, 1);
-			
-		$scope.updateSuggestion();
-	}
+
 
 	var getDayClass = function(data) {
 		
@@ -368,21 +369,53 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 			result += ' suggestion_between_ends';
 		}
 		
+		if (new Date(dateString).setHours(0,0,0,0) == new Date().setHours(0,0,0,0)) {
+			result += ' today';
+		}
+		
 // 		$log.debug('getDayClass', result);
 				
 		return result;
 	}
-	var isDisabled = function(data) {
+	
+	var isDisabledBack = function(data) {
 // 		$log.debug(data);
-		return false;
+		var result = false;
+		var dateString = getDateString(data.date);
+		if (new Date(dateString) <= new Date($scope.systemRequest.lastGetSuggestion)) {
+			result = true;
+		}
+
+
+		return result;
 	}
 	
+	var isDisabledGet = function(data) {
+// 		$log.debug(data);
+		var result = false;
+		var dateString = getDateString(data.date);
+		if (new Date(dateString) >= new Date($scope.systemRequest.firstBackSuggestion)) {
+			result = true;
+		}
 
+
+		return result;
+	}
 	
 	
-	$scope.calendarOptions = {
+	$scope.calendarOptionsGet = {
 		customClass: getDayClass,
-		dateDisabled: isDisabled,
+		dateDisabled: isDisabledGet,
+		minDate: new Date(),
+		showWeeks: false,
+		maxMode: 'day',
+		shortcutPropagation: false,
+		startingDay: 1
+	};
+	
+	$scope.calendarOptionsBack = {
+		customClass: getDayClass,
+		dateDisabled: isDisabledBack,
 		minDate: new Date(),
 		showWeeks: false,
 		maxMode: 'day',
@@ -392,16 +425,54 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 	
 	
 	var renderDatepicker = function() {
-		$scope.dt = new Date($scope.dt.getTime() + 1);
+		$scope.$broadcast('refreshDatepickers');
 	}
 	
 	$scope.validRequest = false;
 	$scope.checkValidRequest = function() {
-		$scope.validRequest = $scope.systemRequest.firstGetSuggestion != '' && $scope.systemRequest.firstBackSuggestion != '' && $scope.systemRequest.message != '';
+		var result = $scope.systemRequest.firstGetSuggestion != '' && $scope.systemRequest.firstBackSuggestion != '' && $scope.systemRequest.message != '';
 		
-		$log.debug('validRequest', $scope.validRequest);
+		$log.debug('systemRequest', $scope.systemRequest);
+		$log.debug('validRequest1', result);
+		if (result) {
+			result = 
+				$scope.systemRequest.preferredContact_fixnetPhone == 'yes' || 
+				$scope.systemRequest.preferredContact_person1_mail == 'yes' || 
+				$scope.systemRequest.preferredContact_person1_phone == 'yes' || 
+				$scope.systemRequest.preferredContact_person2_mail == 'yes' || 
+				$scope.systemRequest.preferredContact_person2_phone == 'yes';
+		}
+		
+		$log.debug('validRequest2', result);
+		
+		$scope.validRequest = result;
+		
+		
 	}
 	$scope.checkValidRequest();
+	
+	
+	// step navigation
+	$scope.currentStep = 'step1';
+	$scope.next = function() {
+		if ($scope.currentStep == 'step1') {
+			$scope.currentStep = 'step2';
+		} else {
+			$scope.currentStep = 'step3';
+		}
+		
+		Piwik.trackPageView($window.location.origin+'/object/'+$stateParams.objectId+'/request/'+$scope.currentStep);
+	}
+	$scope.back = function() {
+		if ($scope.currentStep == 'step2') {
+			$scope.currentStep = 'step1';
+		} else {
+			$scope.currentStep = 'step2';
+		}
+		
+		Piwik.trackPageView($window.location.origin+'/object/'+$stateParams.objectId+'/request/'+$scope.currentStep);
+	}
+	
 	
 	// edit object	
 	$scope.openModalObject = function(object) {

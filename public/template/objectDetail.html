@@ -8,12 +8,14 @@
 	<div class="objectInfo">
 		
 		<div class="containerImage" ng-if="images.length > 0">
-			<ul rn-carousel rn-carousel-buffered rn-carousel-controls>
-				<li ng-repeat="image in images">
-					<div class="img" ng-style="{'background-image': 'url(assets/img/object/'+image+')'}"></div>
-				</li>
-			</ul>
-			
+			<div class="containerCarousel">
+				<div class="height"></div>
+				<ul rn-carousel rn-carousel-buffered rn-carousel-controls>
+					<li ng-repeat="image in images">
+						<div class="img" ng-style="{'background-image': 'url(assets/img/object/'+image+')'}"></div>
+					</li>
+				</ul>
+			</div>
 			<div class="footer">
 				<span class="profilImage medium" ng-style="profilImageBG"></span>
 				<div class="accountName">{{ object.neighbor.accountName }}</div>
@@ -38,7 +40,7 @@
 	<div class="requestInfo">
 		<h2>Ausleihen</h2>
 		<h4 ng-if="object.neighbor.descriptionAvailable != ''">Bevorzugte Zeit für Übergabetermine</h4>
-		<div class="availableText">{{ object.neighbor.descriptionAvailable }}</div>
+		<div class="availableText" ng-if="object.neighbor.descriptionAvailable != ''">«{{ object.neighbor.descriptionAvailable }}»</div>
 		
 		<div class="containerContact" ng-if="object.directContactTypes.length > 0">
 			<div class="title">Direkt kontaktieren</div>
@@ -68,83 +70,113 @@
 			
 			
 		</div>
-					
-		
-		<div class="or" ng-if="systemRequest.active && object.directContactTypes.length > 0">oder</div>
-		
-		
-		<div class="containerRequest" ng-if="systemRequest.active">
+									
+		<div class="containerRequest" ng-if="systemRequest.active" ng-class="{ 'timepicker-open': contextBox.id == 'timepicker' }">
 			<div class="title">Anfrage stellen</div>
-			<div class="content">
-				<p>Wähle möglichst unterschiedliche Termine für Übergabe und Rückgabe:</p>
+			<div class="content" id="requestContent">
 				
-				<div class="calendar" id="calendar">
-					
-					
-					<uib-datepicker template-url="template/datepicker/datepicker.html" ng-model="$parent.dt" datepicker-options="calendarOptions" ng-change="change()"></uib-datepicker>
-					
-					<p class="warning" ng-show="systemRequest.firstGetSuggestion == ''">Mindestens einen <span>Abholtermin</span> wählen</p>
-					<p class="warning" ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstBackSuggestion == ''">Mindestens einen <span>Rückgabetermin</span> wählen</p>
-					<p class="infoMessage" ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstBackSuggestion != ''">Weitere Terminvorschläge hinzufügen<br>oder Anfrage senden</p>
-					
-					<div id="timepicker" class="contextmenu medium timepicker" ng-show="contextmenu.current == 'timepicker'">
-						<div class="switcher" ng-class="{'chooseGet' : selectedDay.type == 'get', 'chooseBack': selectedDay.type == 'back'}">
-							<button class="get" ng-disabled="!selectedDay.chooseType" ng-click="selectedDay.type == 'back' && switchType()">Abholen</button>
-							<button class="back" ng-disabled="!selectedDay.chooseType" ng-click="selectedDay.type == 'get' && switchType()">Zurückbringen</button>
-						</div>
-						<div class="row" ng-repeat="time in selectedDay.times">
-							<div class="select">
-								<select ng-model="time.from" ng-change="timeSelectChanged(time, 'from');">
-									<option ng-repeat="option in timeOption" value="{{option.time}}" ng-disabled="option.time == 'none' && time.from != 'none'">{{option.label}}</option>
-								</select>
-							</div>	
-							<div class="bis">bis</div>
-							<div class="select">
-								<select ng-model="time.to" ng-change="timeSelectChanged(time, 'to');">
-									<option ng-repeat="option in timeOption" value="{{option.time}}" ng-disabled="option.time == 'none' && time.to != 'none'">{{option.label}}</option>
-								</select>
+				<p ng-if="object.neighbor.id == currentNeighbor.id">Eigene Gegenstände können nicht ausgeliehen werden.</p>
+				
+				<div ng-show="object.neighbor.id != currentNeighbor.id">
+											
+							
+					<div class="wizardContainer {{ currentStep }}">
+						
+						
+						<div class="inner">
+							<div id="calendar-get" class="calendar get">
+								<h3>Terminvorschläge für das <span class="get">Abholen</span></h3>
+								
+								<uib-datepicker id="uib-datepicker-get" template-url="template/datepicker/datepicker.html" ng-model="$parent.dt" datepicker-options="calendarOptionsGet" ng-change="change('get')"></uib-datepicker>
+								
+								<div class="text">
+									<p ng-show="systemRequest.firstGetSuggestion == ''">Wann möchtst du den Gegenstand abholen?<br>Wähle mindestens einen Tag.</p>
+									<p ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstGetSuggestion == systemRequest.lastGetSuggestion">Wähle wenn möglich verschiedene Tage.</p>
+									<p ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstGetSuggestion != systemRequest.lastGetSuggestion">Du hast mehrere Tage vorgeschlagen, super!</p>
+								</div>
+								<div class="selectedTimes" ng-if="false">
+									<h4>Deine Auswahl</h4>
+									<div class="day" ng-repeat="day in systemRequest.suggestions | filter: {type:'get'}">
+										<div class="name">{{ day.date | amDateFormat:'dd, DD.MM' }}</div>
+										<div class="time" ng-repeat="time in day.times">{{ time.from }} - {{ time.to }} Uhr</div>
+									</div>
+								</div>
+								
+								<a class="bt_dark arrowRight" ng-class="{'inactive': systemRequest.firstGetSuggestion == '' }" ng-click="systemRequest.firstGetSuggestion != '' && next()" ng-disabled="systemRequest.firstGetSuggestion == ''">Weiter</a>
+								
 							</div>
-							<button class="delete" ng-click="deleteTimeRow($index)">Löschen</button>
+							
+							<div id="calendar-back" class="calendar back">
+								<h3>Terminvorschläge für die <span class="back">Rückgabe</span></h3>
+								
+								<uib-datepicker template-url="template/datepicker/datepicker.html" ng-model="$parent.dt" datepicker-options="calendarOptionsBack" ng-change="change('back')"></uib-datepicker>
+								
+								<div class="text">
+									<p ng-show="systemRequest.firstBackSuggestion == ''">Wann möchtst du den Gegenstand zurückbringen?<br>Wähle mindestens einen Tag.</p>
+									<p ng-show="systemRequest.firstBackSuggestion != '' && systemRequest.firstBackSuggestion == systemRequest.lastBackSuggestion">Wähle wenn möglich verschiedene Tage.</p>
+									<p ng-show="systemRequest.firstBackSuggestion != '' && systemRequest.firstBackSuggestion != systemRequest.lastBackSuggestion">Du hast mehrere Tage vorgeschlagen, super!</p>
+								</div>
+								
+								<div class="selectedTimes" ng-if="false">
+									<h4>Deine Auswahl</h4>
+									<div class="day" ng-repeat="day in systemRequest.suggestions | filter: {type:'back'}">
+										<div class="name">{{ day.date | amDateFormat:'dd, DD.MM' }}</div>
+										<div class="time" ng-repeat="time in day.times">{{ time.from }} - {{ time.to }} Uhr</div>
+									</div>
+								</div>
+								
+								<a class="bt_light arrowLeft" ng-click="back()">Zurück</a>
+								<a class="bt_dark arrowRight" ng-class="{'inactive': systemRequest.firstBackSuggestion == '' }" ng-click="systemRequest.firstBackSuggestion != '' && next()" ng-disabled="systemRequest.firstBackSuggestion == ''">Weiter</a>
+								
+							</div>
+							
+							<div class="form">
+							
+								<div class="summary" >
+									<div class="get">
+										<h3><span class="get">Abholen</span></h3>
+										<div class="day" ng-repeat="day in cleanedSuggestions | filter: {type:'get'}">
+											<div class="name">{{ day.date | amDateFormat:'dd, DD.MM' }}</div>
+											<div class="time" ng-repeat="time in day.times">{{ time.from }} - {{ time.to }} Uhr</div>
+										</div>
+									</div>
+									<div class="back">
+										<h3><span class="back">Zurückbringen</span></h3>
+										<div class="day" ng-repeat="day in cleanedSuggestions | filter: {type:'back'}">
+											<div class="name">{{ day.date | amDateFormat:'dd, DD.MM' }}</div>
+											<div class="time" ng-repeat="time in day.times">{{ time.from }} - {{ time.to }} Uhr</div>
+										</div>
+									</div>
+								</div>
+								
+								<form ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstBackSuggestion != ''" name="requestForm" ng-submit="validRequest && sendRequest()">
+									<textarea name="message" ng-model="systemRequest.message" placeholder="Nachricht an {{ object.neighbor.accountName }}" ng-change="checkValidRequest()"></textarea>
+									
+									<div class="label">Wie möchtest du kontaktiert werden?</div>
+							
+									<label ng-if="currentNeighbor.fixnetPhone" class="checkbox"><input ng-change="checkValidRequest()" type="checkbox" ng-model="systemRequest.preferredContact_fixnetPhone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.fixnetPhone }}</label>
+									<label ng-if="currentNeighbor.person1_mail" class="checkbox"><input ng-change="checkValidRequest()" type="checkbox" ng-model="systemRequest.preferredContact_person1_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_mail }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
+									<label ng-if="currentNeighbor.person1_phone" class="checkbox"><input ng-change="checkValidRequest()" type="checkbox" ng-model="systemRequest.preferredContact_person1_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_phone }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
+									<label ng-if="currentNeighbor.person2_mail" class="checkbox"><input ng-change="checkValidRequest()" type="checkbox" ng-model="systemRequest.preferredContact_person2_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_mail }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
+									<label ng-if="currentNeighbor.person2_phone" class="checkbox"><input ng-change="checkValidRequest()" type="checkbox" ng-model="systemRequest.preferredContact_person2_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_phone }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
+									
+									<a class="bt_light arrowLeft" ng-click="back()">Zurück</a>
+									<input class="bt_dark" ng-class="{inactive: !validRequest }" type="submit" value="Anfrage senden">
+									
+																
+				
+								</form>
+								
+								
+							</div>
 						</div>
 						
-						<button class="add" ng-show="selectedDay.times[selectedDay.times.length-1].to != 'none'" ng-disabled="selectedDay.times[selectedDay.times.length-1].to == 'none'" ng-click="addTimeRow()">Neue Zeitspanne</button>
 						
-						<button class="ok" ng-click="contextmenu.current = ''">OK</button>
+						
 					</div>
-				</div>
-
-				<div class="summary" ng-show="systemRequest.firstGetSuggestion != ''">
-					<div class="get">
-						<h3>Abholen</h3>
-						<div class="day" ng-repeat="day in systemRequest.suggestions | filter: {type:'get'}">
-							<div class="name">{{ day.date | amDateFormat:'dd, DD.MM' }}</div>
-							<div class="time" ng-repeat="time in day.times">{{ time.from }} - {{ time.to }} Uhr</div>
-						</div>
-					</div>
-					<div class="back">
-						<h3>Zurückbringen</h3>
-						<div class="day" ng-repeat="day in systemRequest.suggestions | filter: {type:'back'}">
-							<div class="name">{{ day.date | amDateFormat:'dd, DD.MM' }}</div>
-							<div class="time" ng-repeat="time in day.times">{{ time.from }} - {{ time.to }} Uhr</div>
-						</div>
-					</div>
+				
 				</div>
 				
-				<form ng-show="systemRequest.firstGetSuggestion != '' && systemRequest.firstBackSuggestion != ''" name="requestForm" ng-submit="validRequest && sendRequest()">
-					<textarea name="message" ng-model="systemRequest.message" placeholder="Nachricht an {{ object.neighbor.accountName }}" ng-change="checkValidRequest()"></textarea>
-					
-					<div class="label">Wie möchtest du kontaktiert werden?</div>
-			
-					<label ng-if="currentNeighbor.fixnetPhone" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_fixnetPhone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.fixnetPhone }}</label>
-					<label ng-if="currentNeighbor.person1_mail" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_person1_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_mail }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
-					<label ng-if="currentNeighbor.person1_phone" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_person1_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_phone }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
-					<label ng-if="currentNeighbor.person2_mail" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_person2_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_mail }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
-					<label ng-if="currentNeighbor.person2_phone" class="checkbox"><input type="checkbox" ng-model="systemRequest.preferredContact_person2_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_phone }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
-					
-
-					<input class="bt_dark" ng-class="{inactive: !validRequest }" type="submit" value="Anfrage senden">
-
-				</form>
 			</div>
 			
 			

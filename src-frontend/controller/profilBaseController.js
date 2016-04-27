@@ -1,11 +1,18 @@
-angular.module('Leihnah').controller('ProfilBaseController', function($scope, $http, $state, $window, $uibModal, $log, AuthenticationService, auth, Piwik) {
+angular.module('Leihnah').controller('ProfilBaseController', function($scope, $http, $state, $window, $uibModal, $log, ContextBoxService, AuthenticationService, auth, Piwik) {
 	Piwik.trackPageView($window.location.origin+'/profil/base');
 	
 	$log.debug('ProfilBaseController');
 
 	
+	// profilMenu
+	$scope.showProfilEditMenu = function(event) {
+	    ContextBoxService.setTargetElement(event.currentTarget);
+	    ContextBoxService.setHorizontalAlign('right');
+	    ContextBoxService.setId('profilEditMenu');	    
+	    ContextBoxService.show();
+    }
 	
-	$scope.openModalProfilEdit = function() {
+	$scope.contextBox.openModalProfilEdit = function() {
 		var modalInstance = $uibModal.open({
 			backdrop: 'static',
 			keyboard: false,
@@ -30,7 +37,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 		});
 	}
 	
-	$scope.openModalProfilPerson = function(which) {
+	$scope.contextBox.openModalProfilPerson = function(which) {
 		var modalInstance = $uibModal.open({
 			backdrop: 'static',
 			keyboard: false,
@@ -55,7 +62,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 		});
 	}
 	
-	$scope.openModalPasswordEdit = function() {
+	$scope.contextBox.openModalPasswordEdit = function() {
 		var modalInstance = $uibModal.open({
 			backdrop: 'static',
 			keyboard: false,

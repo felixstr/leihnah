@@ -12,7 +12,7 @@ angular.module('Leihnah').controller('LendCloseController', function($scope, $ui
 	}
 	
 	var type = '';
-	if ($scope.currentLend.confirmedDatetime != null && $scope.currentLend.inTime) {
+	if ($scope.currentLend.confirmedDatetime != null && $scope.currentLend.getPast) {
 		type = 'successful';
 		
 		$scope.formInfo.titleText = 'Möchtest du die Verleihung wirklich abschliessen?';
@@ -26,7 +26,7 @@ angular.module('Leihnah').controller('LendCloseController', function($scope, $ui
 		$scope.formInfo.feedbackPlaceholder = 'Teile '+$scope.formInfo.otherNeighbor.accountName+' mit, wieso du die Anfrage abbrichst';
 		
 		$scope.formInfo.buttonText = 'Anfrage abbrechen';
-	} else if($scope.currentLend.state == 'request' && kind == 'lend') {
+	} else if(($scope.currentLend.state == 'request' || $scope.currentLend.state == 'direct') && kind == 'lend') {
 		type = 'refused';
 		
 		$scope.formInfo.titleText = 'Möchtest du die Anfrage wirklich ablehnen?';

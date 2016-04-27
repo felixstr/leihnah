@@ -1,0 +1,13 @@
+<div id="contextBoxWrap" class="arrowTopRight profil menu">
+	
+	
+	<a ui-sref="profil.base" ng-click="contextBox.hide()" ng-class="{current: state.is('profil.base')}">Dein Profil</a>
+	<a ui-sref="profil.objects" ng-click="contextBox.hide()" ng-class="{current: state.is('profil.objects')}">Deine Gegenstände</a>
+	<a ui-sref="profil.lend" ng-click="contextBox.hide()" ng-class="{current: state.is('profil.lend')}"><span ng-show="lends.mark > 0" class="mark small"></span>An die Nachbarn verliehen</a>
+	<a ui-sref="profil.borrow" ng-click="contextBox.hide()" ng-class="{current: state.is('profil.borrow')}"><span ng-show="borrows.mark > 0" class="mark small"></span>Von den Nachbarn geliehen</a>
+	<a href ng-click="contextBox.hide(); logoutUser()" ng-click="">Abmelden</a>
+
+	
+	
+	
+</div>

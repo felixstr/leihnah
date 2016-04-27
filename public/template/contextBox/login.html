@@ -1,0 +1,18 @@
+<div id="contextBoxWrap" class="arrowTopRight login">
+	
+	
+	<form name="login" ng-submit="loginUser()">
+		<div class="message" ng-if="fail != null">
+			<div ng-if="fail == 'unkown'">Der Benutzername existiert nicht</div>
+			<div ng-if="fail == 'credentials'">Das Passwort ist nicht korrekt</div>
+			<div ng-if="fail == 'inactive'">Dein Benutzerkonto ist nicht freigeschaltet</div>
+		</div>
+		
+		<input type="text" ng-model="loginInfo.username" placeholder="Benutzername">
+		<input class="elPassword" type="password" ng-model="loginInfo.password" placeholder="Passwort">
+		<button class="bt_dark small arrowRight" type="submit" ng-disabled="loginFormDisabled">Anmelden</button>
+	</form>
+	
+	
+	
+</div>

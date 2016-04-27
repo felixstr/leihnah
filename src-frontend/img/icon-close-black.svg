@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="64px" height="66px" viewBox="0 0 64 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.1 (28215) - http://www.bohemiancoding.com/sketch -->
+    <title>close</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="close" fill="#000000">
+            <polygon id="Shape-Copy" transform="translate(31.542141, 20.420000) scale(-1, 1) rotate(-90.000000) translate(-31.542141, -20.420000) " points="51.9621412 -3.70973786 44.190967 -11.122141 11.122141 20.4200001 44.190967 51.9621412 51.9621412 44.549738 26.719604 20.4200001"></polygon>
+            <polygon id="Shape-Copy" transform="translate(31.542141, 45.420000) scale(-1, 1) rotate(-270.000000) translate(-31.542141, -45.420000) " points="51.9621412 21.2902621 44.190967 13.877859 11.122141 45.4200001 44.190967 76.9621412 51.9621412 69.549738 26.719604 45.4200001"></polygon>
+        </g>
+    </g>
+</svg>

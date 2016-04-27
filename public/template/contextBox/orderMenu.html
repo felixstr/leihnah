@@ -1,0 +1,5 @@
+<div id="contextBoxWrap" class="arrowTopRight orderMenu menu">
+	
+	<a href ng-repeat="orderItem in order.items" ng-click="contextBox.hide(); contextBox.changeOrder(orderItem.id)" ng-class="{current: order.current.id == orderItem.id }">{{ orderItem.name }}</a>
+	
+</div>

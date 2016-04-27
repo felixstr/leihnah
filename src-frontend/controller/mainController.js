@@ -1,20 +1,21 @@
-angular.module('Leihnah').controller('MainController', function($scope, $http, $state, $window, $log, $location, $interval, AuthenticationService, ContextmenuService, auth, CategoryService) {
+angular.module('Leihnah').controller('MainController', function($scope, $http, $state, $window, $log, $location, $interval, $document, AuthenticationService, ContextmenuService, ContextBoxService, auth, CategoryService, resize) {
 	
 	if (AuthenticationService.authenticated && $state.is("home")) {
 		$state.go('objects');
 	}
-	if (!AuthenticationService.authenticated && !$state.is("home")) {
-		$state.go('home');
+	if (!AuthenticationService.authenticated) {
+		$state.go('landingpage');
 	}
 	
-	
+	$scope.contextBox = ContextBoxService;		
 	$scope.state = $state;
 	$scope.window = $window;
+	
+	$scope.fadeout = false;
 		
 	
 	$scope.lastObjectId = 0; // @todo: needet?
-	
-	
+	$scope.scrollPosition = 0;
 	
 	// lends and borrows
 	$scope.lends = [];
@@ -101,6 +102,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	}
 	$scope.loadObjects();
 	
+	
 	// categories
 	CategoryService.loadCategories(function(categories) {
 		$scope.categories = categories;
@@ -116,6 +118,16 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 			$scope.categories = categories;
 		});
 	});
+	
+	// profilMenu
+	$scope.showProfilMenu = function(event) {
+	    $log.debug(event.currentTarget);
+	    
+	    ContextBoxService.setTargetElement(event.currentTarget);
+	    ContextBoxService.setHorizontalAlign('right');
+	    ContextBoxService.setId('profil');	    
+	    ContextBoxService.show();
+    }
 	
 	// watch if contextmenu has changed
 	$scope.contextmenu = ContextmenuService;
@@ -159,13 +171,85 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 
 					AuthenticationService.logout();
 					
-					$state.go('home');
+					$state.go('landingpage');
 				}
 			})
 			.error(function(error) {
 				$log.debug(error);
 			});
 	}
+	
+	
+	// resize: check if mobile oder desktop view
+	$scope.showMobile = false;
+	$scope.showDesktop = false;
+	resize($scope).call(function() { 
+		$scope.$apply(function() {
+	       setResponsveVisibility();
+	    });	
+	});
+    var setResponsveVisibility = function() {
+	    $log.debug('showMobile', $scope.showMobile);
+	    $log.debug('resized', $window.innerWidth);
+	    if ($window.innerWidth > 624) {
+		    $scope.showMobile = false;
+			$scope.showDesktop = true;
+	    } else {
+		    $scope.showMobile = true;
+			$scope.showDesktop = false;
+			
+	    }
+	    
+	    $log.debug('showDesktop', $scope.showDesktop);
+    }
+    setResponsveVisibility();
+	
+	// mobile
+	$scope.mobileNav = 'hide';
+	$scope.toggleMobileNav = function() {
+		if ($scope.mobileNav == 'hide') {
+			$scope.mobileNav = 'show';
+		} else {
+			$scope.mobileNav = 'hide';
+		}
+	};
+	
+	
+	
+	$document.on('touchend', function(event) {
+		$scope.$apply(function() {
+			checkNavCloseClick(event);
+		});
+		
+		
+    });
+    var checkNavCloseClick = function(event) {
+		
+		var isContentChild = $("#outherContentWrap").find($(event.target)).size() > 0;
+		var isHamburgerChild = $(event.target)[0] == $("button.hamburger")[0] || $("button.hamburger").find($(event.target)).size() > 0;
+		$log.debug(isContentChild);
+		
+		
+		$log.debug($(event.target)[0]);
+		$log.debug($("button.hamburger")[0]);
+		$log.debug('isHamburger', isHamburgerChild);
+		$log.debug('isContentChild', isContentChild);
+		
+		if (!isHamburgerChild && isContentChild && $scope.mobileNav == 'show') {
+			$scope.toggleMobileNav();
+		}
+		
+		/*
+		var outherContentWrap = document.querySelector("#outherContentWrap");
+		$log.debug(outherContentWrap.find(document.querySelector("nav")));
+		*/
+		/*
+		if ($scope.mobileNav == 'show') {
+		$scope.toggleMobileNav();
+		}
+		*/
+    }
+	
 	
 	/*
 	$interval(function() {

@@ -1,3 +1,7 @@
+<div ng-include="contextBox.template" ng-show="contextBox.visible" onload="contextBox.loaded()"></div>
+<div id="contextBoxOverlay" ng-show="contextBox.visible" ng-click="contextBox.hide()"></div>
+
+
 <div class="landingPageWrap">
 	<header class="landingPage">
 		<div class="content">
@@ -5,9 +9,8 @@
 			<h1>Mehr Wert in der Nachbarschaft</h1>
 			<h2>Leihen spart Geld, schafft Platz, bringt Nähe</h2>
 			
-			
 			<div class="buttons">
-				<a class="bt_light arrowDown" ui-sref="objects">Anmelden</a>
+				<a class="bt_dark arrowDown" ng-click="showLogin('top')" ng-class="{'active': contextBox.id == 'login'}">Anmelden</a>
 			</div>
 			
 		</div>
@@ -15,11 +18,11 @@
 		
 	</header>
 
-	<section class="headerBG" ng-style="headerBGstyle"></section>
+	<section class="headerBG" preload-bg-image="{{ headerBG }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></section>
 	
 	<section class="main">
 		<div class="rowDescription">
-			<div class="titleAdd">Bestehende Siedlungen weisen den Weg</div>
+			<div class="titleAdd">Siedlungen weisen den Weg</div>
 			<h2>Das Potenzial der Nähe nutzen</h2>
 			<p>LEIHNAH wurde in bestehenden Communities entwickelt. Einfache Funktionalität ist der Schlüssel für das neue Teilen: Gegenstände fotografieren und sie zum Verleih freigeben oder in den Gerätschaften der Nachbarn stöbern und sie von ihnen leihen.</p>
 			<p><b>LEIHNAH organisiert die Abläufe, schont die Ressourcen, nutzt das Potenzial der Nähe und stärkt die Nachbarschaft.</b></p>
@@ -36,7 +39,7 @@
 		
 		<div class="rowInspirationImages">
 			<div class="imageWrap" ng-repeat="image in inspirationImages">
-				<div class="img" ng-style="image.style"></div>
+				<div class="img" preload-bg-image="{{ image }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 				<div class="height"></div>
 			</div>
 		</div>
@@ -51,7 +54,7 @@
 		<div class="rowPostitStatements">
 			<div class="statement" ng-repeat="statement in statements">
 				<div class="imageWrap">
-					<div class="img" ng-style="statement.style"></div>
+					<div class="img" preload-bg-image="{{ statement.image }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 					<div class="height"></div>
 				</div>
 				<div class="text">{{ statement.text }}</div>
@@ -61,20 +64,20 @@
 		<div class="rowSettlements">
 			<div class="titleAdd">Neubühl, Im Tiergarten, Riedtli</div>
 			<h2>LEIHNAH-Siedlungen</h2>
-			<p>LEIHNAH wird jetzt schon in verschiedenen Siedlungen verwendet. Ist deine Siedlung bereits dabei?</p>
+			<p>LEINAH wird bereits jetzt in verschiedenen Siedlungen verwendet. Ist deine Siedlung schon dabei?</p>
 		</div>
 		
 		<div class="rowSettlementImages">
 			<div class="settlement" ng-repeat="settlement in settlements">
 				<div class="imageWrap">
-					<div class="img" ng-style="settlement.style"></div>
+					<div class="img" preload-bg-image="{{ settlement.image }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 					<div class="height"></div>
 				</div>
 				<div class="text">{{ settlement.text }}</div>
 			</div>
 			
 			<div class="btContainer">
-				<a class="bt_light arrowRight" href>Alle LEIHNAH-Siedlungen</a>
+				<a class="bt_dark arrowRight" href>Alle LEIHNAH-Siedlungen</a>
 			</div>
 		</div>
 		
@@ -82,12 +85,11 @@
 			<div class="titleAdd">Nutze mit LEIHNAH das Potenzial des Teilens</div>
 			
 			<div class="exist">
-			
 				<h2>Lebst du in einer LEIHNAH-Siedlung?</h2>
-				<p>Wenn LEIHNAH in deiner Siedlung bereits das Tool fürs neue Teilen ist, kannst du gleich auf <i>Registrieren</i> weiterklicken: Deine Registrierung wird geprüft, dein Zugang freigeschaltet und schon kannst du loslegen!</p>
+				<p>Wenn LEIHNAH in deiner Siedlung bereits das Tool fürs neue Teilen ist, kannst du gleich auf <i>Registrieren</i> weiterklicken: Deine Registrierung wird geprüft, dein Zugang freigeschaltet und du kannst loslegen!</p>
 				<div class="btContainer">
 					<a class="bt_dark arrowRight" href>Registrieren</a>
-					<a class="bt_light arrowRight" ui-sref="objects">Anmelden</a>
+					<a class="bt_light arrowRight" ng-click="showLogin('bottom')">Anmelden</a>
 				</div>
 			</div>
 			<div class="notYet">
@@ -108,12 +110,12 @@
 	<footer ng-show="showFooter">
 		<div class="content">
 			<div class="top">
-				<img class="logo" src="assets/img/static/leihnah-logo-negativ.svg" />
+				<img class="logo" src="assets/img/static/leihnah-logo.svg" />
 				<div class="slogan">Mehr Wert in der Nachbarschaft</div>
 			</div>
 			
 			<div class="bottom">
-				Eine Bacholorarbeit von Felix Stricker. <br />
+				Eine Bachelorarbeit von Felix Stricker. <br />
 				Für Fragen oder Anregungen: <a  class="text" href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>
 			</div>
 		</div>

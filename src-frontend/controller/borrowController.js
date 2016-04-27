@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('BorrowController', function($scope, $http, $stateParams, $window, $log, $timeout, AuthenticationService, auth, $uibModal, CategoryService, Piwik, $state) {
+angular.module('Leihnah').controller('BorrowController', function($scope, $http, $stateParams, $window, $log, $timeout, AuthenticationService, auth, $uibModal, $document, CategoryService, Piwik, $state, resize) {
 	Piwik.trackPageView($window.location.origin+'/borrow/'+$stateParams.borrowId);
 	
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -51,9 +51,6 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 			$scope.$parent.loadLends();
 			loadBorrow();
 			
-			$timeout(function() {
-				setTimlineHeight();
-			}, 100);
 			
 		}, function () {
 			$log.debug('Modal dismissed at: ' + new Date());
@@ -62,24 +59,34 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 	
 
 	
-	var setTimlineHeight = function() {
-		var actionElement = document.querySelector(".actionBox").getBoundingClientRect();
-		var containerElement = document.querySelector(".conversationContainer");
+	var setTimelineHeight = function() {
+		var height= 0;
+			
+			if ($scope.currentBorrow.state == 'request') {
+				height = 70;
+			} else if ($scope.currentBorrow.state == 'direct') {
+				height = $('#directContactMessage').position().top + 45;
+			} else if ($scope.currentBorrow.state == 'answered' || $scope.currentBorrow.state == 'confirmed' || $scope.currentBorrow.state == 'closed') {
+				height = $('.actionBox').position().top + 45;
+			}
+			
+			$log.debug('height', height);
+			
+			
+			$('.timelinePast').css({ 'height': height+'px' });
+			
+			
+			height = $('.conversationContainer').height();
+			
+			$('.timeline').css({ 'height': height+'px' });
 		
-		var height = actionElement.top - containerElement.getBoundingClientRect().top + 10;
-		document.querySelector(".timelinePast").setAttribute('style', "height: "+height+"px;");
-		
-		height = containerElement.clientHeight - 100;
-		
-		document.querySelector(".timeline").setAttribute('style', "height: "+height+"px;");
 	}
 	
-	$scope.contentLoaded = function() {
-		$timeout(function() {
-			setTimlineHeight();
-		}, 100);
-	}
-	
+	resize($scope).call(function() { 
+		$scope.$apply(function() {
+	       setTimelineHeight();
+	    });	
+	});
 		
 	$scope.openModalObject = function(object) {
 		var modalInstance = $uibModal.open({
@@ -140,6 +147,11 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 					$scope.myProfilImageBG = {
 						'background-image':'url('+($scope.$parent.currentNeighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+$scope.$parent.currentNeighbor.accountImage)+')'
 					};
+					
+					$timeout(function() {
+						setTimelineHeight();
+						$document.scrollToElement($(".actionBox"), 100, 500);
+					}, 100);	
 					
 				}
 			})

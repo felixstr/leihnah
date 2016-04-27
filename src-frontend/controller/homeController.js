@@ -46,6 +46,8 @@ angular.module('Leihnah').controller('HomeController', function($scope, $http, $
 				$log.debug(error);
 			});
 	}
-
+	
+	
+	
 });
 

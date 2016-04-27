@@ -1,0 +1,23 @@
+<div id="contextBoxWrap" class="arrowTopCenter timepicker">
+	
+	<div class="title">{{ contextBox.dt | amDateFormat:'dd, DD.MM.YY'}} <a href ng-click="contextBox.hide();" class="bt_dark ok"><span>ok</span></a></div>
+	<div class="text">Du kannst mehrere Zeiten wählen.</div>
+	
+	<div class="day-title">Morgen & Vormittag</div>
+	<div class="times">
+		<div class="time" ng-repeat="time in contextBox.timeOption | limitTo:5:0" ><button ng-click="contextBox.timeClicked(time)" ng-class="{'active': contextBox.isTimeActive(time) }">{{ time.from }}:00<br>{{ time.to }}:00</button></div>
+	</div>
+	
+	<div class="day-title">Mittag & Nachmittag</div>
+	<div class="times">
+		<div class="time" ng-repeat="time in contextBox.timeOption | limitTo:5:5" ><button ng-click="contextBox.timeClicked(time)" ng-class="{'active': contextBox.isTimeActive(time) }">{{ time.from }}:00<br>{{ time.to }}:00</button></div>
+	</div>
+	
+	<div class="day-title">Abend</div>
+	<div class="times">
+		<div class="time" ng-repeat="time in contextBox.timeOption | limitTo:5:10" ><button ng-click="contextBox.timeClicked(time)" ng-class="{'active': contextBox.isTimeActive(time) }">{{ time.from }}:00<br>{{ time.to }}:00</button></div>
+	</div>
+						
+						
+						
+</div>

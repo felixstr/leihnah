@@ -1,21 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 844.9 595.3 272" enable-background="new 0 844.9 595.3 272" xml:space="preserve">
-<g>
-	<path fill="#FFFFFF" d="M589.9,882.4H255.5l-38-31.8v31.8H4.7v198.1h335.5l36.7,30.8v-30.8h212.9V882.4H589.9z M573.4,1064.1H376.9
-		v-31.8l-38,31.8H21.1V898.9h196.5v30.8l36.7-30.8h319.1V1064.1z"/>
-	<polygon fill="#FFFFFF" points="71.1,944.1 52.9,944.1 52.9,1019 100.1,1019 100.1,1003.2 71.1,1003.2 	"/>
-	<polygon fill="#FFFFFF" points="129.5,988 160.7,988 160.7,973.5 129.5,973.5 129.5,959.3 162.4,959.3 162.4,944.1 112.1,944.1 
-		112.1,1019 164.3,1019 164.3,1003.6 129.5,1003.6 	"/>
-	<rect x="179.7" y="944.1" fill="#FFFFFF" width="18.1" height="74.8"/>
-	<polygon fill="#FFFFFF" points="264.1,972.5 235,972.5 235,944.1 216.9,944.1 216.9,1019 235,1019 235,987.7 264.1,987.7 
-		264.1,1019 282.2,1019 282.2,944.1 264.1,944.1 	"/>
-	<polygon fill="#FFFFFF" points="366.9,1004 366.7,1004 327.6,944.1 313.9,944.1 313.9,1019 324.4,1019 324.4,957.9 324.6,957.9 
-		364.2,1019 377.3,1019 377.3,944.1 366.9,944.1 	"/>
-	<path fill="#FFFFFF" d="M423,944.1l-32.4,74.8h11.6l7.5-18.4h35.5l7.6,18.4h11.8l-32-74.8H423z M413.3,991.3l14.1-35.1l14,35.1
-		H413.3z"/>
-	<polygon fill="#FFFFFF" points="488.2,975.4 488.2,944.1 477.6,944.1 477.6,1019 488.2,1019 488.2,984.6 526,984.6 526,1019 
-		536.6,1019 536.6,944.1 526,944.1 526,975.4 	"/>
-</g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="523px" height="240px" viewBox="0 0 523 240" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.1 (28215) - http://www.bohemiancoding.com/sketch -->
+    <title>leihnah-logo copy 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-878.000000, -129.000000)">
+            <g id="leihnah-logo-copy-4" transform="translate(878.000000, 129.000000)">
+                <g id="box" transform="translate(0.000000, 32.000000)">
+                    <rect id="Rectangle-4" fill="#FFF217" x="0" y="0" width="523" height="176"></rect>
+                    <text id="LEIH" font-family="AvenirNext-Bold, Avenir Next" font-size="91" font-weight="bold" letter-spacing="1.29999995" fill="#000000">
+                        <tspan x="54" y="120">LEI</tspan>
+                        <tspan x="189.941" y="120">H</tspan>
+                    </text>
+                    <text id="NAH" font-family="AvenirNext-Medium, Avenir Next" font-size="91" font-weight="400" fill="#000000">
+                        <tspan x="270" y="120">NAH</tspan>
+                    </text>
+                </g>
+                <g id="arrow" transform="translate(165.000000, 0.000000)" fill="#000000">
+                    <polygon id="Shape" transform="translate(20.420000, 32.042141) scale(-1, 1) translate(-20.420000, -32.042141) " points="40.8400002 7.91240316 33.068826 0.5 0 32.0421411 33.068826 63.5842822 40.8400002 56.171879 15.5974629 32.0421411"></polygon>
+                    <polygon id="Shape-Copy" transform="translate(172.420000, 208.042141) scale(-1, 1) rotate(-180.000000) translate(-172.420000, -208.042141) " points="192.84 183.912403 185.068826 176.5 152 208.042141 185.068826 239.584282 192.84 232.171879 167.597463 208.042141"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>

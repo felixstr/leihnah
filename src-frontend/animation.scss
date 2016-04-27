@@ -1,0 +1,47 @@
+
+
+#containerMain {
+	
+	&.ng-enter {
+		transition: all 0.5s ease-in-out;
+		
+		
+		opacity: 0;
+		transform: translateY(-2vh);
+		z-index: 4;
+		
+	}
+	&.ng-enter.ng-enter-active {
+		opacity: 1;
+		transform: translateY(0);
+
+	}
+	
+	
+	
+	&.ng-leave {
+		opacity: 1;
+		transition: all 0.01s 0.49s ease;
+		z-index: 3;
+
+
+	}
+	&.ng-leave.ng-leave-active {
+		opacity: 0;
+
+
+
+	}
+	
+}
+
+
+@keyframes animatePageIn {
+	0% { opacity: 0; transform: scale(0.8, 0.8); }
+	100% { opacity: 1; transform: scale(1, 1); }
+}
+
+@keyframes animatePageOut {
+	0% { opacity: 1; transform: translateY(0); }
+	100% { opacity: 1; transform: translateY(-100vh); }
+}

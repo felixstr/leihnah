@@ -1,16 +1,18 @@
 <div class="modalHead">
-	<a href class="close" ng-click="cancel()">schliessen</a>
+	<a href class="bt_dark close" ng-click="cancel()"><span>schliessen</span></a>
 </div>
 
 <div class="modalBody">
 
 	<form name="lendClose" ng-submit="lendClose.$valid && send()">
 		
-		<div class="title">{{ formInfo.titleText }}</div>
+		<div class="formText">
+			<h3>{{ formInfo.titleText }}</h3>
+		</div>
 		
 		<div ng-if="closeData.type == 'successful'">
 		    <div class="formRow">
-				<label><input type="checkbox" ng-model="closeData.objectBack" ng-true-value="'yes'" ng-false-value="'no'">Ich habe den Gegenstand (noch) nicht zurückerhalten, möchte aber trotzdem abschliessen.</label>
+				<label><input type="checkbox" ng-model="closeData.objectBack" ng-true-value="'yes'" ng-false-value="'no'">Ich habe den Gegenstand (noch) <b>nicht</b> zurückerhalten, möchte aber trotzdem abschliessen.</label>
 		    </div>
 		</div>
 		

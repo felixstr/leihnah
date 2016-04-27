@@ -1,5 +1,5 @@
 <div class="modalHead">
-	<a href class="close" ng-click="cancel()">schliessen</a>
+	<a href class="bt_dark close" ng-click="cancel()"><span>schliessen</span></a>
 </div>
 
 <div class="modalBody">
@@ -11,9 +11,9 @@
 				<div class="image" ng-show="editObject.image_1.$valid" ngf-background="objectImage.image_1"></div>
 				<div class="image" ng-show="currentObject.image_1 != '' && objectImage.image_1 === undefined" ng-style="{'background-image':'url(assets/img/object/'+currentObject.image_1+')'}"> </div>
 				
-				<a class="new" href>{{ (objectImage.image_1 || currentObject.image_1) ? 'Bild ersetzen' : 'Bild hinzufügen' }}</a>
+				<a class="new" href>{{ (objectImage.image_1 || currentObject.image_1) ? 'Neu' : 'Bild Hinzufügen' }}</a>
 				
-				<input type="file" ngf-select ng-model="objectImage.image_1" name="image_1" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
+				<input type="file" ngf-select ng-model="objectImage.image_1" name="image_1" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles" ngf-fix-orientation="true">
 				
 				<a class="delete" ng-show="(objectImage.image_1 || currentObject.image_1) && (objectImage.image_2 || currentObject.image_2)" href ng-click="deletePic(1)">löschen</a>
 			</div>
@@ -25,9 +25,9 @@
 				<div class="image" ng-show="editObject.image_2.$valid" ngf-background="objectImage.image_2"></div>
 				<div class="image" ng-show="currentObject.image_2 != '' && objectImage.image_2 === undefined" ng-style="{'background-image':'url(assets/img/object/'+currentObject.image_2+')'}"> </div>
 				
-				<a class="new" href>{{ (objectImage.image_2 || currentObject.image_2) ? 'Bild ersetzen' : 'Bild hinzufügen' }}</a>
+				<a class="new" href>{{ (objectImage.image_2 || currentObject.image_2) ? 'Neu' : 'Bild Hinzufügen' }}</a>
 				
-				<input type="file" ngf-select ng-model="objectImage.image_2" name="image_2" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
+				<input type="file" ngf-select ng-model="objectImage.image_2" name="image_2" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles" ngf-fix-orientation="true">
 				
 				<a class="delete" ng-show="objectImage.image_2 || currentObject.image_2" href ng-click="deletePic(2)">löschen</a>
 			</div>
@@ -38,9 +38,9 @@
 				<div class="image" ng-show="editObject.image_3.$valid" ngf-background="objectImage.image_3"></div>
 				<div class="image" ng-show="currentObject.image_3 != '' && objectImage.image_3 === undefined" ng-style="{'background-image':'url(assets/img/object/'+currentObject.image_3+')'}"> </div>
 				
-				<a class="new" href>{{ (objectImage.image_3 || currentObject.image_3) ? 'Bild ersetzen' : 'Bild hinzufügen' }}</a>
+				<a class="new" href>{{ (objectImage.image_3 || currentObject.image_3) ? 'Neu' : 'Bild Hinzufügen' }}</a>
 				
-				<input type="file" ngf-select ng-model="objectImage.image_3" name="image_3" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles">
+				<input type="file" ngf-select ng-model="objectImage.image_3" name="image_3" accept="image/*" ngf-max-size="3MB" ngf-model-invalid="errorFiles" ngf-fix-orientation="true">
 				
 				<a class="delete" ng-show="objectImage.image_3 || currentObject.image_3" href ng-click="deletePic(3)">löschen</a>
 			</div>
@@ -75,7 +75,7 @@
 			<select name="category" ng-model="currentObject.categoryId" ng-change="updateCategory()" required>
 				<option ng-repeat="option in categories" value="{{option.id}}">{{option.name}}</option>
 			</select>
-			<div class="warning select" ng-show="currentObject.categoryId == '0' || editObject.category.$error.notSelected">Wähle eine Kategorie</div>
+			<div class="warning select" ng-show="editObject.category.$error.notSelected">Wähle eine Kategorie</div>
 		</div>
 		
 		<div class="formRow">

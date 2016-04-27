@@ -1,4 +1,4 @@
-<span class="profilImage large" ng-style="profilImageBG"></span>
+<span class="profilImage xlarge" ng-style="profilImageBG"></span>
 
 <div class="contact">
 	<h2>{{ currentNeighbor.accountName }}</h2>
@@ -37,13 +37,8 @@
 	<p ng-bind-html="currentNeighbor.descriptionAvailableFormatted"></p>
 </div>
 
-<a id="btProfilEdit" class="bt_light arrowDown" ng-class="{active: contextmenu.current == 'profilEdit'}" href ng-click="contextmenu.show('profilEdit')"><span class="mark" ng-show="currentNeighbor.address == '' || currentNeighbor.person1_firstName == ''"></span>Bearbeiten</a>
+<a id="btProfilEdit" class="bt_light arrowDown" ng-class="{active: contextBox.id == 'profilEditMenu'}" href ng-click="showProfilEditMenu($event)"><span class="mark" ng-show="currentNeighbor.address == '' || currentNeighbor.person1_firstName == ''"></span>Bearbeiten</a>
 <div class="editMessage" ng-if="currentNeighbor.person1_firstName == ''">Vervollständige deine Kontaktdaten, damit du diese den einzelnen Gegenständen zuordnen kannst.</div>
 
-<div class="contextmenu medium profilEdit" ng-show="contextmenu.current == 'profilEdit'">
-	<a href ng-click="contextmenu.hide(); openModalProfilEdit()"><span class="mark" ng-show="currentNeighbor.address == ''"></span>Profil bearbeiten</a>
-	<a href ng-click="contextmenu.hide(); openModalProfilPerson(1)"><span class="mark" ng-show="currentNeighbor.person1_firstName == ''"></span>{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? 'Kontaktdaten bearbeiten' : currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName+' bearbeiten' }}</a>
-	<a href ng-click="contextmenu.hide(); openModalProfilPerson(2)">{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? '2. Bewohner hinzufügen' : currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName+' bearbeiten' }}</a>
-	<a href ng-click="contextmenu.hide(); openModalPasswordEdit()">Zugangsdaten ändern</a>
-</div>
+
 

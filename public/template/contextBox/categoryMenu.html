@@ -1,0 +1,27 @@
+<div id="contextBoxWrap" class="arrowTopRight category" ng-class="contextBox.view">
+	<div class="header">
+		<a href class="bt_dark close" ng-click="contextBox.hide()"><span>schliessen</span></a>
+	</div>
+	
+	<h2>Kategorien</h2>
+	<a href class="bt_light arrowRight small" ng-click="contextBox.hide(); contextBox.setFilterCategory('all')">Alle Kategorien</a>
+	
+	<div class="content">
+		<div ng-repeat="category in contextBox.categories" class="itemCategory" ng-click="contextBox.hide(); contextBox.setFilterCategory(category.id)">
+			<div class="imageWrap" >
+				<div class="img" ng-style="{'background-image':'url(assets/img/static/'+category.image+')'}"></div>
+				<div class="height"></div>
+			</div>
+			
+			<div class="info">
+				<div class="categoryName">{{ category.name }}</div>
+				<div class="count">{{ category.count }}</div>
+			</div>
+		</div>
+	</div>
+	
+
+	
+	
+	
+</div>

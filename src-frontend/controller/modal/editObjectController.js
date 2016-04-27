@@ -7,7 +7,7 @@ angular.module('Leihnah').controller('EditObjectController', function($scope, $u
 	$scope.formDisabled = false;
 		
 	$scope.currentObject = {
-		categoryId: '0',
+		categoryId: '8', // sonstiges
 		active: true,
 		image_1: '',
 		image_2: '',
@@ -32,7 +32,7 @@ angular.module('Leihnah').controller('EditObjectController', function($scope, $u
 	
 	if (currentObject !== undefined) {
 		$scope.currentObject = angular.copy(currentObject);
-		$scope.currentObject.categoryId = currentObject.category.id.toString();
+		$scope.currentObject.categoryId = currentObject.categoryId.toString();
 		$scope.currentObject.directContact_fixnetPhone = $scope.currentObject.directContact_fixnetPhone == true ? 'yes' : 'no'; 
 		$scope.currentObject.directContact_person1_mail = $scope.currentObject.directContact_person1_mail == true ? 'yes' : 'no'; 
 		$scope.currentObject.directContact_person1_phone = $scope.currentObject.directContact_person1_phone == true ? 'yes' : 'no'; 
@@ -51,13 +51,13 @@ angular.module('Leihnah').controller('EditObjectController', function($scope, $u
 	
 	$scope.categories = angular.copy(categories);
 	$log.debug('categories', categories);
-	
-	if ($scope.categories[0].id != 0 && $scope.currentObject.categoryId == '0') {
+	/*
+	if ($scope.categories[0].id != 0 && $scope.currentObject.categoryId == 0) {
 		$scope.categories.splice(0, 0, {id: 0, name: '-- Auswahl --'});
 	}
-
-	$log.debug('scope.categories', $scope.categories);
+	*/
 	
+	$log.debug('scope.categories', $scope.categories);
 	
 	$scope.updateCategory = function() {
 		$log.debug('categoryid', $scope.currentObject.categoryId);

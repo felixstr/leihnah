@@ -1,22 +1,40 @@
-angular.module('Leihnah').controller('ObjectsController', function($scope, $http, $state, $window, $log, $uiViewScroll, $document, AuthenticationService, auth, CategoryService, Piwik) {
+angular.module('Leihnah').controller('ObjectsController', function($scope, $http, $state, $window, $log, $uiViewScroll, $document, $timeout, AuthenticationService, auth, CategoryService, ContextBoxService, ScrollService, Piwik) {
+	
 	Piwik.trackPageView($window.location.origin+'/objects');
-	
-	document.body.scrollTop = document.documentElement.scrollTop = 0;
-	
-	$log.debug('ObjectsController', $scope.$parent.lastObjectId);	
-	
 	
 	$scope.state = $state;
 	$scope.showCategories = false;
-	
 	
 	$scope.headerImages = ['abc.jpg', 'barivox.jpg', 'heissleim.jpg', 'schwimmweste.jpg', 'teigwaren.jpg', 'ukulele.jpg', 'schleifmaschine.jpg'];
 	$scope.headerImage = $scope.headerImages[Math.floor(Math.random() * $scope.headerImages.length)];
 // 	$scope.headerImage = 'schleifmaschine.jpg';
 
 	
-	
-	$scope.changeOrder = function(id) {
+	// OrderMenu
+	$scope.showOrderMenu = function(event) {
+	    ContextBoxService.setTargetElement(event.currentTarget);
+	    ContextBoxService.setHorizontalAlign('right');
+	    ContextBoxService.setId('orderMenu');	    
+	    ContextBoxService.show();
+    }
+    
+    // CategoryMenu
+	$scope.showCategoryMenu = function(event) {
+	    ContextBoxService.setTargetElement(event.currentTarget);
+	    ContextBoxService.setHorizontalAlign('right');
+	    ContextBoxService.setId('categoryMenu');
+	    ContextBoxService.setNoPositionBelow(624);	    
+	    ContextBoxService.show();
+	    ContextBoxService.categories = $scope.categories;
+	    ContextBoxService.view = ($scope.filter.search.length > 0 || $scope.filter.category != null) ? 'filtered' : 'default';
+	    ContextBoxService.onLoad(function(){
+		    $document.scrollToElement($('#contextBoxWrap'), 80, 300);
+	    });
+
+// 	    
+    }
+    
+	$scope.contextBox.changeOrder = function(id) {
 		$log.debug(id);
 		
 		document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -34,7 +52,7 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 		$scope.showCategories = !$scope.showCategories;
 	}
 	
-	$scope.setFilterCategory = function(id) {
+	$scope.contextBox.setFilterCategory = function(id) {
 		$scope.filter.category = id;
 		
 		document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -90,22 +108,37 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 		return result;
 	}
 	
-	$scope.scrollToObject = function(id) {
-		if (id > 0) {
-			
-			/*
-			var element = $document.find('#object_'+id);
-			$log.debug(id, element);
-			*/
-			
-// 			$uiViewScroll(angular.element(document).find('#object_'+id));
-/*
-			
-			$anchorScroll.yOffset = 200;
-			$location.hash('object_'+id);
-*/
-		} 
-	}
 	
-	$scope.scrollToObject($scope.$parent.lastObjectId);
+
+	
+
+	
+	
+	$timeout(function() {
+
+		if (ScrollService.lastState == 'object') {
+			$document.scrollTo(0, ScrollService.lastScrollPosition);
+		}
+		
+		
+	}, 100);
+	
+	
+	
+	
+	// openObject
+	$scope.openObject = function(objectId) {
+		$scope.fadeout = true;
+
+		ScrollService.update();
+		
+		$timeout(function() {
+			$document.scrollToElement($("body"), 0, 300);
+		}, 500);
+		
+		$timeout(function() {
+			$state.go('object', {objectId: objectId});
+		}, 800);
+		
+	}
 });

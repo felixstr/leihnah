@@ -2,87 +2,36 @@
 * spacing
 */
 $space: 25px;
+$space-small: 5px;
 
 /**
 * colors
 */
 
-
-$color-warning: #800a02;
-$color-link: #0E5470;
-$color-link-active: #13769e;
-$color-link-bg: #f1f1f1;
-$color-grey: #f7f7f7;
-$color-grey: #f2f2f2;
-$color-text: #333;
-$color-text-title: #0D2232;
-$color-bg: #E9E9E9;
-$color-bg: #d4d9d9;
-
-$color-bg-light: #f0f2f4;
-$color-bg-light: #f4f5f8;
-$color-bg-light: #F8F8F8;
-$color-bg-light: #f0f0f0;
-$color-placeholder: #8A8A8A;
-
-$color-mark: #a71c1c;
-
-$color-context-bg: #f9f9f9;
-
-
-$color-grey-1: #272727; /* 15% text */
-$color-grey-2: #676767; /* 40% */
-$color-grey-3: #b2b2b2; /* 70% contextmenu-border */
-$color-grey-4: #cccccc; /* 80% fine border (kategorie-button, kategorie-borders) */
-$color-grey-5: #e4e4e4; /* 90% page-bg */
-$color-grey-6: #ededed; /* 93% form-direct-contact-bg */
-$color-grey-7: #f2f2f2; /* 95% */
-
-
-
-$color-main-0: #01230B; /* footer gb */
-$color-main-1: #126129; /* title */
-$color-main-2: #2A8043; /* */
-$color-main-3: #45905B; /* link */
-$color-main-4: #F9FCFA; /* object-gb, button-bg */
-
-$color-main-0: #153046; /* footer gb */
-$color-main-1: #153046; /* title */
-$color-main-2: #10425d; /* */
-$color-main-3: #1d7cae; /* link */
-$color-main-4: #eff5ff; /* link */
-
 $color-special-red: #d01003;
-$color-special-green: #1e923d;
-$color-special-black: black;
-
-
-
-$color-title-normal: #333; 
-
-$color-title-text-lighter: #515252;
-$color-main-dark: #093664; /* button-dark-bg, button-light-font, navigation-active-border, a-link */
-$color-main-light: #DCE2E9; /* button-light-border */
-$color-grey-light: #f8f8f8; /* button-light-bg */
-$color-grey-light-text: #b2b2b2; /* placeholder */
-$color-grey-dark: #e4e4e4; /* navigation-hover-border, a-link-border */
-$color-box-border: #E8ECF0; /* bluebox-border */
-$color-box-bg:#F4F6F8; /* bluebox-bg */
-
-
 
 $color-title-normal: #333;
 $color-text: $color-title-normal;
 $color-text-lighter: #515252;
-$color-main-dark: #F07249; /* button-dark-bg, button-light-font, navigation-active-border, a-link */
-$color-main-light: #FEF8F6; /*  */
+$color-main-dark: #F9EB33; /* button-dark-bg, button-light-font, navigation-active-border, a-link */
+$color-main-dark-active: #F5E32A;
+$color-main-light: #FFFAC9; /* button-light-bg */
+$color-main-light-acitve: #FFF6A2;
 $color-grey-light: #f8f8f8; /* button-light-bg */
-$color-grey-light-text: #b2b2b2; /* placeholder */
+$color-grey-light-text: #909090; /* placeholder, landing-page-title-add */
 $color-grey-dark: #e4e4e4; /* navigation-hover-border, a-link-border */
+$color-grey-dark-bg: #f5f5f5; /* navigation-hover-border, a-link-border */
 $color-grey-dark-text: #888888; /* a-link-border */
-$color-box-border: #E8ECF0; /* bluebox-border */
-$color-box-bg:#F4F6F8; /* bluebox-bg */
 $color-black-light: #42413E; /* footer */
+
+$color-special-get: #2CBD7A;
+$color-special-get-light: #96DDBC;
+$color-special-back: #3069BC;
+$color-special-back-light: #98B5DC;
+$color-special-red: #d01003;
+$color-special-green: #36ae03;
+$color-special-orange: #f68e05;
+
 
 /**
 * z-index
@@ -91,11 +40,11 @@ $zIndex-footer: 1;
 $zIndex-BG: 2;
 $zIndex-content: 3;
 $zIndex-topbar: 5;
-$zIndex-contextmenuOverlay: 9;
-$zIndex-contextmenu: 10;
+$zIndex-contextmenuOverlay: 2000;
+$zIndex-contextmenu: 2001;
 
-
-
+/* image */
+$image-ratio: 75%;
 
 
 * {
@@ -108,10 +57,14 @@ $zIndex-contextmenu: 10;
 	-moz-osx-font-smoothing: grayscale;
 	border: none;
 	text-decoration: none;
+	
+	&:focus {
+		outline: none;
+	}
 }
 
 body {  
-    background-color: $color-grey-7;
+    background-color: $color-grey-light;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     
@@ -140,6 +93,7 @@ header.site {
 	left: 0;
 	width: 100%;
 	height: 70px;
+	background: $color-main-dark;
 	background: white;
 	z-index: $zIndex-topbar;
 	box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
@@ -147,7 +101,7 @@ header.site {
 	nav {
 		float: left;
 		margin-left: $space;
-		margin-left: calc((50% - 720px) + ($space*2));
+		margin-left: calc((50% - 720px) + ($space*1));
 	}
 	
 	.containerLogo {
@@ -155,9 +109,9 @@ header.site {
 		width: 200px;
 		left: calc(50% - 100px);
 		text-align: center;
-		line-height: 72px;
+		line-height: 69px;
 		font-family: Roboto-Bold;
-		font-size: 15px;
+		font-size: 14px;
 		color: $color-text;
 		cursor: pointer;
 		
@@ -178,22 +132,24 @@ header.site {
 		height: 70px;
 		float: left;
 		margin-right: $space;
-		padding: 0 10px;
+		padding: 0 15px;
 		color: $color-title-normal;
 		color: $color-text;
+
 		font-family: Roboto-Medium;
-/*		position: relative;*/
 		
-		
-		&:active {
-			background-color: rgba(0, 0, 0, 0.1);
-		}
 		&:hover {
-			border-bottom: 4px solid $color-main-dark;
+			border-bottom: 5px solid $color-grey-dark;
 		}
+		
 		&.current {
-			border-bottom: 4px solid $color-main-dark;
+			border-bottom: 5px solid $color-main-dark;
 		}
+				
+		&:active {
+			border-bottom: 5px solid $color-main-dark;
+		}
+			
 	}
 	
 	a.profil {
@@ -201,40 +157,188 @@ header.site {
 		display: inline-block;
 		position: relative;
 		
-		margin-right: calc((50% - 720px) + ($space*2));
-		padding-right: calc(40px + 10px + 10px);
-		padding-left: 10px;
-		
+		margin-right: calc((50% - 720px) + ($space*1));
+		padding-right: calc(40px + 15px + 10px);
+		padding-left: 15px;
 			
 		span.profilImage {
 			position: absolute;
 			top: 15px;
-			right: 10px;
+			right: 15px;
+			
+			span.mark {
+				top:-7px;
+				left: -7px;
+			}
 		}
-		
-		
 	}
 	
+	
+	button.hamburger {
+		position: absolute;
+		padding-right: calc($space-small * 4);
+		padding-left: $space;
+		right: 0;
+		top: 0;
+		font-size: 20px;
+		
+		width: calc(30px + ($space-small * 4) +  $space);
+		height: 50px;
+		background: white;
+		
+		span.mark {
+			top: 5px;
+			right: 41px;
+			left: auto;
+		}
+		
+		div {
+			width: 100%;
+			height: 3px;
+			background: $color-black-light;
+			margin: 6px 0;
+		}
+	}
+	
+}
+
+.mobile-nav {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	
+	overflow: hidden;
+	background-image: url(img/lp-header-1.jpg);
+	background-size: cover;
+	background-position: center center;
+	
+	.content {
+		width: 100vw;
+		height: 100vh;
+		position: absolute;
+		right: 0;
+		top: 0;
+		padding-top: 4vh;
+		padding-left: 10vw;
+		background: $color-black-light;
+		background: rgba(66, 65, 62, 0.96);
+		
+		transition: transform 0.2s ease-in-out;
+		transition-property: opacity, transform;
+		
+		opacity: 0;
+		transform: scale3d(2, 2, 2);
+		
+		a {
+			float: left;
+			width: 100%;
+			padding-left: 60px;
+			font-size: 16px;
+			margin-top: calc($space/2);
+			padding-top: calc($space/2);
+			color: white;
+			position: relative;
+			font-family: Roboto-Light;
+			
+			span.mark {
+				width: 11px;
+				height: 11px;
+				top: 17px;
+				left: 40px;
+			}
+			
+			&.current {
+				font-family: Roboto-Medium;
+			}
+		}
+		a.profil {
+			margin-bottom: 0;
+			margin-top: 0;
+			border-top: none;
+			
+			.name {
+				font-family: Roboto-Medium;
+				font-size: 22px;
+				position: relative;
+				
+				span {
+					display: block;
+					font-size: 16px;
+					font-family: Roboto-Light;
+					margin-top: 5px;
+				}
+			}
+			.profilImage {
+				width: 75px;
+				height: 75px;
+				margin-bottom: 5px;
+				border: 2px solid white;
+			}
+		}
+		
+		div.profil, div.pages, div.logout {
+			float: left;
+			width: 100%;
+			padding-bottom: calc($space*3/2);
+			border-bottom: 1px solid $color-text;
+		}
+		
+		div.pages, div.logout {
+			padding-top: calc($space/2);
+		}
+		
+		div.logout {
+			border-bottom: none;
+		}
+	}
+	
+	
+	
+	&.showMobileNav .content {
+		opacity: 1;
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+#outherContentWrap {
+	transition: transform .2s ease-in-out;
+	transition-property: transform, height;
+	
+	&.showMobileNav-add {
+		height: 100vh;
+	}
+	&.showMobileNav-remove-active {
+		overflow: hidden;
+		height: 100vh;
+	}
+	
+	&.showMobileNav {
+		height: 90vh;
+		overflow: hidden;
+		transform: scale3d(0.8, 0.8, 0.8) translateX(-95vw);
+		box-shadow: 0px 1px 3px rgba(0,0,0, 0.2);
+	}
 }
 
 
 #containerMain {
 	float: left;
 	width: 100%;
-	margin-top: 70px;
-	min-height: calc(100vh - 95px - 175px);
-	position: relative;
+	top: 70px;
+	min-height: calc(100vh - 70px);
+	position: absolute;
 	z-index: $zIndex-content;
-	margin-bottom: 350px;
+	padding-bottom: 350px;
 		
 	.contentContainer {
 		float: left;
 		width: 100%;
-		padding: calc($space*2) calc((50% - 720px) + ($space*2));
-		padding-bottom: calc($space*3);
+		padding: calc($space*2) calc((50% - 720px) + ($space*1));
+		padding-bottom: calc($space*6);
 		position: relative;
 		background: white;
-	/*	margin-top: calc($space*2);*/
 		min-height: calc(100vh - 120px);
 		
 	}
@@ -242,6 +346,7 @@ header.site {
 	&.page_objects {
 		.contentContainer {
 			margin-top: 0;
+			padding: calc($space*6) calc((50% - 720px) + ($space*0));
 			padding-top: 0;
 		}
 	}
@@ -257,7 +362,21 @@ header.site {
 			padding-top: calc($space*3);
 		}
 	}
+	
+	
+	.topContainer, 
+	.contentContainer {
+		transition: opacity 0.3s ease-in-out;
+	}
+	
+	&.fadeout {
+		.topContainer, 
+		.contentContainer {
+			opacity: 0;
+		}
+	}
 }
+
 
 footer {
 	float: left;
@@ -268,7 +387,7 @@ footer {
 	position: fixed;
 	bottom: 0;
 	left: 0;
-	height: 100vh;
+	height: 400px;
 	
 	
 	.content {
@@ -283,35 +402,42 @@ footer {
 		
 		
 		.top {
+			float: left;
 			width: 50%;
 			img {
-				width: 100px;
-				display: inline;
+				width: 80px;
+				float: left;
+				margin-right: 10px;
 			}
 			.slogan {
-				display: inline;
-				position: relative;
-				top: -18px;
-				margin-left: 10px;
-				color: white;
+				float: left;;
+				margin-top: 9px;
+
+				color: $color-grey-light;
 				font-family: Roboto-Medium;
 				font-size: 16px;
-				color: $color-grey-dark;
 			}
 		}
 		.bottom {
+			float:left;
+			margin-right: 20px;
 			width: 50%;
 			border-top: 1px solid white;
 			margin-top: 15px;
 			padding-top: 15px;
-			color: $color-grey-dark;
+			color: $color-grey-light;
 
 			font-size: 16px;
 			line-height: 23px;
 		}
 		
 		a {
-			color: $color-grey-dark;
+			color: $color-main-dark;
+			border-bottom: 1px solid $color-grey-light;
+			
+			&:hover {
+				border-color: $color-main-dark;
+			}
 		}
 	}
 	
@@ -361,6 +487,7 @@ h2 {
 }
 h3 {
 	font-size: 18px;
+	line-height: 23px;
 	font-family: Roboto-Medium;
 	font-family: RobotoSlab-Bold;
 	font-weight: normal;
@@ -372,7 +499,7 @@ h4 {
 	font-size: 16px;
 	font-family: Roboto-Medium;
 	font-weight: normal;
-	margin-bottom: 5px;
+	margin-bottom: 8px;
 	color: $color-title-normal;
 }
 p {
@@ -383,7 +510,7 @@ p {
 	color: $color-text;
 }
 a {
-	color: $color-main-dark;
+	color: $color-text;
 }
 a.text {
 	border-bottom: 1px solid $color-grey-dark;
@@ -394,6 +521,7 @@ a.text {
 }
 b, strong {
 	font-family: Roboto-Medium;
+	font-weight: normal;
 }
 i {
 	font-family: Roboto-Italic;
@@ -408,305 +536,191 @@ span.accountName {
 * page object
 */
 #containerMain {
-	.topContainer {
+	.objectContentWrapper {
 		float: left;
 		width: 100%;
-		height: calc(100vh - 300px);
-		min-height: 500px;
+		background: white;
 		
-		padding: 0 calc(50% - 600px + ($space*2));
-		padding-top: 15vh;
-
-		background-repeat: no-repeat;
-		background-size: cover;
-		background-position: center center;
 		
-		&.filtered {
-			height: auto;
-			min-height: 0;
-			padding-top: $space;
-			padding-bottom: $space;
-			background: none;
+		.topContainer, 
+		.topContainer .searchContainer,
+		.topContainer .bgImage {
+		/*	transition: all 0.3s ease-in-out;*/
+		}
+		
+		.topContainer {
+			float: left;
+			width: 100%;
+			height: calc(100vh - 300px);
+			min-height: 500px;
+			position: relative;
+			
+			
+			padding: 0 calc(50% - 600px + ($space*2));
+			padding-top: 15vh;
+	
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-position: center center;
+			background-color: $color-grey-dark;
+					
+			&.filtered {
+				height: 0;
+				min-height: 115px;
+				padding-top: $space;
+				padding-bottom: $space;
+				
+				.bgImage {
+					opacity: 0;
+				}
+				.searchContainer {
+					box-shadow: none;
+					margin-top: 0;
+					input {
+						font-size: 16px;
+						font-family: Roboto-Regular;
+						
+						
+					}
+				}
+			}
+			
+			.bgImage {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center center;
+				background-color: grey;
+			}
+			
+			h1 {
+				font-family: RobotoSlab-Bold;
+				color: $color-text;
+				position: absolute;
+				
+			}
 			
 			.searchContainer {
-				box-shadow: none;
+				float: left;
+				width: 100%;
+				height: 65px;
+				background: white;
+				position: relative;
 				
+				margin-top: 100px;
+				
+				box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
+							
 				input {
-					font-size: 16px;
+					width: 100%;
+					height: 45px;
+					margin-top: 10px;
+					line-height: 45px;
+					
+					font-size: 24px;
 					font-family: Roboto-Regular;
+					color: $color-text;
+					padding-left: $space;
+					
+					&::placeholder {
+						color: $color-text; 
+					}
+					
+					&:focus {
+						&::placeholder {
+							color: $color-grey-light-text;
+						}
+					}
 				}
+				
+				.buttons {
+					position: absolute;
+					right: 0;
+					top: 0;
+					width: 360px;
+					
+					a {
+						float: right;
+						margin-right: calc($space/2);
+						position: relative;
+						top: 12px;
+	
+						background-repeat: no-repeat;
+						
+						
+				
+					}
+					
+			
+				}
+				
+				
 			}
 		}
 		
-		h1 {
-			text-shadow: 0px 1px 3px rgba(0,0,0, 0.15);
-			margin-bottom: calc($space*3);
-			font-family: RobotoSlab-Bold;
-			color: $color-text;
-		}
 		
-		.searchContainer {
-			float: left;
-			width: 100%;
-			height: 65px;
-			background: white;
+		.topBar {
+			margin-left: calc(50% - 650px + ($space*4));
+			margin-right: calc(50% - 650px + ($space*4));
+	
 			position: relative;
 			
-			box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
+			.text {
+				height: 65px;
+				line-height: 65px;
+			}
 			
-			/*border-radius: 2px;*/
 			
-			input {
-				width: 100%;
-				height: 45px;
-				margin-top: 10px;
-				line-height: 45px;
-				
-				font-size: 24px;
-				font-family: Roboto-Regular;
-				color: $color-grey-1;
-				padding-left: $space;
-				
-				
+			a.bt_light {
+				position: absolute;
+				right: 0;
+				top: 19px;
+			}
+			
+		}
+		
+		.results {
+			float: left;
+			width: 100%;
+			border-top: 1px solid $color-grey-dark;
+			padding-top: $space;
+		}
+		
+		.previewRow {
+			float: left;
+			width: 100%;
+			margin-top: calc($space*2);
+			margin-bottom: calc($space);
+			
+			h2 {
+				padding-left: calc(20px + ($space*6));
+				margin-bottom: calc($space*2);
 			}
 			
 			.buttons {
-				position: absolute;
-				right: 0;
-				top: 0;
-				width: 360px;
-				
-				a {
-					float: right;
-					margin-right: calc($space/2);
-					position: relative;
-					top: 12px;
-
-					background-repeat: no-repeat;
-					
-					
-					
-					&.close {
-						width: 50px;
-						background-size: 12px;
-						background-image: url(img/icon-close-color.svg);
-						background-position: center center;
-						text-indent: 1000px;
-						overflow: hidden;
-					}
-				}
-				
-				/*
-				button {
-					position: relative;
-					float: right;
-					
-					height: 65px;
-					line-height: 65px;
-					font-size: 14px;
-					color: $color-main-dark;
-					
-					text-transform: uppercase;
-	
-					
-					padding-right: calc(($space) + 12px + 10px);
-
-					padding-left: calc($space);
-					
-					font-family: Roboto-Medium;
-					
-					background: $color-grey-light;
-					background-image: url(img/arrow-down.svg);
-					background-size: 12px;
-					background-position: calc(100% - ($space)) center;
-					background-repeat: no-repeat;
-					
-					&:hover {
-						box-shadow: 0px 1px 4px rgba(0,0,0, 0.2);
-					}	
-					&:active {
-						background-color: rgba(0, 0, 0, 0.1);
-						
-					}
-					
-					&.active {
-						
-						z-index: $zIndex-contextmenu;
-					}
-				}
-				*/
-		
-			}
-			
-			.categoryContainer {
-				background: white;
-				position: absolute;
+				float: left;
 				width: 100%;
-				left: 0;
-				top: calc($space + 65px);
-				z-index: $zIndex-contextmenu;
-				
-				box-shadow: 0px 1px 3px rgba(0,0,0, 0.2);
-	
-				
-				.itemCategory {
-					float: left;
-					width: calc((100% / 6) - ($space) - ($space/6));
-					margin-left: $space;
-					margin-top: $space;
-					
-					border: 5px solid white;
-					box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
-	
-					&:hover {
-						box-shadow: 0px 1px 3px rgba(0,0,0, 0.2);
-					}
-					
-					&:active {
-						top: 2px;
-						box-shadow: 0px 0px 2px rgba(0,0,0, 0.2);
-					}
-	
-					.imageWrap {
-						float: left;
-						width: 100%;
-						position: relative;
-						cursor: pointer;
-						background: $color-grey-4;
-						
-						.height {
-							float: left;
-							width: 1px;
-							padding-top: 65%;
-						}
-							
-						.img {
-							position: absolute;
-							top: 0;
-							left: 0;
-							width: 100%;
-							height: 100%;
-							background-size: cover;
-							background-position: center center;
-						}
-					}
-	
-					.info {
-						float:left;
-						width: 100%;
-						height: 25px;
-						line-height: 30px;
-						background: white;
-						position: relative;
-						
-		
-						.categoryName {
-							float: left;
-							width: calc(100% - 20px - 10px);
-							white-space: nowrap;
-							overflow: hidden;
-							text-overflow: ellipsis;
-							padding-left: 10px;
-			
-							font-size: 13px;
-							font-family: Roboto-Medium;
-						}
-						
-						.count {
-							position: absolute;
-							right: 0;
-							top: 0;
-							padding-right: 10px;
-							font-size: 11px;
-						}
-					}
-				}
-				
-				.footer {
-					float: left;
-					width: 100%;
-					margin-top: $space;
-					padding: $space;
-					text-align: center;
-					background: $color-grey-6;
-				}
-				
+				padding-left: calc(20px + ($space*6));
+				margin-top: calc($space*2);
 			}
 		}
 	}
-	
-	
-	.topBar {
-		margin-left: calc(50% - 650px + ($space*4));
-		margin-right: calc(50% - 650px + ($space*4));
-
-		position: relative;
-		
-		.text {
-			height: 65px;
-			line-height: 65px;
-		}
-		
-		
-		a.bt_light {
-			position: absolute;
-			right: 0;
-			top: 19px;
-			
-			padding-right: calc(($space/2) + 12px + 5px);
-			
-			background: $color-grey-light;
-			background-image: url(img/arrow-down.svg);
-			background-size: 12px;
-			background-position: calc(100% - ($space/2)) center;
-			background-repeat: no-repeat;
-		}
-		.contextmenu.order {
-			right: -14px;
-			top: 69px;
-		}
-	}
-	
-	.results {
-		float: left;
-		width: 100%;
-		border-top: 1px solid $color-grey-4;
-	}
-	
-	.previewRow {
-		float: left;
-		width: 100%;
-		margin-top: calc($space*2);
-		margin-bottom: calc($space);
-		
-		h2 {
-			padding-left: calc(20px + ($space*4));
-		}
-		
-		.buttons {
-			float: left;
-			width: 100%;
-			padding-left: calc(20px + ($space*4));
-			margin-top: calc($space*2);
-		}
-	}
-	
 	
 }
 
-
-/**
-* kontext-menu
-*/
-.contextmenu {
-	position: absolute;
-	z-index: $zIndex-contextmenu;
+#contextBoxWrap.category {
 	background: white;
+	position: absolute;
+	left: 0;
+	top: calc($space + 50px);
+	z-index: $zIndex-contextmenu;
+	padding: $space;
 	
-	box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
-	
-	border: none;
-	border: 1px solid $color-grey-4;
+	box-shadow: 0px 1px 3px rgba(0,0,0, 0.2);
 	
 	&::before {
 		background-color: white;
@@ -715,65 +729,235 @@ span.accountName {
 	    height: 16px;
 	    width:  16px;
 	    position: absolute;
-	    top: -9px;
-		left: 75%;
+	    top: -8px;
+		right: 80px;
 	    transform: rotate( 45deg );
 	    box-shadow: -2px -2px 3px rgba(0, 0, 0, 0.05);
-	    border: 1px solid $color-grey-4;
 	    border-right: none;
 	    border-bottom: none;
 	}
 	
-	a {
-		padding: 14px 20px;
-		display: inline-block;
-		width: 100%;
-		font-size: 16px;
-		position: relative;
-		color: $color-text;
+	$count: 5;
+	.itemCategory {
+		float: left;
+		width: calc((100% / $count) - ($space-small/$count*($count - 1)));
+		margin-left: $space-small;
+		margin-bottom: $space-small;
 		
-		&.current {
-			background-color: rgba(0, 0, 0, 0.04);
+		transition: all 0.1s ease-in-out;	
+		
+		&:nth-child(5n+1) {
+			margin-left: 0;
 		}
 		
 		&:hover {
-			background-color: rgba(0, 0, 0, 0.06);
+			
+			.info {
+				background-color: $color-main-dark-active;
+			}
 		}
-		
 		&:active {
-			background-color: rgba(0, 0, 0, 0.1);
+			transform: scale3d(0.95,0.95,0.95);
 		}
 		
-		
+		.imageWrap {
+			float: left;
+			width: 100%;
+			position: relative;
+			cursor: pointer;
+			background: $color-grey-light;
+			
+			.height {
+				float: left;
+				width: 1px;
+				padding-top: $image-ratio;
+			}
+				
+			.img {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-size: cover;
+				background-position: center center;
+			}
+		}
+
+		.info {
+			float:left;
+			width: 100%;
+			height: 25px;
+			line-height: 25px;
+			background: white;
+			position: relative;
+			
+			width: calc(100% - ($space-small*4));
+			margin-left: calc($space-small*2);
+			margin-top: calc(-$space-small*2 - 25px);
+			
+			.categoryName {
+				float: left;
+				width: calc(100% - 20px - 10px);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				padding-left: 10px;
+
+				font-size: 13px;
+				font-family: Roboto-Medium;
+			}
+			
+			.count {
+				position: absolute;
+				right: 0;
+				top: 0;
+				padding-right: 10px;
+				font-size: 11px;
+			}
+		}
 	}
 	
-	&.medium {
+	> a {
+		position: absolute;
+		top: $space;
+		right: $space;
+	}
+	
+			
+} 
+
+
+
+/* contextbox */
+#contextBoxWrap {
+	z-index: $zIndex-contextmenu;
+	position: absolute;
+	top: 0;
+	left: 9;
+	background: white;
+	
+	
+	box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+	
+	&::before {
+		background-color: white;
+	    content: "\00a0";
+	    display: block;
+	    height: 16px;
+	    width:  16px;
+	    position: absolute;
+	    transform: rotate( 45deg );
+	    box-shadow: -2px -2px 3px rgba(0, 0, 0, 0.06);
+
+	}
+	
+	&.arrowTopRight {
+		&::before {
+			top: -8px;
+			right: 30px;
+		}
+	}
+	
+	&.login {
+		width: 300px;
+		margin-left: calc(-300px);
+		margin-top: 18px;
+	}
+	
+	&.profil,
+	&.profilEditMenu {
 		width: 250px;
+		margin-left: calc(-250px);
+		margin-top: 18px;
 	}
 	
-	&.small {
+	&.orderMenu {
 		width: 150px;
+		margin-left: calc(-150px);
+		margin-top: 18px;
 	}
 	
-	&.profil {
-		right: calc((50% - 720px) + ($space*2) + 10px);
-		top: 92px;
+	&.ownObjectMenu {
+		width: 150px;
+		margin-left: calc(-127px);
+		margin-top: 18px;
+	}
+	&.boxGet,
+	&.boxBack,
+	&.timepicker {
+		width: 300px;
+		margin-left: calc(-150px - 18px);
+		margin-top: 18px;
+	}
+	
+	&.category {
+		width: 1100px;
+		margin-left: calc(-1069px - 18px);
+		margin-top: 18px;
+		&.filtered {
+			margin-left: calc(-1010px - 18px);
+			&::before {
+				top: -8px;
+				right: 83px;
+			}
+		}
+	}
+	
+	&.menu {
+		a {
+			padding: 14px 20px;
+			display: inline-block;
+			width: 100%;
+			font-size: 16px;
+			position: relative;
+			color: $color-text;
+			
+			&.current {
+				background-color: $color-grey-light;
+				font-family: Roboto-Medium;
+			}
+			
+			&:hover {
+				background-color: $color-grey-light;
+			}
+			
+			&:active {
+				background-color: $color-grey-dark;
+			}
+	
+		}
+	}
+	
+	.header {
+		float: left;
+		width: 100%;
+		height: 40px;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background: $color-main-dark;
+		z-index: 11;
+		box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
+		
+		display: none;
+		
+		a.close {
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
 	}
 }
-.contextmenuOverlay {
+#contextBoxOverlay {
 	position: fixed;
 	width: 100vw;
 	height: 100vh;
 	background: white;
 	opacity: 0;
 	z-index: $zIndex-contextmenuOverlay;
-	
-	/*
-	&.overlay_categories {
-		opacity: 1;
-		background: rgba(13,34,50,0.40);
-	}
-	*/
+	top: 0;
+	left: 0;
 }
 
 
@@ -782,8 +966,8 @@ span.accountName {
 */
 span.mark {
 	position: absolute;
-	left: -7px;
-	top: -7px;
+	left: -11px;
+	top: -11px;
 	width: 20px;
 	height: 20px;
 	border-radius: 50%;
@@ -809,15 +993,21 @@ span.mark {
 	border-radius: 50%;
 	display: inline-block;
 	background-size: cover;
+	background-color: white;
 	
-	&.large {
+	&.xlarge {
 		width: 150px;
 		height: 150px;
 	}
 	
-	&.medium {
+	&.large {
 		width: 100px;
 		height: 100px;
+	}
+	
+	&.medium {
+		width: 60px;
+		height: 60px;
 	}
 	
 	&.small {
@@ -832,36 +1022,26 @@ span.mark {
 .modalHead {
 	float: left;
 	width: 100%;
-	height: 60px;
+	height: 40px;
 	position: absolute;
 	top: 0;
 	left: 0;
-	background: white;
+	background: $color-main-dark;
 	z-index: 11;
 	box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
-		
+	
 	a.close {
 		position: absolute;
 		right: 0;
 		top: 0;
-		
-		width: 60px;
-		height: 60px;
-		
-		background-image: url(img/icon-close-color.svg);
-		background-size: 15px;
-		background-position: center center;
-		background-repeat: no-repeat;
-		
-		text-indent: 1000px;
-		overflow: hidden;
 	}
+	
 }
 .modalBody {
 	max-height: calc(100vh - 100px);
 	overflow: auto;
 	float: left;
-	margin-top: 60px;
+	margin-top: 40px;
 	
 	&.space {
 		padding-top: calc($space*2);
@@ -880,6 +1060,18 @@ img.thumb {
 button {
 	cursor: pointer;
 }
+.formText {
+	float:left;
+	width: 100%;
+	width: calc(100% - (4*$space));
+	margin-left: calc(2*$space);
+	margin-bottom: $space;
+	margin-top: $space;
+	h3 {
+		margin-top: $space-small;
+	}
+}
+
 .formRowImage {
 	float:left;
 	width: 100%;
@@ -897,7 +1089,7 @@ button {
 		
 		background: white;
 		overflow: hidden;
-		border: 1px solid $color-grey-5;
+		border: 1px solid $color-grey-dark;
 		position: relative;
 		
 		.new,
@@ -920,8 +1112,8 @@ button {
 		
 		.image {
 			position: absolute;
-			width: 150px;
-			height: 150px;
+			width: 100%;
+			height: 100%;
 			left: 0;
 			top:0;
 			background-position: center center;
@@ -1020,40 +1212,36 @@ button {
 	margin-left: calc(2*$space);
 	margin-bottom: calc(2*$space);
 	margin-top: 16px;
-	/*
-	input {
-		line-height: 45px;
-		font-size: 14px;
-		background: $color-main-2;
-		color: white;
-		width: 100%;
-		cursor: pointer;
-		
-		&.inactive {
-			color: $color-text-1;
-			cursor: auto;
-			opacity: 0.5;
-			background: black;
-		}
-	}
-	*/
 }
 
 input, select, textarea, button {
 	&:focus {
-		outline: none;
+		outline: none;		
 	}
 	&::placeholder {
 		color: $color-grey-light-text;
 	}
 }
 
+form {
+	input, textarea {
+		border: 1px solid $color-grey-dark;
+		font-size: 14px;
+		padding: 8px;
+		
+		&:focus {
+			background-color: $color-main-light;	
+			border-color: $color-main-dark;	
+		}
+	}
+}
 
 /* special */
 .directContact {
 	float:left;
 	margin-left: 15px;
-	background: $color-grey-6;
+	width: calc(100% - 15px);
+	background: $color-grey-light;
 	padding: calc($space/2);
 	font-size: 14px;
 	
@@ -1077,9 +1265,13 @@ a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
 	font-size: 14px;
 	font-family: Roboto-Medium;
 	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	white-space: nowrap;
 	cursor: pointer;
 	
-	&.arrowDown, &.arrowRight, &.add, &.cancel {
+	transition: background-position 0.1s ease-in-out;
+	
+	&.arrowDown, &.arrowRight, &.add, &.cancel, &.close, &.ok, &.category {
 		padding-right: calc(($space/2) + 10px + 12px);
 		background-size: 12px;
 		background-position: calc(100% - ($space/2)) center;
@@ -1088,146 +1280,140 @@ a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
 	&.arrowRight {
 		padding-right: calc(($space/2) + 10px + 7px);
 		background-size: 7px;
+		
+		&:hover {
+			background-position-x: calc((100% - ($space/2)) + 3px);
+		}
 	}
+	&.arrowDown {
+		background-image: url(img/arrow-down-black.svg);
+		
+		&.active,
+		&:hover {
+			background-position-y: calc(50% + 3px);
+		}
+	}
+	&.close {
+		background-image: url(img/icon-close-black.svg);
+		background-position: center center;
+		span {
+			display: none;
+		}
+	}
+	&.cancel {
+		background-image: url(img/icon-close-black.svg);
+	}
+	&.ok {
+		background-image: url(img/icon-ok-black.svg);
+		background-position: center center;
+		background-size: 15px;
+		span {
+			display: none;
+		}
+	}
+	&.category {
+		background-image: url(img/icon-filter-black.svg);
+		background-position: center center;
+		background-size: 20px;
+		span {
+			display: none;
+		}
+	}
+	&.add {
+		background-image: url(img/icon-add-black.svg);
+	}
+	
+	&:disabled,
 	&.inactive {
 		opacity: 0.5;
 		box-shadow: none;
+		cursor: default;
 		
 		&:hover,
 		&:active {
-			margin: 0;
-			box-shadow: none;
+			background-position: calc(100% - ($space/2)) center;
 		}
 	}
 	
 }
 a.bt_light, input.bt_light {
 	background: $color-grey-light;
+	background: $color-main-light;
+	border: 2px solid $color-main-dark;
+	background: white;
 	
-	line-height: 43px;
-	color: $color-main-dark;
-	box-shadow: 0px 1px 1px rgba(0,0,0, 0.1);
+	line-height: 38px;
+	color: $color-text;
 	
-	&:hover {
-		box-shadow: 0px 1px 1px rgba(0,0,0, 0.2);
-	}	
-	
+	&:hover,
 	&.active,
 	&:active {
-		margin-top: 2px;
-		margin-bottom: -2px;
-		box-shadow: 0px 0px 0px rgba(0,0,0, 0.1);
+		background-color: $color-main-light;
 	}
 	
-	&.arrowDown {
-		background-image: url(img/arrow-down.svg);
-	}
+
 	&.arrowRight {
-		background-image: url(img/arrow-right-color.svg);
+		background-image: url(img/arrow-right-black.svg);
 	}
-	&.add {
-		background-image: url(img/icon-add.svg);
-	}
-	&.cancel {
-		background-image: url(img/icon-close-color.svg);
-	}
+	
+
 	
 }
 
 a.bt_dark, button.bt_dark, input.bt_dark {
-	color: white;
+	color: $color-text;
 	background: $color-main-dark;
-	box-shadow: 0px 1px 1px rgba(0,0,0, 0.2);
+
 	border: none;
-	line-height: 43px;
+	line-height: 42px;
 	
 	&:hover {
-		box-shadow: 0px 1px 1px rgba(0,0,0, 0.3);
+		background-color: $color-main-dark-active;
 	}
 	&:active {
-		margin-top: 2px;
-		margin-bottom: -2px;
-		box-shadow: 0px 0px 0px rgba(0,0,0, 0.2);
+
 	}
 	
 	&.arrowRight {
-		background-image: url(img/arrow-right-white.svg);
+		background-image: url(img/arrow-right-black.svg);
 	}
 }
 input.bt_dark {
 	width: 100%;
 }
 
-a.bt_light.small {
+a.bt_light.small, a.bt_dark.small, button.bt_dark.small {
 	font-size: 12px;
-	padding: 0 calc($space/2);
-	height: 28px;
-	line-height: 28px;
+	height: 29px;
 	cursor: pointer;
-}
-
-/*
-.bt_normal, .bt_action a, .bt_action button {
-	position: relative;
-	border: 1px solid $color-main-3;
-	background: white;
-	padding: 0 $space;
-	height: 43px;
-	line-height: 43px;
-	color: $color-main-3;
-	display: inline-block;
-	font-size: 16px;
-	font-family: Roboto-Medium;
+	background-size: 10px;
+	padding-right: calc(($space-small*1) +  10px + ($space-small*2));
+	padding-left: calc($space-small*2);
 	
-	&:active {
-		position: relative;
-		top: 2px;
-	}
+	background-position-x: calc(100% - ($space-small*2));
 	
-	&.active {
-		background: $color-main-2;
-		color: white;
-		position: relative;
-		top: 2px;
-	}
-}
-
-
-.bt_normal {
-	&:hover {
-		border-color: $color-main-2;
-		background: $color-main-4;
-		
-		
-		a {
-			color: $color-main-2;
-		}
-	}
-	
-	
-}
-
-.bt_action {
-	a, button {
-		
-		border: none;		
-		background: $color-main-3;
-		color: white;
-		
+	&.arrowDown {
 		&:hover {
-			background: $color-main-2;
-			color: white;
-			
+			background-position-y: calc(50% + 2px);
 		}
-		
-		&.inactive {
-			background: $color-grey-5;
-			color: $color-grey-2;
-		}
+	}
 	
+	&.arrowRight {
+		background-size: 6px;
+		padding-right: calc(($space-small*1) +  8px + ($space-small*2));
+		&:hover {
+			background-position-x: calc((100% - ($space-small*2)) + 3px);
+		}
 	}
 }
-*/
+
+a.bt_light.small {
+	line-height: 26px;
+}
+a.bt_dark.small, button.bt_dark.small {
+	line-height: 30px;
+}
+
 
 
 /**
@@ -1238,11 +1424,17 @@ a.bt_light.small {
 	width: calc((100% / 4) - ($space / 4*3));
 	margin-left: $space;
 	margin-top: $space;
-	border: 5px solid white;
-	box-shadow: 0 0 0 1px $color-grey-5;
-	box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
 	
 	
+	margin: 0;
+	width: calc((100% / 4) - ($space-small / 4*3));
+	margin-left: $space-small;
+	margin-bottom: $space-small;
+
+
+	transition: all 0.1s ease-in-out;
+	transition-property: transform;
+
 	position: relative;
 	cursor: pointer;
 	
@@ -1250,13 +1442,10 @@ a.bt_light.small {
 		margin-left: 0;
 	}
 	
-	&:hover {
-		box-shadow: 0px 1px 3px rgba(0,0,0, 0.2);
-	}
+	
 	
 	&:active {
-		top: 2px;
-		box-shadow: 0px 0px 2px rgba(0,0,0, 0.2);
+		transform: scale3d(0.95,0.95,0.95);
 	}
 	
 	.imageWrap {
@@ -1268,7 +1457,7 @@ a.bt_light.small {
 		.height {
 			float: left;
 			width: 1px;
-			padding-top: 75%;
+			padding-top: $image-ratio;
 		}
 			
 		.img {
@@ -1285,16 +1474,32 @@ a.bt_light.small {
 	.info {
 		float:left;
 		width: 100%;
-		background: white;
+
 		padding: 10px;
-		padding-bottom: 5px;
 		position: relative;
+		
+		transition: all 0.2s ease-in-out;
+		
+		
+		width: 60px;
+		height: 60px;
+		background: none;
+		margin-left: calc($space-small*2);
+		margin-top: calc(-$space-small*2 - 60px);
+		
+		overflow: hidden;
 		
 		
 		
 		.profilImage {
 			float: left;
 			margin-right: 10px;
+			border: 2px solid white;
+			transition: all 0.2s ease-in-out;
+			width: 50px;
+			height: 50px;
+			margin-top: -5px;
+			margin-left: -5px;
 		}
 		.objectName,
 		.accountName {
@@ -1316,32 +1521,30 @@ a.bt_light.small {
 		a.edit {
 			position: absolute;
 			right: 0;
-			top: 3px;
+			top: 0;
 			font-size: 13px;
 			margin-top: 0;
-			height: 35px;
+			height: 30px;
 			width: 40px;
 			text-indent: 1000px;
 			overflow: hidden;
 			
 
 			
-			background-image: url(img/arrow-down.svg);
+			background-image: url(img/arrow-down-black.svg);
 			background-size: 12px;
 			background-position: calc(100% - 10px) center;
 			background-repeat: no-repeat;
 			
+			transition: all 0.1s ease-in-out;
+			
+			&:hover {
+				background-position-y: calc(50% + 3px);
+			}
+			
+			
 		}
 		
-		.contextmenu {
-			right: -14px;
-			top: 48px;
-			
-			a {
-				font-size: 14px;
-				
-			}
-		}
 	}
 	
 	&.deactivated {
@@ -1352,9 +1555,62 @@ a.bt_light.small {
 		
 	}
 }
+
 .page_profil-objects .itemObject {
-	&:active {
-		top: 0;
+	
+	transition: none;
+	transform: none;
+	
+	.info {
+		overflow: visible;
+		height: 30px;
+		margin-top: calc(-$space-small*2 - 30px);
+		width: calc(100% - ($space-small*4));
+		background: $color-main-dark;
+		padding-top: 0;
+		.objectName {
+			line-height: 30px;
+			margin: 0;
+		}
+	}
+}
+
+body.click-device {
+	.itemObject {
+		&:hover {
+			.info {
+				background: $color-main-dark;
+				width: calc(100% - ($space-small*4));
+				border-radius: 0;
+				.profilImage {
+					width: 40px;
+					height: 40px;
+					margin-top: 0;
+					margin-left: 0;
+					border-color: $color-main-dark;
+				}
+			}
+	
+		}
+		
+	}
+}
+
+body.touch-device {
+	.itemObject {
+		.info {
+			width: 100%;
+			height: 60px;
+			background: white;
+			margin-left: 0;
+			margin-top: 0;
+		}
+		
+		&:active {
+			.info {
+				background: $color-main-dark;
+			}
+		}
 	}
 }
 
@@ -1379,7 +1635,7 @@ a.bt_light.small {
 		padding-left: calc($space*2);
 		
 		form {
-			background: $color-grey-7;
+			background: $color-grey-light;
 			padding: $space;
 			
 			input[type=text],
@@ -1429,34 +1685,30 @@ nav.sub {
 	
 	a {
 		padding: 15px 15px;
-		border-bottom: 1px solid $color-grey-5;
 		display: inline-block;
 		width: 100%;
 		position: relative;
 		color: $color-text;
+		border-bottom: 5px solid white;
+		padding-bottom: 10px;
 		
-		&.current {
-			background-color: rgba(0, 0, 0, 0.04);
-		}
 		
 		&:hover {
-			background-color: rgba(0, 0, 0, 0.06);
+			border-bottom: 5px solid $color-grey-dark;
+		}
+		&.current {
+			font-family: Roboto-Medium;
+			border-bottom: 5px solid $color-main-dark;
 		}
 		
 		&:active {
-			background-color: rgba(0, 0, 0, 0.1);
+			border-bottom: 5px solid $color-main-dark;
 		}
 		
 		.mark {
 			top: 19px;
 		}
 	}
-}
-#containerProfil {
-	float: right;
-	width: calc((100% / 4 * 3) - ($space));
-
-	margin-left: $space;
 }
 
 .page_profil-objects {
@@ -1465,8 +1717,16 @@ nav.sub {
 		margin-bottom: $space;
 	}
 }
+#containerProfil {
+	position: relative;
+	float: right;
+	width: calc((100% / 4 * 3) - ($space));
+
+	margin-left: $space;
+}
 
 .page_profil-base #containerProfil {
+	
 	.profilImage {
 		float: left;
 	}
@@ -1474,9 +1734,12 @@ nav.sub {
 	.contact {
 		width: calc(100% - 150px - $space);
 		float: right;
-		font-size: 16px;
-		line-height: 22px;
 		
+		
+		div {
+			font-size: 16px;
+			line-height: 22px;
+		}
 		.group {
 			.base {
 				float: left;
@@ -1504,21 +1767,17 @@ nav.sub {
 	
 	#btProfilEdit {
 		position: absolute;
-		right: calc($space*2);
-		top: calc($space*2);
+		right: 0;
+		top: 0;
 		
 		
 	}
 	
-	.contextmenu.profilEdit {
-		right: 32px;
-		top: calc(($space*2) + 41px + $space);
-	}
 	
 	.editMessage {
 		position: absolute;
 		right: calc($space + 150px);
-		top: $space;
+		top: 0;
 		width: 300px;
 		padding: 10px;
 		background: $color-special-red;
@@ -1540,6 +1799,187 @@ nav.sub {
 	}
 }
 
+.page_profil-lend, .page_profil-borrow {
+	.listContainer {
+		float: left;
+		width: 100%;
+		margin-top: calc($space*2);
+		
+		.itemLend {
+			float: left;
+			width: 100%;
+			margin-bottom: calc($space*2);
+			
+			.toolbar {
+				float: left;
+				width: 100%;
+				background: $color-grey-dark-bg;
+				
+				line-height: 40px;
+				height: 40px;
+				.status {
+					position: relative;
+					float: left;
+					font-family: Roboto-Medium;
+					text-transform: uppercase;
+					font-size: 14px;
+					padding: 0 calc($space-small*4);
+					padding-left: calc(($space-small*4) + 15px);
+					background-position: calc($space-small * 2) center;
+					background-repeat: no-repeat;
+					background-size: 15px;
+					letter-spacing: 0.5px;
+					
+				
+				}
+				a {
+					float: right;
+				}
+			
+				&.state-alert .status {
+					color: $color-special-red;
+					background-image: url(img/icon-alert-red.svg);
+					background-position-y: calc(50% - 1px);
+					background-size: 16px;
+					padding-left: calc(($space-small*4) + 15px);
+				}
+				&.state-abort .status {
+					color: $color-special-red;
+					background-image: url(img/icon-close-red.svg);
+					background-position-y: calc(50% - 1px);
+					background-size: 10px;
+					padding-left: calc(($space-small*4) + 10px);
+				}
+				&.state-wait .status {
+					color: $color-special-orange;
+					background-image: url(img/icon-wait-orange.svg);
+					background-position-y: calc(50% - 1px);
+				}
+				&.state-ok .status {
+					background-image: url(img/icon-ok-green.svg);
+					background-position-y: calc(50% - 1px);
+					color: $color-special-green;
+				}
+				
+				
+				
+			}
+			
+			.what {
+				float: left;
+				width: calc(100% / 3);
+				background: $color-grey-light;
+				padding: calc($space*2) $space;
+				padding-bottom: 0;
+				
+				background-image: url(img/arrow-right-color.svg);
+				background-position: calc(50% + $space-small) calc($space-small*12);
+				background-repeat: no-repeat;
+				background-size: 25px;
+				
+				.img {
+					float: left;
+					width: calc(38%);
+					background-position: center center;
+					background-size: cover;
+					
+					.height {
+						float: left;
+						width: 1px;
+						padding-top: $image-ratio;
+					}
+				}
+				
+				.person {
+					float: right;
+					width: calc(38%);
+					text-align: center;
+					.profilImage {
+						margin-bottom: 5px;
+					}
+					.name {
+						font-family: Roboto-Medium;
+						font-size: 14px;
+					}
+				}
+			}
+			
+			
+			
+			.von, .bis, .closed, .what {
+				min-height: 190px;
+			}
+			
+			
+			.von, .bis, .closed {
+				float: left; 
+				width: calc((100% / 3) - ($space-small));
+				background: $color-grey-light;
+				text-align: center;
+				padding: $space;
+				
+			}
+			
+			.closed {
+				width: calc((100% / 3 *2) - ($space-small));
+				
+			
+				.statement {
+					font-family: Roboto-Italic;
+				}
+			}
+			
+			
+			.von, .bis, .closed {
+				margin-left: $space-small;
+				
+				.title {
+					float: left; 
+					width: 100%;
+					font-size: 14px;
+					font-family: RobotoSlab;
+					color: $color-text-lighter;
+					margin-bottom: calc($space-small*4);
+					
+					
+				}
+				.date {
+					float: left;
+					width: 100%;
+					font-size: 30px;
+					
+					margin-bottom:calc($space-small*1);
+				}
+				.time {
+					float: left;
+					width: 100%;
+					font-size: 25px;
+				}
+			}
+			
+		}
+		
+		h3 {
+			float: left;
+			width: 100%;
+			margin-top: calc($space*2);
+			margin-bottom: calc($space*2);
+		}
+	}
+}
+
+.page_profil-borrow .listContainer .itemLend .what {
+	background-position: calc(50% - 5px) calc(5px*12);
+	    
+	.img {
+		float: right;
+	}
+	
+	.person {
+		float: left;
+	}
+			
+}
 
 /**
 * object-detail
@@ -1548,51 +1988,81 @@ nav.sub {
 	#btEditObject {
 		position: absolute;
 		right: calc($space*2);
+		right: calc((50% - 720px) + ($space*1));
 		top: $space;
 	}
 	
 	.objectInfo {
 		float: left;
-		width: calc(70% - $space);
-		box-shadow: 0 0 0 1px $color-grey-4;
-		
-		box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
-		/*border-radius: 2px;*/
+		width: calc(50% - $space);
+
 		
 		.containerImage {
 			position: relative;
 			float: left;
 			width: 100%;
-			border: 5px solid white;
-			background: black;
 			
-			ul {
-				min-height: 400px;
-				height: calc(100vh - 550px);
+/*			border: 5px solid white;*/
+			background: $color-black-light;
+			
+			.containerCarousel {
 				float: left;
 				width: 100%;
+				position: relative;
 				
+				.height {
+					float: left;
+					width: 1px;
+					padding-top: $image-ratio;
+				}
 				
-				.img {
-					min-height: 400px;
-					height: calc(100vh - 550px);
-					background-size: contain;
-					background-repeat: no-repeat;
-					background-position: center center;
+				ul {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
 					
+					
+					
+					li {
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						
+						
+						.img {
+							height: 100%;
+							width: 100%;
+							
+							
+							background-size: contain;
+							background-repeat: no-repeat;
+							background-position: center center;
+							
+						}
+						
+					}
 				}
 			}
 			
 			.footer {
 				float: left;
 				width: 100%;
+				
+				padding: calc($space/1);
+				
+				background: $color-main-dark;
 				background: white;
-				padding: calc($space/2);
-				padding-bottom: calc($space/2 - 5px);
+				border-left: 2px solid $color-grey-light;
+				border-right: 2px solid $color-grey-light;
 				
 				.profilImage {
 					float: left;
-					margin-right: $space;
+					margin-right: calc($space/1);
+					margin-left: 25px;
 				}
 				.accountName, .address {
 					float: left;
@@ -1603,8 +2073,8 @@ nav.sub {
 				.accountName {
 					font-family: Roboto-Medium;
 					font-size: 28px;
-					margin-bottom: 10px;
-					margin-top: 20px;
+					margin-bottom: 8px;
+					margin-top: 7px;
 				}
 			}
 		}
@@ -1620,7 +2090,7 @@ nav.sub {
 				width: 100%;
 				.label {
 					float: left;
-					width: calc(100px + 7px);
+					width: calc(100px + 2px);
 					text-align: right;
 					margin-right: $space;
 					color: $color-grey-light-text;
@@ -1628,7 +2098,7 @@ nav.sub {
 				}
 				.text {
 					float: left;
-					width: calc(100% - 100px - 7px - $space);
+					width: calc(100% - 100px - 2px - $space);
 				}
 			}
 			
@@ -1639,38 +2109,25 @@ nav.sub {
 	}
 	
 	.requestInfo {
-		float: right;
-		width: calc(30% - ($space));
-		font-size: 14px;
+		float: left;
+		width: calc(50% - ($space));
+		margin-left: calc($space*2);
+		font-size: 16px;
 		line-height: 19px;
 		
 		h2 {
-			margin-bottom: 20px;
+			margin-bottom: 25px;
 		}
 		.availableText {
 			font-family: Roboto-Italic;
-		}
-		
-		.or {
 			width: 100%;
-			float: left;
-			padding-top: $space;
-			text-align: center;
-			font-size: 18px;
-			color: $color-grey-2;
 		}
 		
 		.containerContact, .containerRequest {
 			float: left;
-			width: 100%;
-			background: $color-box-bg;
-			border: 1px solid $color-box-border;
-			/*
-			box-shadow: 0 0 0 1px $color-bg;
-			box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
-			*/
+			
 			margin-top: $space;
-			/*border-radius: 2px;*/
+			background: $color-grey-light;
 			
 			.title {
 				float: left;
@@ -1679,23 +2136,27 @@ nav.sub {
 				background: white;
 				line-height: 45px;
 				padding: 0 calc($space/2);
-				font-family: Roboto-Regular;
+				font-family: RobotoSlab;
 				font-size: 18px;
+				
+				background: $color-main-dark;
 			}
 		}
 		
 		.containerContact {
-			
+			width: calc(100% - 345px - $space);
+			margin-right: $space;
 			.contactType {
 				font-family: Roboto-Medium;
 			}
 				
 			.info {
-				padding: calc($space/2);
+				padding: calc($space);
 				
 				float: left;
 				width: 100%;
 				
+				line-height: 22px;
 			
 				.name {
 					font-family: Roboto-Medium;
@@ -1707,467 +2168,476 @@ nav.sub {
 		}
 		
 		.containerRequest {
+			width: 345px;
+			
+			&.timepicker-open .content .wizardContainer .inner .calendar .uib-datepicker table.uib-daypicker tr td button.active {
+					background-color: $color-main-light;
+
+			}
+						
 			.content {
 				float: left;
 				width: 100%;
-				padding: calc($space/2);
+				padding: calc($space);
+				position: relative;
 				
-				p {
-					font-size: 14px;
-					line-height: 18px;
-				}
 				
-				.calendar {
-					float: left;
+				
+				.wizardContainer {
 					width: 100%;
-					min-height: 200px;
-					position: relative;
-					left: calc(-$space / 2);
-					width: calc(100% + $space);
-					background: white;
-					padding: calc($space/2);
+					overflow: hidden;
+					float: left;
 					
-					p {
-						text-align: center;
-						font-size: 13px;
-						padding-top: 10px;
-						
-						
-						span {
-							font-family: Roboto-Medium;
-							color: $color-special-red;
-						}
-						
-						&.infoMessage {
-							color: $color-special-green;
-						}
-						
+					
+					&.step1 .inner form,
+					&.step2 .inner form {
+						display: none;
+					}
+					&.step2 .inner {
+						transform: translateX(calc((100% /3 * -1)));
+					}
+					&.step3 .inner {
+						transform: translateX(calc((100% /3*2 * -1)));
 					}
 					
-					#timepicker {
-						position: absolute;
-						background: white;
-						padding: $space $space;
-// 						background: #f9f9f9;
-						box-shadow: 0px 1px 3px rgba(0,0,0, 0.2);
-						width: 300px;
-						margin-left: -150px;
-						margin-top:10px;
-						text-align: center;
+					.inner {
+						float: left;
+						width: calc(300% + (3*$space));
 						
-						&::before {
-							left: calc(50% - 8px);
-							
-						}
+						transition: all 0.3s ease-in-out;
 						
-						.switcher {
-							width: 100%;
-							float: left;
-							border: 1px solid $color-grey-4;
-							background: white;
-							margin-bottom: 10px;
+						h3 {
+							margin-top: 0;
+							margin-bottom: calc($space-small*3);
+							text-align: center;
 							
-							button {
-								float: left;
-								width: 50%;
-								line-height: 25px;
-								font-size: 12px;
-								color: $color-main-2;
-								background: white;
+							span {
+								background-image: url(img/icon-arrow-get.svg);
+								background-size: 14px;
+								background-repeat: no-repeat;
+								background-position: left center;
+								padding-left: 20px;
 								
-								&:disabled {
-									opacity: 0.5;
-									cursor: default;
+								&.back {
+									background-image: url(img/icon-arrow-back.svg);
 								}
 							}
-							
-							&.chooseGet button.get,
-							&.chooseBack button.back {
-								background: $color-grey-5;
-								color: $color-grey-1;
-							}
-							
 						}
 						
-						.row {
+						a.arrowRight {
+							float: right;
+							margin-top: $space;
+						}
+						a.arrowLeft {
 							float: left;
-							width: 100%;
-							padding-top: 10px;
-							text-align: left;
-							font-size: 12px;
+							margin-top: $space;
+						}
 							
-							.select {
+						.form {
+							float: left;
+							width: calc((100% /3) - $space);
+							
+							.summary {
 								float: left;
-								width: 35%;
-								height: $space;
-								background: url(img/arrow-down.svg) no-repeat calc(100% - 5px) white;
-								background-size: 9px;
-								overflow: hidden;
-								border: 1px solid $color-grey-4;
+								width: 100%;
+								margin-top: $space-small;
 								
-								select {
-									background: transparent;
+								h3 {
+									text-align: left;
+									margin-bottom: calc($space-small*2);
+								}
+								div.get, div.back {
+									float: left;
 									width: 100%;
-									padding: 5px;
-									font-size: 12px;
-									line-height: 1;
-									border: 0;
-									border-radius: 0;
-									height: $space;
-									-webkit-appearance: none;
+									margin-bottom: calc($space-small*3);
 								}
-							}
-							.bis {
-								float: left;
-								width: 20%;
-								line-height: $space;
-								text-align: center;
-							}
-							.delete {
-								float: left;
-								width: 10%;
-								overflow: hidden;
-								background: url(img/icon-close.svg) no-repeat center right white;
-								background-size: 10px;
-								height: $space;
-								text-indent: 10000px;
-								overflow: hidden;
-								opacity: 0.5;
-								
-								&:hover, &:active {
-									opacity: 1;
+								div.get {
+									margin-bottom: calc($space-small*6);
 								}
-							}
-							
-							
-						}
-						
-						.add {
-							margin-top: 10px;
-							background: white;
-							border: 1px solid $color-grey-4;
-							float: left;
-							width: $space;
-							height: $space;
-							line-height: $space;
-							padding: 0, 10px;
-							margin-left: calc(50% - ($space/2));
-						}
-						
-						.ok {
-							height: $space;
-							line-height: $space;
-							width: 100%;
-							background: $color-main-2;
-							color: white;
-							margin-top: 20px;
-						}
-						
-					}
-					
-					
-					.uib-datepicker {
-						width: 100%;
-						
-						font-family: Roboto-Regular;
-						
-						button {
-							background: none;
-							&.uib-title {
-								color: $color-grey-1;
-								
-								font-size: 14px;
-								padding: 10px;
-								cursor: default;
-								
-								strong {
-									font-family: Roboto-Medium;
-								}
-								
-							}
-							
-							strong {
-								font-weight: normal;
-							}
-						}
-						
-						table.uib-daypicker {
-							width: 100%;
-							border-collapse: collapse;
-							
-							tr th {
-								background: white;
-								font-weight: normal;
-							
-							}
-							tr:first-child {
-								th {									
-									button.uib-left,  button.uib-right {
-										min-height: 20px;
-										background: url(img/arrow-right-color.svg);
-										background-repeat: no-repeat;
-										background-size: 7px;
-										background-position: center center;
-										width: 100%;
-										min-height: 30px;
-									}
+								.day {
+									float: left;
+									width: calc(100% / 3);
+									line-height: 20px;
 									
-									button.uib-left {
-										background-image: url(img/arrow-left.svg);
+									.name {
+										font-family: Roboto-Medium;
+										margin-bottom: $space-small;
 									}
 								}
 							}
-							tr:nth-child(2) {
-								th {
+							
+							form {
+								float: left;
+								width: 100%;
+								margin-top: $space;
+								
+								textarea {
+									font-size: 14px;
+									border: 1px solid $color-grey-dark;
 									padding: 10px;
-									font-family: Roboto-Medium;
-									text-transform: uppercase;
-									
-									border-bottom: 1px solid $color-bg;
+									height: 70px;
+									width: 100%;
 								}
-							}
-							/* first data row */
-							tr:nth-child(1) { 
-								td {
-									padding-top: 10px;
-									background: white;
-									
+								
+								.label {
+									font-size: 16px;
+									color: $color-text-lighter;
+									float: left;
+									width: 100%;
+									margin-top: $space;
+									margin-bottom: calc($space-small*2);
 								}
-							}
-							
-							tr td {
-								button.btn-default {
-									background: white;
-// 									padding: 15px;
-									min-height: 40px;
-// 									border: 1px solid white;
-									font-family: Roboto-Regular;
-									font-size: 12px;
-									position:relative;
-									
-									
-									span {
+								
+								label.checkbox {
+									float: left;
+									width: 100%;
+									padding-left: 20px;
+									position: relative;
+									font-size: 14px;
+									margin-bottom: $space-small;
+									input {
 										position: absolute;
-										top: 8px;
-										width: 20px;
-										height: 20px;
-										line-height: 20px;
-										left: calc(50% - 10px);
-										/* border-radius: 2px;*/
+										left: 0;
+										top: 3px;
 									}
-									
-									/*
-									&.active {
-										span {
-											font-family: Roboto-Bold;
-											font-size: 14px;
-											color: $color-main-3;
-										}
-									}
-									*/
-									
-									
-									
-									&:active {		
-										span {								
-											font-family: Roboto-Bold;
-											color: $color-main-1;
-										}
-									}
-									
-									&:hover {
-										span {
-											font-family: Roboto-Bold;
-											font-size: 14px;
-										}
-									}
-									
-									&:disabled {
+								}
+								
+								input[type=submit] {
+									margin-top: $space;
+									width: auto;
+									float: right;
+								}
+							}
+						}
+						
+						.calendar {
+							float: left;
+							
+							position: relative;
+				
+							padding: 0;
+							
+							width: calc(100% /3);
+							padding-right: calc($space);
+							
+														
+							
+														
+							.uib-datepicker {
+								width: 100%;
+								font-family: Roboto-Regular;
+								background: white;
+								padding: $space-small;
+								
+								button {
+									background: none;
+									&.uib-title {
+										color: $color-text;
+										
+										font-size: 14px;
+										padding: 5px;
 										cursor: default;
 										
-										&:hover span,
-										&:active span,
-										span {
-											font-family: Roboto-Regular;
-											color: $color-grey-3;
-											background: $color-grey-7;
-											border: none;
-											font-size: 12px;
+										strong {
+											font-family: Roboto-Medium;
 										}
-	
+										
 									}
 									
-									&.other-month {
-										cursor: default;
-										
-										&:hover span,
-										&:active span,
-										span {
-											background: none;
-											color: $color-grey-5;
-											font-family: Roboto-Regular;
-											font-size: 12px;
+									strong {
+										font-weight: normal;
+									}
+								}
+								
+								table.uib-daypicker {
+									width: 100%;
+									border-collapse: collapse;
+									background: white;
+									
+									tr th {
+										background: white;
+										font-weight: normal;
+									
+									}
+									tr:first-child {
+										th {									
+											button.uib-left,  button.uib-right {
+												min-height: 20px;
+												background: url(img/arrow-right-black.svg);
+												background-repeat: no-repeat;
+												background-size: 7px;
+												background-position: center center;
+												background-color: $color-main-dark;
+												width: 100%;
+												min-height: 40px;
+												
+												transition: all 0.1s ease-in-out;
+												
+												&:hover {
+													background-color: $color-main-dark-active;
+													background-position-x: calc(50% + 3px);
+												}
+											}
+											
+											button.uib-left {
+												background-image: url(img/arrow-left-black.svg);
+												&:hover {
+													background-position-x: calc(50% - 3px);
+												}
+											}
+										}
+									}
+									tr:nth-child(2) {
+										th {
+											padding: 10px;
+											font-family: Roboto-Medium;
+											text-transform: uppercase;
 											
 										}
 									}
 									
-								}
+									
+									tr {
+										td {
+											button {
+												min-width: calc(100% - 2px);
+												margin-left: 1px;
+												margin-right: 1px;
+												background: white;
+												padding: 10px 8px;
+												margin-top: 2px;
+												font-size: 12px;
+												
 								
-								&.suggestion_back, &.suggestion_get, &.suggestion_between, &.suggestion_between_ends {
-									button {
-										background-color: white;
-										background-size: 5px;
-										background-repeat: no-repeat;
-										background-position: center 23px;
-										
-										span {
-											top: 3px;
+												
+												&:hover {
+													background: $color-main-light;
+												}
+												&:active {
+													color: $color-text;
+													background: $color-main-light-acitve;
+												}
+												
+												&:disabled {
+													cursor: default;
+													background: $color-grey-light;
+													color: $color-grey-light-text;
+												}
+												&.other-month {
+													display: none;
+													/*
+													cursor: default;
+													color: $color-grey-light-text;
+													
+													&:hover {
+														background: white;
+													}
+													*/
+												}
+												
+												
+											}
+											
+											&.suggestion_back {
+												button {
+													background: $color-special-back !important;
+													font-family: Roboto-Medium;
+													color: white;
+													
+													&:disabled {
+														background-color: $color-special-back-light !important;
+													}
+												}
+											}
+											&.suggestion_get {
+												button {
+													background: $color-special-get !important;
+													font-family: Roboto-Medium;
+													color: white;
+													
+													&:disabled {
+														background-color: $color-special-get-light !important;
+													}
+												}
+											}
+											
+											&.today {
+												button {
+													span {
+														font-family: Roboto-Medium;
+														border-bottom: 2px solid $color-main-dark;
+													}
+												}
+											}
 										}
 									}
 									
 								}
 								
-								&.suggestion_between {
-									button {
-										span {
-											font-family: Roboto-Italic;
-											border-bottom: 1px solid $color-main-2;
-											border-radius: 0;
-											width: 100%;
-											height: 25px;
-											left: 0;
-										}
-									}
-								}
-								
-								&.suggestion_between_ends {
-									button {
-										span {
-											font-family: Roboto-Italic;
-											border-bottom: 1px solid $color-grey-4;
-											border-radius: 0;
-											width: 100%;
-											height: 25px;
-											left: 0;
-										}
-									}
-								}
-								
-								&.suggestion_back {
-									button {
-										background-image: url(img/arrow-left.svg);
-										span {
-											border: none;
-										}
-									}
-								}
-								
-								&.suggestion_get {
-									button {
-										
-										background-image: url(img/arrow-right-color.svg);
-										span {
-											border: none;
-										}
-				
-										
-									}
+							}
+							
+							.text {
+								float: left;
+								width: 100%;
+								padding: $space-small;
+								margin-top: $space-small;
+								text-align: center;
+								p {
+									font-size: 14px;
+									line-height: 18px;
+									font-family: Roboto-Medium;
 								}
 							}
 							
 							
-							
 						}
 						
-					}
-					
-				}
-				
-				.summary {
-					float: left;
-					width: 100%;
-					padding: calc($space/2);
-					font-size: 12px;
-					line-height: 16px;
-					
-					.get {
-						float: left;
-						width: calc(50% - ($space/2));
-					}
-					.back {
-						float: left;
-						width: calc(50% - ($space/2));
-						margin-left: $space;
-					}
-					
-					.day {
-						width: 100%;
-						float: left;
-						margin-bottom: 5px;
 						
-						.name,
-						.time {
-							width: 50%;
-							float: left;
-						}
-						.time {
-							float: right;
-						}
-						
-					}
-					
-				}
-				
-				form {
-					float: left;
-					width: 100%;
-					
-					textarea {
-						width: 100%;
-						height: 50px;
-						
-						font-size: 14px;
-						padding: 10px;
-					
-					}
-					
-					.label {
-						margin-top: 10px;	
-						margin-bottom: 5px;
-						color: $color-main-1;
-					}
-					label.checkbox {
-						width: 100%;
-						float: left;
-						input {
-							margin-right: 5px;
-							font-size: 14px;
-						}
-					}
-					
-					.bt_action {
-						margin-top: $space;
-						float: left;
 					}
 				}
 			}
+			
+			
+			
 		}
-	
+		
+		
 		
 		
 	}
 }
 
+#contextBoxWrap.boxGet,
+#contextBoxWrap.boxBack {
+	.title {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+		
+	.content {
+		float: left;
+		width: 100%;
+		margin-top: 50px;
+		max-height: calc(100vh - 350px);
+		overflow: scroll;
+		
+		a.cancel {
+			margin-top: $space;
+			margin-bottom: $space;
+		}
+	}
+}
+
+#contextBoxWrap.boxGet,
+#contextBoxWrap.boxBack,
+#contextBoxWrap.timepicker {
+	position: absolute;
+	background: white;
+		
+	text-align: center;
+	
+	&::before {
+		right: calc(150px - 8px);
+		top: -8px;
+		background: $color-main-dark;
+	}
+	
+	.title {
+		width: 100%;
+		background: $color-main-dark;
+		line-height: 20px;
+		font-size: 14px;
+		float: left;
+		padding: calc($space-small*2);
+		
+		font-family: Roboto-Medium;
+		
+		.bt_dark {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 20px;
+		}
+	}
+	.text {
+		width: 100%;
+		float: left;
+		padding: calc($space-small*2);
+		font-size: 14px;
+		background:$color-grey-light;
+		margin-bottom: calc($space-small*2);
+		font-family: Roboto-Medium;
+	}
+	
+	.day-title {
+		float:left; 
+		width: 100%;
+		text-align: center;
+		padding: $space-small;
+		font-size: 14px;
+		font-family: RobotoSlab;
+		color: $color-black-light;
+	}
+	
+	.times {
+		float: left;
+		width: 100%;
+		padding: calc($space-small*2);
+		
+		.time {
+			float: left;
+			width: calc(100%/5 - ($space-small/5*4));
+			margin-left: $space-small;
+			margin-bottom: $space-small;
+			
+			&:nth-child(5n+1) {
+				margin-left: 0;
+			}
+			
+			button {
+				float: left;
+				width: 100%;
+				
+				font-size: 12px;
+				
+
+				background: $color-grey-light;
+				padding: 10px;
+				text-align: center;
+				
+				cursor: pointer;
+				
+				&:hover {
+					background: $color-main-light;
+				}
+				
+				&.active {
+					background: $color-main-dark;
+				}
+				
+				&:active {
+					background: $color-main-dark-active;
+					color: $color-text;
+				}
+				
+			}
+		}
+	}
+	
+	
+	
+	
+	
+}
+
+
+
 /**
 * Borrow / Lend
 */
-.page_borrow, .page_lend, .page_profil-lend, .page_profil-borrow {
-	.img {
-		width: 200px;
-		height: 200px;
-		background-size: cover;
-	}
-}
+
+
 
 #containerMain.page_borrow, #containerMain.page_lend {
 	.contentContainer {
@@ -2176,82 +2646,99 @@ nav.sub {
 	.header {
 		float: left;
 		width: 100%;
-		background: $color-grey-7;
-		background-image: url(img/arrow-right-color.svg);
-		background-size: 30px;
-		background-repeat: no-repeat;
-		background-position: center center;
-		padding: calc($space/1) calc(50% - (1200px/2));
+		background: $color-grey-light;
+		padding: calc($space*2) calc(50% - (1200px/2));
+		
+		.img {
+			position: absolute;
+			left: calc(50% - (150px / 3 * 4) /2);
+			width: calc(150px / 3 * 4);
+			height: 150px;
+			top: $space;
+			margin-right: -20px;
+			background-size: cover;
+			background-position: center center;
+			border: 0px solid white;
+			
+			.arrow {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, 0.2);
+				background-image: url(img/arrow-right-color.svg);
+				background-size: 50px;
+				background-repeat: no-repeat;
+				background-position: center center;
+				
+				&:hover {
+					background: none;
+				}
+			}
+		}
 		
 		.lender, .borrower {
 			float: left;
-			padding-left: $space;
-			width: 50%;
+			width: calc(50% - 150px);
 			.name {
-				float: left;
-				font-size: 22px;
+				float: right;
+				font-size: 20px;
 				line-height: 100px;
-				margin-right: 10px;
+				margin-right: $space;
 			}
 			.profilImage {
-				float: left;
+				float: right;
 				position: relative;
 				z-index: 2;
 				border: 2px solid white;
 			}
-			.img {
-				float: left;
-				width: 150px;
-				height: 80px;
-				margin-top: 10px;
-				margin-left: -30px;
-				background-size: cover;
-				background-position: center center;
-				border: 2px solid white;
-			}
+			
 		}
 		
 		.borrower {
-			padding-right: $space;
+			float: right;
 			.name {
-				float: right;
-				margin-left: 10px;
-				margin-right: 0;
+				float: left;
+				margin-left: $space;
 			}
 			.profilImage {
-				float: right;
+				float: left;
 			}
 		}
 	}
 	.conversationContainer {
 		float: left;
 		padding: calc($space/1) calc(50% - (1200px/2) + $space);
+		position: relative;
 		
 		.timeline {
 			position: absolute;
 			width: 2px;
 			left: calc(50% - 1px);
-			min-height: 200px;
+			top: 0;
 			
 			&.show {
-				background: $color-grey-7;
+				background: $color-grey-light;
 			}
 			
 			.timelinePast {
-				min-height: 100px;
-				background: $color-grey-5;
+				background: $color-grey-dark;
 				width: 2px;
 				position: relative;
+				height: 0;
+				
+				transition: height 0.5s ease-in-out;
 				
 				.now {
 					position: absolute;
-					bottom: 0;
-					left: calc(50% - 15px);
-					width: 30px;
-					line-height: 30px;
-					height: 30px;
+					bottom: -8px;
+					left: calc(50% - 8px);
+					width: 16px;
+					line-height: 16px;
+					height: 16px;
 					border-radius: 50%;
-					background: $color-main-3;
+					background: $color-main-dark;
 					text-align: center;
 					color: white;
 					font-size: 14px;
@@ -2275,60 +2762,82 @@ nav.sub {
 		.messageItem, .actionBox {
 			.content, .closed {
 				float: left;
-				width: 45%;
+				width: calc(50% - ($space * 2));
 				position: relative;
 				margin-bottom: $space;
-				border: 1px solid $color-grey-4;
-				background: white;
+				background: $color-grey-light;
 				
 				&::before {
-					background-color: white;
+					background-color: $color-main-dark;
 				    content: "\00a0";
 				    display: block;
 				    height: 14px;
 				    width:  14px;
 				    position: absolute;
-				    
-				    border: 1px solid $color-grey-4;
-				    border-right: none;
-				    border-top: none;
-				    
+				    				    
 				    top: 12px;
-					right: -8px;
+					right: -7px;
 					transform: rotate( 225deg );
 				}
 				
-				> div {
+				> .title {
+					line-height: 40px;
+					font-size: 16px;
+					background: $color-main-dark;
+					font-family: Roboto-Medium;
+					padding: 0 calc($space-small*3);
 					float: left;
 					width: 100%;
-					padding: 10px;
 				}
-				.title {
-					
-					font-family: Roboto-Medium;
-				}
-				.text {
-					border-top: 1px solid $color-grey-4;
+				.message, .text {
 					font-family: Roboto-Italic;
+					float: left; 
+					width: 100%;
+					padding: calc($space-small*3);
+					padding: calc($space);
+					
+				}
+				.message {
+					font-family: Roboto-Regular;
+					
 				}
 				.suggestions {
-					background: $color-grey-7;
+					float: left;
+					width: 100%;
+					background: $color-grey-dark-bg;
 					font-size: 14px;
-					padding: $space;
+					padding: calc($space-small*3);
+					padding: calc($space);
 					
 					.get {
 						float: left;
-						width: 50%;
+						width: 100%;
+						.title {
+							background-image: url(img/icon-arrow-get.svg);
+						}
 					}
 					.back {
 						float: right; 
-						width: 50%;
+						width: 100%;
+						margin-top: $space;
+						.title {
+							background-image: url(img/icon-arrow-back.svg);
+						}
 					}
 					.title {
-						font-family: Roboto-Italic;
+						font-family: RobotoSlab-Bold;
+						
+						background-size: 14px;
+						background-repeat: no-repeat;
+						background-position: left center;
+						padding-left: 20px;
+					
 					}
 					.day {
+						float: left;
+						width: calc(100% / 4);
 						margin-top: 10px;
+						color: $color-text;
 						.datum {
 							font-family: Roboto-Medium;
 						}
@@ -2337,20 +2846,38 @@ nav.sub {
 						}
 					}
 					
+					&.max_day-1,
+					&.max_day-2 {
+						.get, .back {
+							width: 50%;
+							margin-top: 0;
+							.day {
+								width: calc(100% / 2);
+							}
+						}
+					}
 					
 				}
 				.dates {
-					background: $color-grey-7;
+					float: left;
+					width: 100%;
+					padding: calc($space-small*3);
+					background: $color-grey-dark-bg;
 					font-size: 14px;
 					text-align: center;
+					
+					b {
+						font-size: 18px;
+						margin: 0 10px;
+					}
 				}
 				.date {
 					position: absolute;
-					bottom: -30px;
-					right: -10px;
+					bottom: -18px;
+					right: 0;
 					left: auto;
 					font-size: 12px;
-					color: $color-grey-4;
+					color: $color-grey-dark-text;
 					text-align: right;
 					
 				}
@@ -2363,33 +2890,47 @@ nav.sub {
 					margin-left: calc(50% - (45%/2));
 					
 					&::before {
-					    top: -8px;
-						left: calc(50% - 8px);
+					    top: -7px;
+						left: calc(50% - 9px);
 						transform: rotate( 135deg );
 					}
 					
 					.title {
 						text-align: center;
 					}
+					
+					&.get {
+						.title,
+						&:before {
+							background-color: $color-special-get-light;
+						}
+					}
+					
+					&.back {
+						.title,
+						&:before {
+							background-color: $color-special-back-light;
+						}
+					}
 				}
 			}
 			
 		}
 		
-		.messageItem.right .content, .actionBox .closed{
+		.messageItem.right .content, .actionBox .closed.right {
 
 				
 			float: right;
 			
 			&::before {
 			    top: 12px;
-				left: -8px;
+				left: -7px;
 				transform: rotate( 45deg );
 			}
 			
 			.date {
 				text-align: left;
-				left: -10px;
+				left: 0px;
 			}
 		}
 			
@@ -2401,10 +2942,23 @@ nav.sub {
 			}
 			
 			.closed {
-				border: 1px solid $color-special-red;
-			
+				.title {
+					background: $color-special-red;
+					color: white;
+				}
 				&::before {
-			    	border-color: $color-special-red;
+			    	background: $color-special-red;
+				}
+				
+				&.type-successful {
+					.title,
+					&::before {
+						background: $color-main-dark;
+					}
+					
+					.title {
+						color: black;
+					}
 				}
 			}
 			
@@ -2414,26 +2968,30 @@ nav.sub {
 		.actionBox {
 			float: left;
 			width: 100%;
-			margin-top: $space;
-			padding-right: $space;
-			padding-left: $space;
+			padding: $space;
+			
 			
 			.content {
 				float: right;
-				width: 45%;
-				border: 1px solid $color-main-3;
-				background: $color-main-3;
+				background: $color-grey-light;
+				padding: calc($space-small*3);
 				padding: $space;
+				border: 5px solid $color-grey-dark;
 				
+				h3 {
+					margin-top: 0;
+					margin-bottom: $space;
+				}
 				p {
-					color: white;
+					color: $color-text;
+				}
+				a {
+					float: right;
+				}
+				a:first-of-type {
+					float: left;
 				}
 				
-				.bt_normal {
-					width: 100%;
-					text-align: center;
-					margin-top: 10px;
-				}
 			}
 		}
 	}
@@ -2441,31 +2999,37 @@ nav.sub {
 
 #containerMain.page_lend {
 	.header {
-		background-image: url(img/arrow-left.svg);
+		
+		.img {
+			.arrow {
+				background-image: url(img/arrow-left-color.svg);
+			}
+		}
 		
 		.lender {
 			float: right;
-			padding-right: $space;
-			
+			.name {
+				
+			}
 			.name, .profilImage {
-				float: right;
-				margin-left: 10px;
-				margin-right: 0;
+				float: left;
+				margin-right: $space;
 			}
 			.img {
-				float: right;
-				margin-left: 0;
-				margin-right: -30px;
+				float: left;
+				margin-right: 0;
+				margin-left: -20px;
 			}
 		}
 		.borrower {
 			float: left;
-			padding-left: $space;
-			
-			.name, .profilImage {
-				float: left;
-				margin-right: 10px;
-				margin-left: 0;
+			.name {
+				float: right;
+				margin-right: 0;
+			}
+			.profilImage {
+				float: right;
+				margin-left: $space;
 			}
 		}
 	}
@@ -2474,13 +3038,56 @@ nav.sub {
 /* lend/borrow modals */
 .modalBody.lendCheckData {
 	position: relative;
-	padding: $space;
+
 	form {
 		float: left;
+	
+		.buttonRow {
+			float: left;
+			width: 100%;
+			text-align: center;
+			a {
+				margin: 5px;
+				border: none;
+				background: $color-special-back-light;
+				&:hover {
+					background: $color-special-back;
+				}
+				&:first-of-type {
+					background: $color-special-get-light;
+					
+					&:hover {
+						background: $color-special-get;
+					}
+				}
+				
+				&.noMatching {
+					text-decoration: line-through;
+				}
+			}
+			
+			margin-bottom: $space;
+		}
+		
+		.buttonContainer {
+			float: left;
+			
+			p {
+				margin-bottom: $space;
+			}
+			a {
+				float: right;
+				&:first-of-type {
+					float: left;
+				}
+			}
+		}
 	}
 	
+
 	
 }
+/*
 .modal-content {
 	.boxGet, .boxBack {
 		position: absolute;
@@ -2505,7 +3112,7 @@ nav.sub {
 			left: calc(50% - 8px);
 		    transform: rotate( 45deg );
 		    box-shadow: -2px -2px 3px rgba(0, 0, 0, 0.05);
-		    border: 1px solid $color-grey-4;
+		    border: 1px solid $color-grey-dark;
 		    border-right: none;
 		    border-bottom: none;
 		}
@@ -2539,15 +3146,15 @@ nav.sub {
 					font-size: 12px;
 					font-family: Roboto-Regular;
 					height: 30px;
-					border: 1px solid $color-grey-6;
+					border: 1px solid green;
 					background: white;
 					
 					&:hover {
-						border-color: $color-grey-3;
+						border-color: blue;
 					}
 					
 					&.active {
-						border-color: $color-grey-2;
+						border-color: red;
 					}
 				}
 			}
@@ -2561,15 +3168,15 @@ nav.sub {
 				font-size: 12px;
 				width: 100%;
 				height: 30px;
-				border: 1px solid $color-grey-6;
+				border: 1px solid red;
 				background: white;
 				
 				&:hover {
-					border-color: $color-grey-3;
+					border-color: blue;
 				}
 				
 				&.active {
-					border-color: $color-grey-2;
+					border-color: green;
 				}
 			}
 		}
@@ -2579,11 +3186,50 @@ nav.sub {
 		right: 40px;
 		left: auto;
 	}
+	
+	
+}
+*/
+.modal-content {
+	.confirmData {
+		background: $color-grey-light;
+		float: left;
+		width: 100%;
+		padding: $space;
+		text-align: center;
+		font-family: Roboto-Medium;
+		font-size: 18px;
+		margin-bottom: $space;
+	}
 }
 
 /**
 * LandingPage
 */
+#contextBoxWrap.login {
+	padding: $space;
+	
+	form {
+		width: 100%;
+		float: left;
+		
+		.message {
+			color: $color-special-red;
+			font-size: 14px;	
+			margin-bottom: 10px;
+		}
+		
+		input {
+			width: 100%;
+			margin-bottom: calc($space-small*3);
+		}
+		
+		button {
+			float: right;
+		}
+	}
+}
+
 .landingPageWrap {
 	header.landingPage {
 		position: absolute;
@@ -2600,6 +3246,7 @@ nav.sub {
 			width: 1200px;
 			padding: $space calc($space*2);
 			padding-right: calc(300px - ($space*2));
+			padding-top: 20px;
 			margin: 0 calc(50% - (1200px/2));
 			position: relative;
 			
@@ -2607,8 +3254,8 @@ nav.sub {
 			
 			img.logo {
 				display: block;
-				width: 100px;
-				margin-bottom: 23px;
+				width: 80px;
+				margin-bottom: 20px;
 			}
 			
 			h1 {
@@ -2732,6 +3379,7 @@ nav.sub {
 					a {
 						float: left;
 						margin-right: $space;
+						margin-top:$space-small;
 					}
 				}
 			}
@@ -2752,12 +3400,12 @@ nav.sub {
 				float: left;
 				
 				position: relative;
-				background: $color-grey-6;
+				background: $color-grey-light;
 				
 				.height {
 					float: left;
 					width: 1px;
-					padding-top: 67%;
+					padding-top: $image-ratio;
 				}
 					
 				.img {
@@ -2777,6 +3425,15 @@ nav.sub {
 			.imageWrap {
 				width: calc(100%/4 - 2px);
 				margin: 1px;
+				
+				width: calc((100%/4) - ($space-small / 4*3));
+				margin: 0;
+				margin-left: $space-small;
+				margin-bottom: $space-small;
+				
+				&:nth-child(4n+1) {
+					margin-left: 0;
+				}
 			}
 		}
 		
@@ -2786,22 +3443,33 @@ nav.sub {
 				width: calc(100%/3 - 2px);
 				margin: 1px;
 				
+				margin: 0;
+				width: calc(100%/3);
+				
+				width: calc((100%/3) - ($space-small / 3*2));
+				margin: 0;
+				margin-left: $space-small;
+				
+				&:nth-child(3n+1) {
+					margin-left: 0;
+				}
+				
+				
 				.imageWrap {
 					width: 100%;
-					.height {
-						padding-top: 77%;
-					}
 				}
 				
 				.text {
 					float: left;
 					
-					margin-top: calc(-$space*2);
+					margin-top: calc(-$space*1 - 50px);
 					width: calc(100% - ($space*4));
 					margin-left: calc($space*2);
 					padding: 10px 15px;
+					min-height: 50px;
 					position: relative;
 					z-index: 1;
+					
 					
 					
 				}
@@ -2810,24 +3478,27 @@ nav.sub {
 		
 		.rowPostitStatements {
 			.statement .text {
-				background: #FDEB36;
+				background: $color-main-dark;
 				font-family: Roboto-Italic;
 				font-size: 16px;
-				color: $color-grey-1;
+				color: $color-text;
 				line-height: 22px;
 			}
 		}
 		
 		.rowSettlementImages {
 			.settlement .text {
-				background: white;
+				background: $color-main-dark;
 				text-align: center;
 				font-family: Roboto-Medium;
 				font-size: 18px;
-				color: $color-grey-1;
+				color: $color-text;
 				line-height: 25px;
 				height: 51px;
-				padding-top: 15px;
+				padding-top: 13px;
+				white-space: nowrap;
+				
+				font-family: RobotoSlab-Bold;
 			}
 			
 			.btContainer {

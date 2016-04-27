@@ -1,0 +1,14 @@
+<div id="contextBoxWrap" class="arrowTopRight boxGet">
+	<div class="title">Einen Übergabetermin wählen</div>
+	
+	<div class="content">
+		<div class="day" ng-repeat="day in contextBox.currentLend.timeSuggestions.get">
+			<div class="day-title">{{ day.date | amDateFormat:'dd, DD.MM.YY' }}</div>
+			<div class="times">
+				<div class="time" ng-repeat="time in day.times"><button ng-class="{'active': day.date == contextBox.formInfo.activeGet.date && time == contextBox.formInfo.activeGet.time }" ng-click="contextBox.selectTime('get', day.date, time)">{{ time }}</button></div>
+			</div>
+		</div>
+		
+		<a class="bt_light cancel small" ng-class="{'active': contextBox.formInfo.noFindingGet }" ng-click="contextBox.selectTime('get', 'none')">Kein passender Termin</a>
+	</div>
+</div>

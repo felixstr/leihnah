@@ -1,6 +1,7 @@
-angular.module('Leihnah').controller('LendCheckDataController', function($scope, $uibModalInstance, $http, $log, $uibModal, AuthenticationService, currentLend) {
+angular.module('Leihnah').controller('LendCheckDataController', function($scope, $uibModalInstance, $http, $log, $uibModal, AuthenticationService, currentLend, ContextBoxService) {
 	
-	$log.debug('currentLend', currentLend);
+// 	$log.debug('currentLend', currentLend);
+	$scope.contextBox = ContextBoxService;
 	
 	$scope.currentLend = angular.copy(currentLend);
 	
@@ -29,15 +30,31 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 	$log.debug('$scope.checkData', $scope.checkData);
 	
 	
-	$scope.showBoxBack = function() {
-		$scope.formInfo.showBox = 'back';
+	$scope.showBoxBack = function(event) {
+// 		$scope.formInfo.showBox = 'back';
+		
+		ContextBoxService.setTargetElement(event.currentTarget);
+	    ContextBoxService.setHorizontalAlign('right');
+	    ContextBoxService.setId('boxBack');	    
+	    ContextBoxService.show();
+	    ContextBoxService.currentLend = $scope.currentLend;
+	    ContextBoxService.formInfo = $scope.formInfo;
+		
+		
 	}
 	
-	$scope.showBoxGet = function() {
-		$scope.formInfo.showBox = 'get';
+	$scope.showBoxGet = function(event) {
+		
+		ContextBoxService.setTargetElement(event.currentTarget);
+	    ContextBoxService.setHorizontalAlign('right');
+	    ContextBoxService.setId('boxGet');	    
+	    ContextBoxService.show();
+	    ContextBoxService.currentLend = $scope.currentLend;
+	    ContextBoxService.formInfo = $scope.formInfo;
+	    
 	}
 	
-	$scope.selectTime = function(type, date, time) {
+	$scope.contextBox.selectTime = function(type, date, time) {
 		$scope.formInfo.showBox = '';
 
 		if (date == 'none') {
@@ -75,6 +92,8 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 		if ($scope.formInfo.dateStatus == 'yes') {
 			$scope.formInfo.validAnswer = true;
 		}
+		
+		ContextBoxService.hide();
 		
 		$log.debug($scope.checkData);
 	}
@@ -134,6 +153,29 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 		}, function () {
 			$log.debug('Modal dismissed at: ' + new Date());
 		});
+	}
+	
+	
+	$scope.directContact = function() {
+		
+		var url = 'api/lend/direct/'+$scope.currentLend.id;			
+		
+		$http.post(url, {}, {
+			headers: { 'auth-token': AuthenticationService.getLocalToken() }
+		})
+		.success(function(response) {
+			$log.debug('sendAnswer: response', response);
+			
+			if (response.ok) {
+				$uibModalInstance.close();
+			}
+			
+		})
+		.error(function(error) {
+			$log.debug(error);
+		});
+			
+		
 	}
 	
 	$scope.cancel = function () {

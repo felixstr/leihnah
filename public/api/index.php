@@ -387,8 +387,10 @@ $app->get('/object[/{id}]', function (Request $request, Response $response, $arg
 		
     }
 
+// 	echo print_r($result);	
 		
-	$newResponse = $response->withJson($result, null, JSON_NUMERIC_CHECK);
+	$newResponse = $response->withJson($result);
+// 	$newResponse = $response->withJson($result, null, JSON_NUMERIC_CHECK);
 	
     return $newResponse;
 });
@@ -697,6 +699,42 @@ $app->post('/lend/answer/{id}', function (Request $request, Response $response, 
     return $newResponse;
 });
 
+$app->post('/lend/direct/{id}', function (Request $request, Response $response, $args) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+	$requestBody = $request->getParsedBody();
+// 	echo Authentication::getUser()->isSuperUser() ? 'ja' : 'nein';
+// 	echo print_r($requestBody);
+	
+	$result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    $lendEntity = LendEntity::factory($this->db)
+	    	->setId($args['id'])
+	    	->load();
+	    	
+	    if ($lendEntity->getUserLendId() == Authentication::getUser()->getId()) {
+	    
+		    $direct = $lendEntity
+		    	->directContact()
+		    	->load();
+		    	
+		    if (!$lendEntity->getError()) {
+				$result['ok'] = true;
+				$result['lend'] = $direct->toArray();
+		    } 
+		}
+    }
+	
+
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
 $app->post('/lend/confirm/{id}', function (Request $request, Response $response, $args) {
     
     Authentication::initialize($this->db, $this->logger);
@@ -792,6 +830,7 @@ $app->post('/lend/close/{id}', function (Request $request, Response $response, $
 	    } 
     }
 	
+	
 
 	$newResponse = $response->withJson($result);
 	
@@ -839,7 +878,8 @@ $app->get('/lend[/{id}]', function (Request $request, Response $response, $args)
     }
 	
 
-	$newResponse = $response->withJson($result, null, JSON_NUMERIC_CHECK);
+	$newResponse = $response->withJson($result);
+// 	$newResponse = $response->withJson($result, null, JSON_NUMERIC_CHECK);
 	
     return $newResponse;
 });

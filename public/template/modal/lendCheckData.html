@@ -1,21 +1,18 @@
 <div class="modalHead">
-	<a href class="close" ng-click="cancel()">schliessen</a>
+	<a href class="bt_dark close" ng-click="cancel()"><span>schliessen</span></a>
 </div>
 
 <div class="modalBody lendCheckData">
 
 	<form name="lendAnswer" ng-submit="formInfo.validAnswer && answerRequest()">
-		<div class="title">Ist die Verleihung für dich möglich?</div>
-		<p>Wähle aus den Vorschlägen von {{ currentLend.neighborBorrow.accountName }} für das Abholen und die Rückgabe je einen passenden Termin.</p>
+		<div class="formText">
+			<h3>Ist die Verleihung für dich möglich?</h3>
+			<p>Wähle aus den Vorschlägen von {{ currentLend.neighborBorrow.accountName }} für das Abholen und die Rückgabe je einen passenden Termin.</p>
+		</div>
 		
 		<div class="buttonRow">
-			<div class="bt_normal">
-				<a href ng-click="showBoxGet()">Abholen am {{ checkData.getDatetime | amDateFormat:'DD.MM. - HH:mm' }}</a>
-			</div>
-			
-			<div class="bt_normal">
-				<a href ng-click="showBoxBack()">Rückgabe am {{ checkData.backDatetime | amDateFormat:'DD.MM. - HH:mm' }}</a>
-			</div>
+			<a href class="bt_dark" ng-click="showBoxGet($event)" ng-class="{ 'noMatching': formInfo.noFindingGet }">Abholen am {{ checkData.getDatetime | amDateFormat:'DD.MM.YY - HH:mm' }}</a>
+			<a href class="bt_dark" ng-click="showBoxBack($event)" ng-class="{ 'noMatching': formInfo.noFindingBack }">Rückgabe am {{ checkData.backDatetime | amDateFormat:'DD.MM.YY - HH:mm' }}</a>
 		</div>
 		
 		<div class="formRow" ng-show="formInfo.dateStatus == 'yes'">
@@ -28,8 +25,10 @@
 		</div>
 		
 		<div class="buttonContainer" ng-show="formInfo.dateStatus == 'no'">
-			<input class="bt_dark" value="Direkter Kontakt" ng-click="sendAnswer()">
-			<input class="bt_light" value="Anfrage ablehnen" ng-click="openModalClose()">
+			<p>Die Vorschläge von {{ currentLend.neighborBorrow.accountName }} sind für dich nicht passend. Du hast jetzt die Möglichkeit, direkt Kontakt aufzunehmen, um andere Termine zu finden oder die Anfrage abzulehnen.</p>
+			
+			<a class="bt_dark" ng-click="directContact()">Direkter Kontakt</a>
+			<a class="bt_light cancel" ng-click="openModalClose()">Anfrage ablehnen</a>
 		</div>
 		
 	</form>
@@ -39,27 +38,3 @@
 	
 </div>
 <div class="clear"></div>
-
-<div class="boxGet" ng-show="formInfo.showBox == 'get'">
-	<div class="day" ng-repeat="day in currentLend.timeSuggestions.get">
-		<div class="date">{{ day.date | amDateFormat:'dd, DD.MM.YY' }}</div>
-		<div class="times">
-			<div class="time" ng-repeat="time in day.times"><button ng-class="{'active': day.date == formInfo.activeGet.date && time == formInfo.activeGet.time }" ng-click="selectTime('get', day.date, time)">{{ time }}</button></div>
-		</div>
-	</div>
-	<div class="none">
-		<button ng-class="{'active': formInfo.noFindingGet }" ng-click="selectTime('get', 'none')">Kein passender Termin</button>
-	</div>
-</div>
-
-<div class="boxBack" ng-show="formInfo.showBox == 'back'">
-	<div class="day" ng-repeat="day in currentLend.timeSuggestions.back">
-		<div class="date">{{ day.date | amDateFormat:'dd, DD.MM.YY' }}</div>
-		<div class="times">
-			<div class="time" ng-repeat="time in day.times"><button ng-class="{'active': day.date == formInfo.activeBack.date && time == formInfo.activeBack.time }" ng-click="selectTime('back', day.date, time)">{{ time }}</button></div>
-		</div>
-	</div>
-	<div class="none">
-		<button ng-class="{'active': formInfo.noFindingBack }" ng-click="selectTime('back', 'none')">Kein passender Termin</button>
-	</div>
-</div>

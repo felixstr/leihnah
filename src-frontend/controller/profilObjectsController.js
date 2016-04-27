@@ -1,9 +1,19 @@
-angular.module('Leihnah').controller('ProfilObjectsController', function($scope, $http, $state, $window, $uibModal, $log, AuthenticationService, auth, CategoryService, Piwik) {
+angular.module('Leihnah').controller('ProfilObjectsController', function($scope, $http, $state, $window, $uibModal, $log, ContextBoxService, AuthenticationService, auth, CategoryService, Piwik) {
 	Piwik.trackPageView($window.location.origin+'/profil/objects');
 	
 	$log.debug('ProfilObjectsController');
 	
 	$scope.objects = '';
+	
+	
+	// profilMenu
+	$scope.showObjectMenu = function(event, object) {
+	    ContextBoxService.setTargetElement(event.currentTarget);
+	    ContextBoxService.setHorizontalAlign('right');
+	    ContextBoxService.setId('ownObjectMenu');	    
+	    ContextBoxService.show();
+	    ContextBoxService.object = object;
+    }
 	
 	$scope.loadObjects = function() {
 		$http.get('api/object/own', {
@@ -21,7 +31,8 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 	}
 	
 
-	$scope.openModalObject = function(object) {
+	$scope.contextBox.openModalObject = function(object) {
+		$log.debug('obj', object); 
 		var modalInstance = $uibModal.open({
 			backdrop: 'static',
 			keyboard: false,
@@ -59,7 +70,7 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 		});
 	}
 	
-	$scope.openModalObjectDelete = function(object) {
+	$scope.contextBox.openModalObjectDelete = function(object) {
 		var modalInstance = $uibModal.open({
 			backdrop: 'static',
 			keyboard: false,
@@ -84,7 +95,7 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 			$log.debug('Modal dismissed at: ' + new Date());
 		});
 	}
-	
+	/*
 	$scope.openModalObjectActivation = function(object) {
 		var modalInstance = $uibModal.open({
 			backdrop: 'static',
@@ -110,9 +121,9 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 			$log.debug('Modal dismissed at: ' + new Date());
 		});
 	}
+	*/
 	
-	
-	$scope.activation = function (object) {
+	$scope.contextBox.activation = function (object) {
 
 		var url = 'api/object/'+object.id;
 // 		$log.debug(url);

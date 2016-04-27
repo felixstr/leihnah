@@ -1,0 +1,8 @@
+<div id="contextBoxWrap" class="arrowTopRight ownObjectMenu menu">
+	
+	<a href ng-click="contextBox.hide(); contextBox.openModalObject(contextBox.object)">Bearbeiten</a>
+	<a href ng-click="contextBox.hide(); contextBox.activation(contextBox.object)">{{ contextBox.object.active ? 'Deaktivieren' : 'Aktivieren' }}</a>
+	<a href ng-click="contextBox.hide(); contextBox.openModalObjectDelete(contextBox.object)">Löschen</a>
+
+	
+</div>

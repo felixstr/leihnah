@@ -1,4 +1,4 @@
-var app = angular.module('Leihnah', ["ui.router", 'ui.bootstrap', "ngFileUpload", 'piwik', 'ngSanitize', 'angular-carousel', 'ngTouch', 'angularMoment', 'ngAnimate']); 
+var app = angular.module('Leihnah', ["ui.router", 'ui.bootstrap', "ngFileUpload", 'piwik', 'ngSanitize', 'angular-carousel', 'ngTouch', 'angularMoment', 'ngAnimate', 'duScroll', 'rt.resize', 'angular-preload-image']); 
 module.exports = app;
  
  
@@ -61,7 +61,23 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $logProvi
 			url: '/object/:objectId',
 			controller: 'ObjectDetailController',
 			templateUrl: 'template/objectDetail.html',
-			parent: 'layout'
+			parent: 'layout',
+			resolve: {
+				test: function($q, $timeout){
+					var deferred = $q.defer();
+					
+					
+					
+					deferred.resolve("ok");
+					/*
+					$timeout(function(){
+                    	deferred.resolve("ok");
+                 	}, 2000);
+*/
+					
+					return deferred.promise;
+				}
+			}
 		})
 		.state('neighbor', {
 			url: '/neighbor',
@@ -125,20 +141,16 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $logProvi
 		});
 });
 
-app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache, AuthenticationService, ContextmenuService, Piwik, amMoment) {
+app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache, $uibModalStack, AuthenticationService, Piwik, amMoment, ScrollService) {
 	
 	amMoment.changeLocale('de');
-/*
 	
-
-	$transitions.onBefore({to: '**'}, function($window, Piwik, $state) {
-		$log.debug('state-current', $state.current);
-// 		
+	
+	$transitions.onBefore({to: '**'}, function() {
+		ScrollService.updateState();
 		
-		
+		$uibModalStack.dismissAll();
 	});
-	
-*/
 
 	$transitions.onBefore({ to: 'home' }, function($state) {								
 		return AuthenticationService.isAuthenticated() ? $state.target('objects') : true;
@@ -178,6 +190,13 @@ app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache
 	$transitions.onBefore({ to: 'profil.base' }, toHome);
 	$transitions.onBefore({ to: 'profil.objects' }, toHome);
 	
+	
+	
+	if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) {
+		$('body').addClass('touch-device');	
+	} else {
+		$('body').addClass('click-device');	
+	}
 	
 	
 	

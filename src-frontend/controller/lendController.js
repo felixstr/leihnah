@@ -1,27 +1,32 @@
-angular.module('Leihnah').controller('LendController', function($scope, $http, $stateParams, $window, $log, $timeout, AuthenticationService, auth, $uibModal, CategoryService, Piwik, $state) {
+angular.module('Leihnah').controller('LendController', function($scope, $http, $stateParams, $window, $log, $timeout, $document, AuthenticationService, auth, $uibModal, CategoryService, Piwik, $state, resize) {
 	Piwik.trackPageView($window.location.origin+'/lend/'+$stateParams.lendId);
 	
-	document.body.scrollTop = document.documentElement.scrollTop = 0;
+// 	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	
-	// timeline height berrechnen. @todo: verbessern (resize)
-	var setTimlineHeight = function() {
-		var actionElement = document.querySelector(".actionBox").getBoundingClientRect();
-		var containerElement = document.querySelector(".conversationContainer");
-		
-		var height = actionElement.top - containerElement.getBoundingClientRect().top + 10;
-		document.querySelector(".timelinePast").setAttribute('style', "height: "+height+"px;");
-		
-		height = containerElement.clientHeight - 100;
-		
-		document.querySelector(".timeline").setAttribute('style', "height: "+height+"px;");
+	var setTimelineHeight = function() {
+		var height= 0;
+			
+			if ($scope.currentLend.state == 'request' || $scope.currentLend.state == 'direct' || $scope.currentLend.state == 'confirmed' || $scope.currentLend.state == 'closed') {
+				height = $('.actionBox').position().top + 45;
+			} else if ($scope.currentLend.state == 'answered') {
+				height = $('#answerMessage').position().top + 45;
+			} 
+
+			
+			$log.debug('height', height);
+			
+			$('.timelinePast').css({ 'height': height+'px' });
+			
+			height = $('.conversationContainer').height();
+			$('.timeline').css({ 'height': height+'px' });
+			
 	}
 	
-	$scope.contentLoaded = function() {
-		$timeout(function() {
-			setTimlineHeight();
-		}, 100);
-	}
-	
+	resize($scope).call(function() { 
+		$scope.$apply(function() {
+	       setTimelineHeight();
+	    });	
+	});
 	
 	$scope.openModalCheckData = function(object) {
 		var modalInstance = $uibModal.open({
@@ -42,10 +47,13 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 			$scope.$parent.loadLends();
 			loadLend();
 			
-		}, function () {
+		}, function (type) {
 			
-			$scope.$parent.loadLends();
-			$state.go('profil.lend');
+			if (type == 'close') {
+			
+				$scope.$parent.loadLends();
+				$state.go('profil.lend');
+			}
 			
 			$log.debug('Modal dismissed at: ' + new Date());
 		});
@@ -101,7 +109,10 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 						'background-image':'url('+($scope.$parent.currentNeighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+$scope.$parent.currentNeighbor.accountImage)+')'
 					};
 					
-					setTimlineHeight();
+					$timeout(function() {
+						setTimelineHeight();
+						$document.scrollToElement($(".actionBox"), 100, 500);
+					}, 100);					
 					
 				} else {
 					$state.go('profil.lend');

@@ -24,6 +24,8 @@ class LendEntity {
 	protected $getDatetime = null;
 	protected $backDatetime = null;
 	protected $inTime = false;
+	protected $getPast = false;
+	protected $backPast = false;
 	
 	protected $confirmedDatetime = null;
 	
@@ -61,7 +63,9 @@ class LendEntity {
 				fk_userBorrow AS userBorrowId,
 				fk_userLend AS userLendId,
 				fk_postit AS postitId,
-				(DATE(NOW()) between getDatetime and backDatetime) AS inTime
+				(DATE(NOW()) between getDatetime and backDatetime) AS inTime,
+				(DATE(NOW()) >= getDatetime) AS getPast,
+				(DATE(NOW()) > backDatetime) AS backPast
 			FROM lend
 			WHERE 
 				pk_lend = :id AND
@@ -103,6 +107,8 @@ class LendEntity {
 		$this->getDatetime = $row['getDatetime'];
 		$this->backDatetime = $row['backDatetime'];
 		$this->inTime = $row['inTime'];
+		$this->getPast = $row['getPast'];
+		$this->backPast = $row['backPast'];
 		
 		$this->confirmedDatetime = $row['confirmedDatetime'];
 		$this->directContactDatetime = $row['directContactDatetime'];
@@ -383,7 +389,7 @@ class LendEntity {
 			UPDATE
 				lend
 			SET
-				directContactDatetime = NOW()
+				directContactDatetime = NOW(),
 				deleted = 0,
 				state = 'direct',
 				changeDate = NOW()
@@ -469,14 +475,6 @@ class LendEntity {
 	public function getState() { return $this->state; }
 	
 	public function getError() { return $this->error == true; }
-	/*
-	public function getId() { return $this->id; }
-	public function getUserId() { return $this->userId; }
-	public function getCategoryId() { return $this->categoryId; }
-	public function getName() { return $this->name; }
-	public function getDescription() { return $this->description; }
-	public function getDamage() { return $this->damage; }
-	*/
 
 	public function setId($value){ $this->id = $value; return $this;	}
 	public function setObjectId($value){ $this->objectId = $value; return $this;	}
@@ -517,6 +515,8 @@ class LendEntity {
 			'getDatetime' => $this->getDatetime,
 			'backDatetime' => $this->backDatetime,
 			'inTime' => $this->inTime == 1,
+			'getPast' => $this->getPast == 1,
+			'backPast' => $this->backPast == 1,
 			'confirmedDatetime' => $this->confirmedDatetime,	
 			'directContactDatetime' => $this->directContactDatetime,
 			'closedText' => $this->closedText,
