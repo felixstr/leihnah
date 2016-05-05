@@ -1,21 +1,22 @@
 <div ng-include="contextBox.template" ng-show="contextBox.visible" onload="contextBox.loaded()"></div>
 <div id="contextBoxOverlay" ng-show="contextBox.visible" ng-click="contextBox.hide()"></div>
 
-<div class="mobile-nav" ng-if="showMobile" ng-class="{showMobileNav: mobileNav == 'show'}">
+<div class="mobile-nav" ng-if="showMobile" ng-class="{showMobileNav: mobileNav == 'show'}" ng-show="pageVisibility.showContent">
+	<div class="bg"></div>
 	<div class="content">
 		<div class="profil">
-			<a class="profil" ng-class="{current: state.is('profil.base')}" ui-sref="profil.base" ng-click="toggleMobileNav()">
+			<a class="profil" ng-class="{current: state.is('profil.base')}" href ng-click="contextBox.goPageProfil('profil.base'); toggleMobileNav()">
 				<div class="profilImage medium" ng-style="profilImageBG"></div>
 				<div class="name">{{ currentNeighbor.accountName }}<span>Dein Profil</span></div>
 				
 			</a>
 			
-			<a ui-sref="profil.objects" ng-class="{current: state.is('profil.objects')}" ng-click="toggleMobileNav()">Deine Gegenstände</a>
-			<a ui-sref="profil.lend" ng-class="{current: state.is('profil.lend')}" ng-click="toggleMobileNav()"><span ng-show="lends.mark > 0" class="mark small"></span>An die Nachbarn verliehen</a>
-			<a ui-sref="profil.borrow" ng-class="{current: state.is('profil.borrow')}" ng-click="toggleMobileNav()"><span ng-show="borrows.mark > 0" class="mark small"></span>Von den Nachbarn geliehen</a>
+			<a ng-click="contextBox.goPageProfil('profil.objects'); toggleMobileNav()" href ng-class="{current: state.is('profil.objects')}" ng-click="toggleMobileNav()">Deine Gegenstände</a>
+			<a ng-click="contextBox.goPageProfil('profil.lend'); toggleMobileNav()" href ng-class="{current: state.is('profil.lend')}" ng-click="toggleMobileNav()"><span ng-show="lends.mark > 0" class="mark small"></span>An die Nachbarn verliehen</a>
+			<a ng-click="contextBox.goPageProfil('profil.borrow'); toggleMobileNav()" href ng-class="{current: state.is('profil.borrow')}" ng-click="toggleMobileNav()"><span ng-show="borrows.mark > 0" class="mark small"></span>Von den Nachbarn geliehen</a>
 		</div>
 		<div class="pages">
-			<a ng-class="{current: state.is('objects') || state.includes('object')}" ng-click="resetFilter(); loadObjects(); toggleMobileNav()" ui-sref="objects">Gegenstände</a>
+			<a ng-class="{current: state.is('objects') || state.includes('object')}" ng-click="toggleMobileNav(); goPageObjects(); resetFilter(); loadObjects(); " href >Gegenstände</a>
 		</div>
 		<div class="logout">
 			<a href ng-click="logoutUser(); toggleMobileNav()">Abmelden</a>
@@ -28,7 +29,7 @@
 <div id="outherContentWrap" ng-class="{showMobileNav: mobileNav == 'show'}">
 	<header class="site" ng-if="!state.is('home') && !state.is('register')">
 	
-		<div class="containerLogo" ng-click="state.go('objects')">
+		<div class="containerLogo" ng-click="goPageObjects();">
 			<img class="logo" src="assets/img/static/leihnah-logo.svg" />
 			{{ currentNeighbor.settlement.name }}
 		</div>
@@ -37,14 +38,14 @@
 			<span class="name">{{ currentNeighbor.accountName }}</span>
 			<span class="profilImage small" ng-style="profilImageBG"><span ng-show="lends.mark > 0 || borrows.mark > 0" class="mark"></span></span>
 		</a>
-		
+<!--  		content: {{  pageVisibility.showContent }}, contentProfil: {{  pageVisibility.showContentProfil }} -->
 		<nav class="pages" ng-if="showDesktop">
-			<a ng-class="{current: state.is('objects') || state.includes('object')}" ng-click="resetFilter(); loadObjects()" ui-sref="objects">Gegenstände</a>
+			<a ng-class="{current: state.is('objects') || state.includes('object')}" ng-click="goPageObjects();" href>Gegenstände</a>
 	<!-- 		<a ui-sref="neighbor">Nachbarn</a> -->
 	<!-- 		<a ui-sref="wishlist">Wunschliste</a> -->
 		</nav>
 
-		<button class="hamburger" ng-if="showMobile" ng-click="toggleMobileNav()">
+		<button class="hamburger" ng-if="showMobile" ng-click="toggleMobileNav()" ng-class="{active: mobileNav == 'show'}">
 			<span ng-show="lends.mark > 0 || borrows.mark > 0" class="mark"></span>
 			<div></div>
 			<div></div>
@@ -56,21 +57,22 @@
 	<div id="containerMain" ng-class="{'fadeout': fadeout}" class="{{ 'page_'+state.current.name.replace('.', '-') }}"ui-view autoscroll='false' onload="contentLoaded()"></div>
 	
 	
-	<footer>
-		<div class="content">
-			<div class="top">
-				<img class="logo" src="assets/img/static/leihnah-logo-negativ.svg" />
-				<div class="slogan">Mehr Wert in der Nachbarschaft</div>
-			</div>
-			
-			<div class="bottom">
-				Eine Bachelorarbeit von Felix Stricker. <br />
-				Für Fragen oder Anregungen: <a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>
+	<footer ng-show="pageVisibility.showContent">
+		<div class="bg"></div>
+		<div class="contentWrap">
+			<div class="content">
+				<div class="top">
+					<img class="logo" src="assets/img/static/leihnah-logo.svg" />
+					<div class="slogan">Mehr Wert in der Nachbarschaft</div>
+				</div>
+				
+				<div class="bottom">
+					Eine Bachelorarbeit von Felix Stricker. <br />
+					Für Fragen oder Anregungen: <a  class="text" href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>
+				</div>
 			</div>
 		</div>
+		
+		
 	</footer>
 </div>
-
-
-
-<a ng-if="showDesktop" class="linkFeedback" href="mailto:felix@leihnah.ch?Subject=LEIHNAH%20Feedback%20von%20{{ currentNeighbor.accountName.replace(' ', '%20').replace('&', '+') }}&Body=Mein%20Feedback hier...%0A%0A------%0APage:%20{{ window.location.hash }}%0A{{ window.navigator.userAgent }}">Feedback oder Fehler melden</a>

@@ -1,8 +1,12 @@
-angular.module('Leihnah').controller('ProfilBaseController', function($scope, $http, $state, $window, $uibModal, $log, ContextBoxService, AuthenticationService, auth, Piwik) {
+angular.module('Leihnah').controller('ProfilBaseController', function($scope, $http, $state, $window, $uibModal, $log, $timeout, ContextBoxService, AuthenticationService, auth, Piwik, PageVisibilityService) {
 	Piwik.trackPageView($window.location.origin+'/profil/base');
 	
 	$log.debug('ProfilBaseController');
-
+	
+	$timeout(function() {
+		PageVisibilityService.showProfil();
+	},50);
+	
 	
 	// profilMenu
 	$scope.showProfilEditMenu = function(event) {
@@ -30,7 +34,6 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 		modalInstance.result.then(function (neighbor) {
 			$scope.$parent.$parent.currentNeighbor = neighbor;
 			$log.debug('neighbor', neighbor);
-			$log.debug('$scope.$parent.$parent', $scope.$parent.$parent);
 			
 		}, function () {
 			$log.debug('Modal dismissed at: ' + new Date());

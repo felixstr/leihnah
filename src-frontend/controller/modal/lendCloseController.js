@@ -16,7 +16,7 @@ angular.module('Leihnah').controller('LendCloseController', function($scope, $ui
 		type = 'successful';
 		
 		$scope.formInfo.titleText = 'Möchtest du die Verleihung wirklich abschliessen?';
-		$scope.formInfo.feedbackPlaceholder = 'Teile '+$scope.formInfo.otherNeighbor.accountName+' mit, wie zurfrieden du mit der Verleihung bist';
+		$scope.formInfo.feedbackPlaceholder = 'Teile '+$scope.formInfo.otherNeighbor.accountName+' mit, wie zufrieden du mit der Verleihung bist';
 		$scope.formInfo.buttonText = 'Verleihung abschliessen';
 		
 	} else if(($scope.currentLend.state == 'request' || $scope.currentLend.state == 'answered') && kind == 'borrow') {

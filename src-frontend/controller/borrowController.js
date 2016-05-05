@@ -1,7 +1,19 @@
-angular.module('Leihnah').controller('BorrowController', function($scope, $http, $stateParams, $window, $log, $timeout, AuthenticationService, auth, $uibModal, $document, CategoryService, Piwik, $state, resize) {
+angular.module('Leihnah').controller('BorrowController', function($scope, $http, $stateParams, $window, $log, $timeout, AuthenticationService, auth, $uibModal, $document, CategoryService, Piwik, $state, resize, ContextBoxService, PageVisibilityService) {
 	Piwik.trackPageView($window.location.origin+'/borrow/'+$stateParams.borrowId);
 	
-	document.body.scrollTop = document.documentElement.scrollTop = 0;
+// 	document.body.scrollTop = document.documentElement.scrollTop = 0;
+	
+	// states
+	$scope.states = {
+		showBottomBackBar: false,
+		showBottomGetBar: false,
+		expired: false
+	}
+	var initStates = function() {
+		$scope.states.showBottomBackBar = $scope.currentBorrow.confirmedDatetime != null && ($scope.currentBorrow.state != 'closed' || $scope.currentBorrow.closedType == 'successful') && !$scope.currentBorrow.backPast;
+		$scope.states.showBottomGetBar = $scope.currentBorrow.confirmedDatetime != null && !$scope.currentBorrow.getPast && $scope.currentBorrow.state != 'closed';
+		$scope.states.expired = $scope.currentBorrow.confirmedDatetime == null && new Date($scope.currentBorrow.timeSuggestions.get[0].date).setHours(0,0,0,0) <= new Date().setHours(0,0,0,0);
+	}
 	
 	
 	
@@ -25,7 +37,7 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 		modalInstance.result.then(function () {
 			
 			$scope.$parent.loadLends();
-			$state.go('profil.borrow');
+			loadBorrow();
 			
 		}, function () {
 			$log.debug('Modal dismissed at: ' + new Date());
@@ -47,6 +59,7 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 		});
 		
 		modalInstance.result.then(function () {
+			PageVisibilityService.hide();
 			
 			$scope.$parent.loadLends();
 			loadBorrow();
@@ -57,28 +70,50 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 		});
 	}
 	
-
+	$scope.showContactData = function() {
+		ContextBoxService.setTargetElement($("a.contact"));
+	    ContextBoxService.setHorizontalAlign('right');
+	    ContextBoxService.setId('lendContact');	    
+	    ContextBoxService.show();
+	    ContextBoxService.currentLend = $scope.currentBorrow;
+	    ContextBoxService.person = $scope.currentBorrow.neighborLend;
+	    ContextBoxService.dataAll = true;
+	}
+	
+	var initScrollTo = function() {
+	
+		if ($scope.states.expired) {
+			$document.scrollTo(0, $("#containerMain").height() - $window.innerHeight, 500);
+		} else {
+			$document.scrollToElement($(".actionBox"), ($(window).height() / 2), 500);
+		}
+		
+		
+	}
 	
 	var setTimelineHeight = function() {
 		var height= 0;
 			
-			if ($scope.currentBorrow.state == 'request') {
-				height = 70;
-			} else if ($scope.currentBorrow.state == 'direct') {
-				height = $('#directContactMessage').position().top + 45;
-			} else if ($scope.currentBorrow.state == 'answered' || $scope.currentBorrow.state == 'confirmed' || $scope.currentBorrow.state == 'closed') {
-				height = $('.actionBox').position().top + 45;
-			}
-			
-			$log.debug('height', height);
-			
-			
-			$('.timelinePast').css({ 'height': height+'px' });
-			
-			
-			height = $('.conversationContainer').height();
-			
-			$('.timeline').css({ 'height': height+'px' });
+		if ($scope.states.expired) {
+			height = $('.messageExpired').position().top;
+		} else if ($scope.currentBorrow.state == 'request') {
+			height = 70;
+			height = $('.actionBox').position().top + 20;
+		} else if ($scope.currentBorrow.state == 'direct') {
+			height = $('#directContactMessage').position().top + 20;
+		} else if ($scope.currentBorrow.state == 'answered' || $scope.currentBorrow.state == 'confirmed' || $scope.currentBorrow.state == 'closed') {
+			height = $('.actionBox').position().top + 20;
+		}
+		
+		$log.debug('height', height);
+		
+		
+		$('.timelinePast').css({ 'height': height+'px' });
+		
+		
+		height = $('.conversationContainer').height() - 80;
+		
+		$('.timeline').css({ 'height': height+'px' });
 		
 	}
 	
@@ -135,6 +170,8 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 				$log.debug('loadBorrow', response);
 				if (response.ok) {
 					$scope.currentBorrow = response.lend;
+					
+					initStates();
 										
 					$scope.lendProfilImageBG = {
 						'background-image':'url('+($scope.currentBorrow.neighborLend.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+$scope.currentBorrow.neighborLend.accountImage)+')'
@@ -148,10 +185,13 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 						'background-image':'url('+($scope.$parent.currentNeighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+$scope.$parent.currentNeighbor.accountImage)+')'
 					};
 					
+					PageVisibilityService.show();
+					
 					$timeout(function() {
 						setTimelineHeight();
-						$document.scrollToElement($(".actionBox"), 100, 500);
-					}, 100);	
+						initScrollTo();
+						
+					}, 300);	
 					
 				}
 			})
@@ -160,5 +200,13 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 			});
 	};
 	loadBorrow();
+	
+	$scope.goBack = function() {
+		PageVisibilityService.hide();
+		$timeout(function() {
+			$state.go('profil.borrow');
+		}, 1000);
+		
+	}
 
 });

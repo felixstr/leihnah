@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('ProfilObjectsController', function($scope, $http, $state, $window, $uibModal, $log, ContextBoxService, AuthenticationService, auth, CategoryService, Piwik) {
+angular.module('Leihnah').controller('ProfilObjectsController', function($scope, $http, $state, $window, $uibModal, $log, $timeout, ContextBoxService, AuthenticationService, auth, CategoryService, Piwik, PageVisibilityService) {
 	Piwik.trackPageView($window.location.origin+'/profil/objects');
 	
 	$log.debug('ProfilObjectsController');
@@ -23,6 +23,11 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 				$log.debug('loadObjects', response);
 				if (response.ok) {
 					$scope.objects = response.objects;
+					
+					$timeout(function() {
+						PageVisibilityService.showProfil();
+					},50);
+					
 				}
 			})
 			.error(function(error) {

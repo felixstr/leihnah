@@ -1,44 +1,46 @@
-<span class="profilImage xlarge" ng-style="profilImageBG"></span>
-
-<div class="contact">
-	<h2>{{ currentNeighbor.accountName }}</h2>
+<div class="profilBaseWrap" ng-show="pageVisibility.showContentProfil">
 	
-	<div class="single" ng-if="currentNeighbor.person2_firstName == ''">
-		<div class="address">{{ currentNeighbor.address }}</div>
-		<div class="phone">{{ currentNeighbor.fixnetPhone }}</div>
+	<span class="profilImage xlarge" ng-style="profilImageBG"></span>
+	
+	<div class="contact">
+		<h2>{{ currentNeighbor.accountName }}</h2>
 		
-		<div class="mail">{{ currentNeighbor.person1_mail }}</div>
-		<div class="phone">{{ currentNeighbor.person1_phone }}</div>
+		<div class="single" ng-if="currentNeighbor.person2_firstName == ''">
+			<div class="iconAddress">{{ currentNeighbor.address }}</div>
+			<div class="iconPhone">{{ currentNeighbor.fixnetPhone }}</div>
+			
+			<div class="iconMail">{{ currentNeighbor.person1_mail }}</div>
+			<div class="iconPhone">{{ currentNeighbor.person1_phone }}</div>
+		</div>
+		
+		<div class="group" ng-if="currentNeighbor.person2_firstName != ''">
+			<div class="base">
+				<div class="iconAddress">{{ currentNeighbor.address }}</div>
+				<div class="iconPhone">{{ currentNeighbor.fixnetPhone }}</div>
+			</div>
+			
+			<div class="person1">
+				<div class="name">{{ currentNeighbor.person1_firstName }} {{ currentNeighbor.person1_lastName }}</div>	
+				<div class="iconMail">{{ currentNeighbor.person1_mail }}</div>
+				<div class="iconPhone">{{ currentNeighbor.person1_phone }}</div>
+			</div>
+			
+			<div class="person2">
+				<div class="name">{{ currentNeighbor.person2_firstName }} {{ currentNeighbor.person2_lastName }}</div>	
+				<div class="iconMail">{{ currentNeighbor.person2_mail }}</div>
+				<div class="iconPhone">{{ currentNeighbor.person2_phone }}</div>
+			</div>
+		</div>
 	</div>
 	
-	<div class="group" ng-if="currentNeighbor.person2_firstName != ''">
-		<div class="base">
-			<div class="address">{{ currentNeighbor.address }}</div>
-			<div class="phone">{{ currentNeighbor.fixnetPhone }}</div>
-		</div>
-		
-		<div class="person1">
-			<div class="name">{{ currentNeighbor.person1_firstName }} {{ currentNeighbor.person1_lastName }}</div>	
-			<div class="mail">{{ currentNeighbor.person1_mail }}</div>
-			<div class="phone">{{ currentNeighbor.person1_phone }}</div>
-		</div>
-		
-		<div class="person2">
-			<div class="name">{{ currentNeighbor.person2_firstName }} {{ currentNeighbor.person2_lastName }}</div>	
-			<div class="mail">{{ currentNeighbor.person2_mail }}</div>
-			<div class="phone">{{ currentNeighbor.person2_phone }}</div>
-		</div>
+	<div class="description">
+		<p ng-bind-html="currentNeighbor.descriptionFormatted"></p>
+		<h3 ng-if="currentNeighbor.descriptionAvailableFormatted">Bevorzugte Zeit für Übergabetermine</h3>
+		<p ng-bind-html="currentNeighbor.descriptionAvailableFormatted"></p>
 	</div>
+	
+	<a id="btProfilEdit" class="bt_light arrowDown small" ng-class="{active: contextBox.id == 'profilEditMenu'}" href ng-click="showProfilEditMenu($event)"><span class="mark" ng-show="currentNeighbor.address == '' || currentNeighbor.person1_firstName == ''"></span>Bearbeiten</a>
+	<div class="editMessage" ng-if="currentNeighbor.person1_firstName == ''">Vervollständige deine Kontaktdaten, damit du diese den einzelnen Gegenständen zuordnen kannst.</div>
+	
+	
 </div>
-
-<div class="description">
-	<p ng-bind-html="currentNeighbor.descriptionFormatted"></p>
-	<h3 ng-if="currentNeighbor.descriptionAvailableFormatted">Bevorzugte Zeit für Übergabetermine</h3>
-	<p ng-bind-html="currentNeighbor.descriptionAvailableFormatted"></p>
-</div>
-
-<a id="btProfilEdit" class="bt_light arrowDown" ng-class="{active: contextBox.id == 'profilEditMenu'}" href ng-click="showProfilEditMenu($event)"><span class="mark" ng-show="currentNeighbor.address == '' || currentNeighbor.person1_firstName == ''"></span>Bearbeiten</a>
-<div class="editMessage" ng-if="currentNeighbor.person1_firstName == ''">Vervollständige deine Kontaktdaten, damit du diese den einzelnen Gegenständen zuordnen kannst.</div>
-
-
-

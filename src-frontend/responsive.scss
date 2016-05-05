@@ -16,7 +16,7 @@ $space-small: 5px;
 	
 	/* site */
 	header.site {
- /*		background: green;*/
+		/*background: green;*/
 
 		nav {
 			margin-left: calc($space*1);
@@ -28,8 +28,15 @@ $space-small: 5px;
 	
 	
 	#containerMain {
+		.topBar {
+			padding-left: calc($space*1);
+			padding-right: calc($space*1);
+		}
+		
 		.contentContainer {
-			padding: calc($space*1) calc($space*1);
+			padding-left: calc($space*1);
+			padding-right: calc($space*1);
+			padding-top: calc($space*1);
 		}
 			
 		.objectContentWrapper {
@@ -43,9 +50,6 @@ $space-small: 5px;
 	}
 	
 	.page_object {
-		#btEditObject {
-			right: $space;
-		}
 		
 		.objectInfo {
 			width: calc(45% - $space);
@@ -59,11 +63,16 @@ $space-small: 5px;
 }
 
 @media all and (max-width: 1200px) {
-	
+	footer {
+		height: 350px;
+		.bg {
+			background-position-y: 50%;
+		}
+	}
 	/* landing-page */
 	.landingPageWrap {
 		header.landingPage .content {
-// 			background: green;
+/* 			background: green;*/
 			width: 100%;
 			margin: 0;
 		}
@@ -87,6 +96,11 @@ $space-small: 5px;
 					width: calc(100% - ($space*2));
 				}
 			}
+			.rowPostitStatements .statement {
+				.text {
+					margin-top: calc(-$space*2);
+				}
+			}
 			.rowPostitStatements {
 				.statement .text {
 					font-size: 14px;
@@ -95,9 +109,11 @@ $space-small: 5px;
 			}
 		}
 		
-		footer .content {
-			margin-left: 0;
-			width: 100%;
+		footer {
+			.content {
+				margin-left: 0;
+				width: 100%;
+			}
 		}
 	}
 	
@@ -111,7 +127,7 @@ $space-small: 5px;
 		margin-left: calc(((100% - ($space*4)) * -1) + ($space/2));
 		
 		&.filtered {
-			margin-left: calc(((100% - ($space*4)) * -1) + ($space/2) + 60px);
+			margin-left: calc(((100% - ($space*4)) * -1) + ($space/2) + 65px);
 		}
 	}
 	
@@ -122,7 +138,7 @@ $space-small: 5px;
 				padding-right: calc($space*2);
 			}
 			
-			.topBar {
+			.topBox {
 				margin-left: calc($space*2);
 				margin-right: calc($space*2);
 			}
@@ -157,7 +173,93 @@ $space-small: 5px;
 		padding-right: calc($space*2);
 	}
 	
-
+	#containerMain.page_borrow, #containerMain.page_lend { 
+		.header {
+			width: 100%;
+			padding: $space;
+			
+			.firstPerson {
+				.info {
+					width: calc(100% - 100px);
+					
+					.name {
+						width: 100%;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				}
+				
+				&.showContact  {
+					a.contact {
+						max-width: 100%;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						text-align: left;
+					}
+				
+				}
+				
+			}
+			
+		}
+		.conversationContainer { 
+			width: 100%;
+			padding: calc($space/1) $space;
+			.messageItem, .actionBox {
+				padding-right: 0;
+				padding-left: 0;
+				
+			}
+		
+		}
+	}
+	
+	.profilLendWrap, .profilBorrowWrap {
+		.listContainer {
+			.itemLend {
+				.von, .bis {
+					width: calc((100% - (250px * 1.25) - ($space-small*1)));
+					height: 125px;
+					min-height: 0;
+					
+					.title {
+						margin-top: 0;
+						margin-bottom: calc($space-small*2);
+					}
+					.date {
+						margin-bottom:calc($space-small*1);
+						
+						&::after {
+							content: ' - ';
+						}
+					}
+					.date,
+					.time {
+						font-family: Roboto-Regular;
+						font-size: 22px;
+						float: none;
+						display: inline;
+					}
+				
+				}
+				.closed {
+					width: calc((100% - (250px * 1.25) - ($space-small*1)));
+					min-height: 250px;
+					.title {
+						margin-top: 0;
+					}
+				}
+				.von, .closed{
+					padding-top: calc($space-small*8);
+				}
+				.bis {
+					padding-top: calc($space-small*2);
+				}
+			}
+		}
+	}
 }
 
 @media all and (max-width: 1023px) {
@@ -184,6 +286,12 @@ $space-small: 5px;
 			.rowSettlementImages {
 				.settlement .text {
 					font-size: 14px;
+					line-height: 39px;
+					min-height: 0;
+					height: 40px;
+					padding-top: 0;
+					
+					margin-top: calc(-$space*1 - 40px);
 				}
 			}
 			
@@ -232,8 +340,7 @@ $space-small: 5px;
 	nav.sub {
 		display: none;
 	}
-	#containerProfil,
-	.page_profil-base #containerProfil {
+	#containerProfil {
 		width: 100%;
 		margin-left: 0;
 		margin-right: 0;
@@ -243,10 +350,184 @@ $space-small: 5px;
 			margin-left: calc($space * -1);
 		}
 	}
+	
+	#containerMain.page_borrow, #containerMain.page_lend { 
+		.header {
+			.arrowBG {
+				width: 240px;
+				left: calc(50% - (240px / 2));
+				top: 45px;
+			}
+			.profilImage {
+				width: 60px;
+				height: 60px;
+				margin-bottom:5px;
+			}
+			.firstPerson {
+				.info {
+					padding: 0;
+					line-height: 22px;
+					width: 100%;
+					
+					.name {
+						margin-top: 5px;
+						width: 100%;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				}
+				&.showContact .info {
+					padding: 0;
+					width: 100%;
+				}
+			}
+
+			.firstPerson, .secondPerson {
+				width: calc(50% - (190px / 2) - ($space));
+			}
+		}
+
+		.conversationContainer { 
+			.timeline {
+				display: none;
+			}
+			
+			
+			.messageItem, .actionBox {
+				.content, .closed {
+					width: calc(75%);
+					
+					
+					.profilImage {
+						display: block;
+						position: absolute;
+						top: 0;
+						
+						width: 40px;
+						height: 40px;
+					}
+					
+				}
+				
+				&.right .content,
+				.closed.right {
+					&::before {
+						right: -7px;
+						left: auto;
+					}
+					margin-right: 60px; 
+					
+					.profilImage {
+						right: -60px;
+					}
+					
+					.date {
+						right: 2px;
+						left: auto;
+					}
+				}
+				
+				&.left .content {
+					&::before {
+						left: -7px;
+						right: auto;
+					}
+					
+					margin-left: 60px; 
+					
+					.profilImage {
+						left: -60px;
+					}
+					
+					.date {
+						left: 2px;
+						right: auto;
+					}
+				}
+				
+				&.both {
+					.content {
+						width: calc(100% + ($space*2));
+						margin-left: -$space;
+						
+						&::before {
+							display: none;
+						}
+					}
+				}
+				
+				.actionContent {
+					width: 500px;
+					
+					&::before {
+						right: -9px;
+						top: 14px;
+						left: auto;
+					}
+					margin-right: 65px; 
+					
+					.profilImage {
+						right: -65px;
+						
+					}
+				}
+				
+			}
+			
+		
+		}
+	}
+	
+	.profilLendWrap, .profilBorrowWrap {
+		.listContainer {
+			.itemLend {
+				.von, .bis {
+					width: calc((100% - (250px * 1.25) - ($space-small*2)) / 2);					height: 250px;
+					
+					.title {
+						margin-top: calc($space-small*4);
+						margin-bottom: calc($space-small*4);
+					}
+					.date {
+						
+						&::after {
+							display: none;
+						}
+					}
+					.date,
+					.time {
+						font-family: Roboto-Light;
+						font-size: 40px;
+						float: left;
+						display: block;
+					}
+					.time {
+						font-size: 30px;
+					}
+				
+				}
+				.closed {
+
+					.title {
+						margin-top: calc($space-small*4);
+					}
+				}
+				.von, .closed{
+					padding-top: calc($space-small*2);
+				}
+				.bis {
+					padding-top: calc($space-small*2);
+				}
+			}
+		}
+	}
 }
+
 
 @media all and (max-width: 769px) {
 
+	
 	/* site */
 	header.site {
 /*		background: yellow;*/
@@ -268,7 +549,7 @@ $space-small: 5px;
 		margin-left: calc(((100% - ($space*2)) * -1) + ($space/2));
 		
 		&.filtered {
-			margin-left: calc(((100% - ($space*2)) * -1) + ($space/2) + 60px);
+			margin-left: calc(((100% - ($space*2)) * -1) + ($space/2) + 65px);
 		}
 		
 		$count: 3;
@@ -285,7 +566,52 @@ $space-small: 5px;
 		}
 	}
 	
+	#containerMain, 
+	.profilObjectWrap {
+		.itemObject {
+			width: calc((100% / 2) - ($space-small / 2*1));
+			
+			&:nth-child(3n+1) {
+				margin-left: $space-small;
+			}
+			
+			&:nth-child(2n+1) {
+				margin-left: 0;
+			}
+		}
+	}
+	
+	
 	#containerMain {
+		h1 {
+			font-size: 35px;
+			line-height: 46px;
+			margin-bottom: calc($space-small*4);
+		}
+		
+		.topBar {
+			
+			.nav { 
+
+				
+				.labelNav {
+					span.label {
+						display: none;
+					}
+				}
+			}
+			
+			
+			a.back {
+				span.short {
+					display: block;
+				}
+				span.long {
+					display: none;
+				}
+			}
+		}
+		
 		.objectContentWrapper {
 			
 			.topContainer {
@@ -294,16 +620,12 @@ $space-small: 5px;
 		
 			}
 			
-			.topBar {
+			.topBox {
 				margin-left: calc($space*1);
 				margin-right: calc($space*1);
 			}
 	
-			/*
-			.contentContainer {
-				padding: calc($space*1) calc($space*1);
-			}
-			*/
+	
 			.previewRow {
 				h2, .buttons {
 					padding-left: calc($space*1);
@@ -314,17 +636,7 @@ $space-small: 5px;
 		
 	}
 	
-	.itemObject {
-		width: calc((100% / 2) - ($space-small / 2*1));
-		
-		&:nth-child(3n+1) {
-			margin-left: $space-small;
-		}
-		
-		&:nth-child(2n+1) {
-			margin-left: 0;
-		}
-	}
+	
 	
 	.page_object {
 		.objectInfo {
@@ -343,13 +655,71 @@ $space-small: 5px;
 		}
 	}
 	
-	.page_profil-base #containerProfil .contact .group {
+	.profilBaseWrap .contact .group {
 		.person1,
 		.person2 {
 			width: 100%;
 		}
 		.person2 {
 			margin-top: $space-small;
+		}
+	}
+	
+	.profilLendWrap, .profilBorrowWrap {
+		.listContainer {
+			.itemLend {
+				.von, .bis {
+					width: calc((100% - (250px * 1.25) - ($space-small*1)));
+					height: 125px;
+					min-height: 0;
+					
+					.title {
+						margin-top: 0;
+						margin-bottom: calc($space-small*2);
+					}
+					.date {
+						margin-bottom:calc($space-small*1);
+						
+						&::after {
+							display: inline;
+						}
+					}
+					.date,
+					.time {
+						font-family: Roboto-Regular;
+						font-size: 22px;
+						float: none;
+						display: inline;
+					}
+				
+				}
+				.closed {
+					width: calc((100% - (250px * 1.25) - ($space-small*1)));
+					min-height: 250px;
+					.title {
+						margin-top: 0;
+					}
+				}
+				.von, .closed{
+					padding-top: calc($space-small*8);
+				}
+				.bis {
+					padding-top: calc($space-small*2);
+				}
+				
+				
+			}
+		}
+	}
+	
+	#containerMain.page_borrow, #containerMain.page_lend { 
+		.conversationContainer { 
+			
+			.actionBox {
+				.actionContent {
+					width: calc(100% - 100px - $space);
+				}
+			}
 		}
 	}
 }
@@ -361,13 +731,27 @@ $space-small: 5px;
 */
 @media all and (max-width: 624px) {
 	/* text */
-	h1 {
-		font-size: 33px;
-		line-height: 41px;
+	h1,
+	#containerMain h1 {
+		font-size: 30px;
+		line-height: 37px;
 	}
+	h2,
+	#containerMain h2 {
+		font-size: 23px;
+		line-height: 28px;
+	}
+	
 	/* buttons */
+	/*
 	a.bt_light, a.bt_dark {
 		padding: 0 calc($space/2);
+	}
+	*/
+	
+	span.mark {
+		width: 15px;
+		height: 15px;
 	}
 	
 	/* landing-page */
@@ -393,10 +777,12 @@ $space-small: 5px;
 				
 				a.bt_dark {
 					font-size: 12px;
-					padding: 0 calc($space/2);
-					padding-right: calc(($space/2) + 10px + 10px);
+					padding: 0 calc($space-small*2);
+					padding-right: calc(($space-small*2) + 10px + 10px);
 					height: 29px;
 					line-height: 30px;
+					
+					background-position: calc(100% - ($space-small*2)) center;
 				}
 			}
 		}
@@ -406,7 +792,6 @@ $space-small: 5px;
 		}
 		section.main {
 			margin-top: 107vh;
-			margin-bottom: 350px;
 			
 			.titleAdd {
 				font-size: 18px;
@@ -471,7 +856,7 @@ $space-small: 5px;
 			
 			.rowSettlementImages {
 				.settlement .text {
-					font-size: 18px;
+					font-size: 16px;
 				}
 				
 				.btContainer {
@@ -489,10 +874,10 @@ $space-small: 5px;
 		height: 50px;
 		
 		.containerLogo {
-			left: $space;
+			left: calc($space-small*3);
 			text-align: left;
 			line-height: 49px;
-			
+			width: auto;
 			img {
 				width: 63px;
 			}
@@ -511,23 +896,40 @@ $space-small: 5px;
 		left: 0;
 		margin: 0;
 		padding-top: 60px;
+		padding-bottom: 90px;
 		
 		> a {
 			top: calc($space + 40px);
 		}	
 		
 		
-		$count: 2;
-		.itemCategory {
-			width: calc((100% / $count) - ($space-small/$count*($count - 1)));
+		.content {
+			float: left;
+			width: calc(100% + ($space*2));
+			margin-left: -$space;
+			margin-top: calc($space-small*2);
 			
-			&:nth-child(3n+1) {
-				margin-left: $space-small;
+			h2 {
+				margin-top: 4px;
 			}
-						
-			&:nth-child(2n+1) {
-				margin-left: 0;
+			
+			$count: 2;
+			.itemCategory {
+				width: calc((100% / $count) - ($space-small/$count*($count - 1)));
+				
+				&:nth-child(3n+1) {
+					margin-left: $space-small;
+				}
+							
+				&:nth-child(2n+1) {
+					margin-left: 0;
+				}
+				
+				&:active {
+					transform: none;
+				}
 			}
+			
 		}
 		
 		.header {
@@ -535,10 +937,39 @@ $space-small: 5px;
 		}
 	}
 	
-
+	
 	
 	#containerMain {
-		top: 50px;
+		padding-top: 50px;
+		
+		.topBar {
+			height: 50px;
+			padding: calc($space-small*2) calc($space-small*2);
+			
+			.nav { 
+				margin-left: calc($space-small*2);
+				a {
+					margin-left: calc($space-small*2);
+					span {
+						display: none;
+					}
+				}
+				
+				.labelNav {
+					span.label {
+						display: none;
+					}
+				}
+			}
+			
+			.edit {
+				display: none;
+			}
+		}
+		
+		.contentContainer {
+			min-height: calc(100vh - 50px);
+		}
 		
 		.objectContentWrapper {
 			.topContainer {
@@ -546,9 +977,22 @@ $space-small: 5px;
 				min-height: 300px;
 				padding-top: calc($space*2);
 				
+				
 				&.filtered {
-					
+					height: 98px;
+					min-height: 0;
+				
 					.searchContainer {
+						input, .input {
+							margin-top: 9px;
+							display: block;
+							font-size: 16px;
+						}
+						
+						.input {
+							display: none;
+						}
+						
 						.buttons {
 							a.category {
 								display: block;
@@ -556,8 +1000,23 @@ $space-small: 5px;
 						}
 					}
 				}
-				
+
 				.searchContainer {
+					height: 48px;
+					
+					input, .input {
+						height: 30px;
+						line-height: 30px;
+						font-size: 18px;
+						/*padding-left: calc($space-small*3);*/
+						display: none;
+					}
+					
+					.input {
+						display: block;
+						line-height: 27px;
+					}
+					
 					.buttons {
 						width: 115px;
 						
@@ -565,20 +1024,76 @@ $space-small: 5px;
 							display: none;
 						}
 						a {
-							top: 10px;
-							margin-right: 10px;
+							top: $space-small;
+							margin-right: $space-small;
+							padding: 0;
+							width: 45px;
+							height: 36px;
 						}
 					}
 				
 				}
 			}
+			
+			.previewRow {
+				margin-top: $space;
+				
+				h2 {
+					margin-bottom: $space;
+				}
+				.buttons {
+					margin-top: $space;
+				}
+			}
 		}
 	}
 	
+	
+	body.scroll-header #containerMain .topBar,
+	body.scroll-up #containerMain .topBar {
+		transform: translateY(50px);
+	}
+	
+	
+	#containerMain.page_object .contentContainer.hasTopBar {
+		padding-top: calc($space + 50px);
+	}
 	.page_object {
-		#btEditObject {
-			right: calc($space-small*4);
+		
+		
+		.objectInfo { 
+			
+			.containerImage .footer {
+				.profilImage {
+				
+					margin-left: 0;
+					margin-right: calc($space-small*3);
+				}
+				.accountName,
+				.address {
+					width: calc(100% - 75px);
+				}
+			}
+			
+			.containerText {
+				padding: $space;
+				padding-bottom: 0;
+				
+				.textRow {
+					.text {
+						float: left;
+						width: 100%;
+					}
+					.label {
+						float: left;
+						width: 100%;
+						margin-right: 0;
+						text-align: left;
+					}
+				}
+			}
 		}
+		
 		.requestInfo {			
 			.containerContact {
 				width: 100%;
@@ -590,10 +1105,12 @@ $space-small: 5px;
 		}
 	}
 	
-	.itemObject {
+	body.touch-device #containerMain .itemObject {
+		
+		
+		
 		width: calc((100% / 2) - (($space-small/2) / 2*1));
 		margin-left: calc($space-small/2);
-		margin-bottom: calc($space-small/2);
 		
 		&:nth-child(3n+1) {
 			margin-left: calc($space-small/2);
@@ -602,24 +1119,30 @@ $space-small: 5px;
 		&:nth-child(2n+1) {
 			margin-left: 0;
 		}
+			
 		
 		.info {
+
+			
 			.profilImage {
-				width: 40px;
-				height: 40px;
-				margin-top: -1px;
-				margin-left: -5px;
+				width: 38px;
+				height: 38px;
+				margin: 0;
 				margin-right: 5px;
+				
 				
 				.objectName, .accountName {
 					line-height: 16px;
 				}
 			}
 		}
+		
+		
+		
+		
 	}
 	
-	#containerProfil,
-	.page_profil-base #containerProfil {
+	.profilBaseWrap {
 		.profilImage {
 			margin-bottom: $space
 		}
@@ -642,9 +1165,14 @@ $space-small: 5px;
 		
 
 	
+	
 	footer .content {
 		padding-left: calc($space*1);
 		padding-right: calc($space*1);
+		.top .slogan,
+		.bottom {
+			font-size: 14px;
+		}
 	}
 	
 	
@@ -657,7 +1185,7 @@ $space-small: 5px;
 		.modal-content {
 			height: 100vh;
 			.modalBody {
-				height: calc(100vh - 40px);
+				height: calc(100vh - 80px);
 				max-height: none;
 				
 				.formRow {
@@ -673,6 +1201,253 @@ $space-small: 5px;
 			}
 		}
 	}
+	
+	
+	#contextBoxWrap.timepicker {
+		width: calc(100% - ($space * 4));
+	}
+	#contextBoxWrap.boxBack {
+		margin-left: calc(100% - 300px - 25px);
+		> .arrow {
+			margin-left: -40px;
+		}
+	}
+	
+	.profilLendWrap, .profilBorrowWrap {
+		.listContainer {
+			width: calc(100% + ($space*2));
+			margin-left: calc(($space*1) * -1);
+			
+			.itemLend {
+				.what {
+					width: calc(200px * 1.25);
+				}
+				.closed, .what {
+					min-height: 200px;
+				}
+				.von, .bis {
+					width: calc((100% - (200px * 1.25) - ($space-small*1)));
+					height: 100px;
+				}
+				.closed {
+					width: calc((100% - (200px * 1.25) - ($space-small*1)));
+				}
+				.von, .closed {
+					padding-top: calc($space-small*6);
+				}
+				
+				
+			}
+			
+			h2.past {
+				padding-left: $space;
+			}
+		}
+	}
+
+	#containerMain.page_borrow, #containerMain.page_lend { 
+		.header {
+			padding: calc($space-small * 4) calc($space-small * 2);
+			padding-bottom: 0;
+			margin-top: 50px;
+			
+			.arrowBG {
+				width: 90px;
+				left: calc(50% - (90px / 2));
+				top: 30px;
+			}
+			
+			.profilImage {
+				width: 40px;
+				height: 40px;
+				margin-bottom: 0;
+			}
+			
+			
+			
+			.img {
+				top: calc($space-small * 4);
+				height: 40px;
+				width: calc(40px * 4 / 3);
+				left: calc(50% - ((40px * 4 / 3)/2));
+			}
+			
+			.firstPerson, .secondPerson {
+				width: calc(50% - ((50px * 4 / 3)/2) - ($space-small * 2));
+			}
+			
+			.firstPerson {
+				&.showContact .info,
+				.info {
+					width: calc(100% - 40px - $space-small);
+					padding-right: calc($space-small * 2);
+				}
+				
+				.info {
+					.name {
+						margin: 0;
+						font-size: 14px;
+						font-family: Roboto-Medium;
+						line-height: 40px;
+					}
+				}
+			}
+		}
+		
+		.conversationContainer {
+			padding: calc($space-small * 2);
+			padding-top: calc($space * 2);
+
+			.messageItem {
+				.content {
+					width: calc(100% - 65px);
+					
+					> .title {
+						line-height: 18px;
+						font-size: 14px;
+						
+						padding: 10px calc($space-small*2);
+					}
+					.dates,
+					.suggestions,
+					.message,
+					.text {
+						padding: calc($space-small*2);
+						font-size: 14px;
+						line-height: 18px;
+					}
+					.dates {
+						.get, .back {
+							width: 100%;
+						}
+						.back {
+							margin-top: calc($space-small*3);
+						}
+						.datum {
+							font-size: 14px;
+							margin-top: calc($space-small*1);
+						}
+					}
+				}
+				
+				&.both {
+					.content {
+						width: calc(100% + ($space-small * 4));
+						margin-left: calc($space-small * 2 * -1);
+					}
+				}
+			}
+			
+			.actionBox .content .contentWrap {
+				padding: calc($space-small *3);
+				p {
+					line-height: 18px;
+					font-size: 14px;
+				}
+			}
+		}
+	}
+	
+	a.bt_light.small, button.bt_light.small, input.bt_light.small {
+		border-width: 1px;
+		line-height: 28px;
+	}
+}
+
+@media all and (max-width: 530px) {
+	.profilLendWrap, .profilBorrowWrap {
+		.listContainer {
+			.itemLend {
+				.what {
+					width: 100%;
+					height: calc(100vw * 0.75);
+					
+					.info {
+						bottom: calc($space-small*6);
+					}
+				}
+				.closed {
+					position: relative;
+					width: 100%;
+					margin: 0;
+					height: auto;
+					min-height: 0;
+					padding-bottom: calc($space-small*6);
+					margin-left: calc($space-small * 2);
+					width: calc(100% - ($space-small*4));
+					margin-top: calc($space-small * 6 * -1);
+				}
+				.von, .bis {
+					position: relative;
+					width: calc(100% - ($space-small*4));
+					text-align: left;
+					margin: 0;
+					margin-left: calc($space-small * 2);
+					
+					margin-bottom: 0;
+					padding-left: calc(($space-small * 4) + 10px);
+					padding-top: calc($space-small * 2);
+					
+					height: auto;
+					
+					.date, .time {
+						font-size: 14px;
+						font-family: Roboto-Medium;
+					}
+					.date {
+						margin-left: 30px;
+					}
+					
+					.title {
+						margin-bottom: 0;
+						font-size: 14px;
+						
+						span {
+							padding-left: 30px;
+							padding-bottom: 2px;
+						}
+					}
+					
+					/*
+					margin: 0;
+					padding: calc($space-small*4) calc($space-small*2);
+					height: auto;
+					
+					.title {
+						font-size: 14px;
+					}
+					.date, .time {
+						font-size: 18px;
+						width: 100%;
+						float: left;
+						
+						&::after {
+							display: none;
+						}
+					}
+					*/
+				}
+				.von {
+					margin-top: calc($space-small * 6 * -1);
+					padding-bottom: 0;
+				}
+				
+				.bottomBar {
+					text-align: left;
+					padding-left: calc($space-small*2);
+					padding-right: calc($space-small*2);
+					margin-top: 0;
+					
+					a {
+						width: 100%;
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
 }
 
 @media all and (max-width: 414px) {
@@ -700,37 +1475,26 @@ $space-small: 5px;
 				padding-right: calc($space-small*4);
 				
 				&.filtered {
-					padding: calc($space-small*1);
-					min-height: 70px;
+					padding: calc($space-small*2);
+					height: 68px;
 					
 					.searchContainer {
-						input {
-							padding-left: calc($space-small*2);
+						background-position: calc($space-small*2) center;
+						background-size: 15px;
+						
+						input, .input {
+							padding-left: calc($space-small*7);
+							margin-top: 8px;
 						}
-						.buttons {
-							a.category {
-								display: block;
-							}
-						}
+
+
 					}
 				}
 				
-				.searchContainer {
-					height: 60px;
-					input {
-						height: 40px;
-						line-height: 40px;
-						font-size: 20px;
-						padding-left: calc($space-small*3);
-					}
-	
-				
-				}
-				
-				
+		
 			}
 			
-			.topBar {
+			.topBox {
 				margin-left: calc($space-small*3);
 				margin-right: calc($space-small*3);
 				.text {
@@ -774,11 +1538,35 @@ $space-small: 5px;
 				padding-right: calc($space-small*4);
 			}
 		}
+		
+		.objectInfo { 
+			
+
+			
+			.containerText {
+				padding: calc($space-small*4);
+				padding-bottom: 0;
+				
+				.textRow {
+					.text {
+						float: left;
+						width: 100%;
+					}
+					.label {
+						float: left;
+						width: 100%;
+						margin-right: 0;
+						text-align: left;
+					}
+				}
+			}
+		}
 	}
 
 	
 	#containerProfil,
-	.page_profil-base #containerProfil  {
+	.profilBaseWrap   {
+		
 		.objectContainer {
 			width: calc(100% + ($space-small*8));
 			margin-left: calc($space-small*4 *-1);
@@ -801,4 +1589,75 @@ $space-small: 5px;
 		padding-left: calc($space-small*4);
 		padding-right: calc($space-small*4);
 	}
+	
+	
+	#contextBoxWrap.timepicker {
+		width: calc(100% - ($space-small * 9));
+	}
+	
+	
+	.profilLendWrap, .profilBorrowWrap {
+		.listContainer {
+			width: calc(100% + ($space-small*8));
+			margin-left: calc(($space-small*4) * -1);
+			
+			/*
+			.itemLend {
+				.von, .bis {
+					width: 100%;
+					text-align: left;
+					padding-left: calc($space-small*4);
+					.title {
+						font-size: 16px;
+					}
+					.date {
+						margin-bottom:calc($space-small*1);
+						
+						&::after {
+							content: ' - ';
+						}
+					}
+					.date,
+					.time {
+						font-size: 22px;
+						float: none;
+						display: inline;
+						
+					}
+					
+				}
+				.von {
+					padding-bottom: 0;
+				}
+				
+				.bottomBar {
+					text-align: left;
+				}
+			}
+			*/
+		}
+	}
+	
+	#containerMain.page_borrow, #containerMain.page_lend { 
+		.header {
+			.firstPerson.showContact .info a.contact {
+				background-position-x: 50%;
+				
+				span {
+					display: none;
+				}
+			}
+		}
+		
+		
+	}
+	
+	
 }
+
+@media all and (max-height: 700px) {
+	.landingPageWrap section.main {
+		margin-top: 640px;
+	}
+}
+

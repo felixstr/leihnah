@@ -1,6 +1,9 @@
 <?php
 class CategoryMapper extends Mapper {
 	
+	private $settlementId = 1;
+	private $restriction = false;
+	
 	public static function factory($db) {
 		return new CategoryMapper($db);
 	}
@@ -16,10 +19,18 @@ class CategoryMapper extends Mapper {
 				o.`fk_category` = `pk_category` AND
 				o.`active` = 1 AND
 				o.`deleted` = 0
+			JOIN user AS u ON
+				o.`fk_user` = u.`pk_user`
+			
+			".($this->restriction && $this->settlementId != null ? 'WHERE u.fk_settlement = :settlementId' : '')."
+			
 			GROUP BY `pk_category`
 			ORDER BY `position`
 		";
 		$stmt = $this->db->prepare($sql);
+		if ($this->restriction && $this->settlementId != null) {
+			$stmt->bindParam(':settlementId', $this->settlementId, PDO::PARAM_INT);
+		}
 		$stmt->execute();
 		
 		
@@ -33,5 +44,5 @@ class CategoryMapper extends Mapper {
 		return $results;
 	}
 	
-
+	public function setSettlementId($value){ $this->settlementId = $value; return $this;}
 }

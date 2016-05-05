@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="64px" height="66px" viewBox="0 0 64 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="130px" height="130px" viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
-    <title>close copy 2</title>
+    <title>alert copy 3</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Artboard-1" transform="translate(-480.000000, -318.000000)" fill="#D01003">
-            <g id="close-copy-2" transform="translate(480.000000, 318.000000)">
-                <polygon id="Shape-Copy" transform="translate(31.542141, 20.420000) scale(-1, 1) rotate(-90.000000) translate(-31.542141, -20.420000) " points="51.9621412 -3.70973786 44.190967 -11.122141 11.122141 20.4200001 44.190967 51.9621412 51.9621412 44.549738 26.719604 20.4200001"></polygon>
-                <polygon id="Shape-Copy" transform="translate(31.542141, 45.420000) scale(-1, 1) rotate(-270.000000) translate(-31.542141, -45.420000) " points="51.9621412 21.2902621 44.190967 13.877859 11.122141 45.4200001 44.190967 76.9621412 51.9621412 69.549738 26.719604 45.4200001"></polygon>
+        <g id="Artboard-1" transform="translate(-765.000000, -846.000000)">
+            <g id="alert-copy-3" transform="translate(765.000000, 846.000000)">
+                <path d="M65,130 C100.898509,130 130,100.898509 130,65 C130,29.1014913 100.898509,0 65,0 C29.1014913,0 0,29.1014913 0,65 C0,100.898509 29.1014913,130 65,130 Z" id="Oval-1" fill="#D01003"></path>
+                <g id="close-copy-2" transform="translate(34.000000, 33.000000)" fill="#FFFFFF">
+                    <polygon id="Shape-Copy" transform="translate(30.586319, 19.801212) scale(-1, 1) rotate(-90.000000) translate(-30.586319, -19.801212) " points="50.3875308 -3.59732156 42.8518468 -10.7851064 10.7851064 19.8012122 42.8518468 50.3875308 50.3875308 43.1997459 25.909919 19.8012122"></polygon>
+                    <polygon id="Shape-Copy" transform="translate(30.586319, 44.043636) scale(-1, 1) rotate(-270.000000) translate(-30.586319, -44.043636) " points="50.3875308 20.6451027 42.8518468 13.4573178 10.7851064 44.0436364 42.8518468 74.6299551 50.3875308 67.4421702 25.909919 44.0436364"></polygon>
+                </g>
             </g>
         </g>
     </g>

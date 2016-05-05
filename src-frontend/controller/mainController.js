@@ -1,6 +1,6 @@
-angular.module('Leihnah').controller('MainController', function($scope, $http, $state, $window, $log, $location, $interval, $document, AuthenticationService, ContextmenuService, ContextBoxService, auth, CategoryService, resize) {
+angular.module('Leihnah').controller('MainController', function($scope, $http, $state, $window, $log, $location, $interval, $document, $timeout, AuthenticationService, ContextBoxService, auth, CategoryService, resize, PageVisibilityService, ScrollService) {
 	
-	if (AuthenticationService.authenticated && $state.is("home")) {
+	if (AuthenticationService.authenticated && $state.is("landingpage")) {
 		$state.go('objects');
 	}
 	if (!AuthenticationService.authenticated) {
@@ -12,10 +12,14 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	$scope.window = $window;
 	
 	$scope.fadeout = false;
-		
+
+	$scope.pageVisibility = PageVisibilityService;
+
+	
 	
 	$scope.lastObjectId = 0; // @todo: needet?
 	$scope.scrollPosition = 0;
+	$scope.backState = '';
 	
 	// lends and borrows
 	$scope.lends = [];
@@ -39,20 +43,47 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	
 	
 	// list filter and order
+
 	$scope.filter = {
 		search: '',
 		category: null,
-		categoryName: ''
+		categoryName: '',
+		showResults: false,
+		showSmallHead: false,
+		filteredObjects: []
 	}
 	$scope.resetFilter = function() {
 		$scope.filter = {
 			search: '',
 			category: null,
-			categoryName: ''
+			categoryName: '',
+			showResults: false,
+			showSmallHead: false
 		};
-		
-		$location.hash('');
 	}
+	$scope.openResults = function() {
+		
+		
+		if ($scope.filter.category == null) {
+			$scope.contextBox.setFilterCategory('all');
+		}
+	}
+	
+	$scope.closeResults = function() {
+
+		$scope.filter.showResults = false;
+		
+		$timeout(function() {
+			$scope.filter.showSmallHead = false;
+			
+			$scope.filter.search = ''; 
+			if ($scope.filter.category != null) {
+				$scope.contextBox.setFilterCategory(null);
+			}
+		}, 400);
+		
+	}
+	
 	$scope.order = {
 		items: [
 			{ 
@@ -64,7 +95,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 			{ 
 				id: 'newest', 
 				name: 'Neuster', 
-				field: 'id',
+				field: 'createDate',
 				reverse: true
 			},
 			{ 
@@ -72,13 +103,20 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 				name: 'Beliebtester', 
 				field: 'viewCount',
 				reverse: true
+			},
+			{ 
+				id: 'neighbor', 
+				name: 'Bewohner', 
+				field: 'neighbor.accountName',
+				reverse: false
 			}			
 		]
 	}
 	$scope.order.current = $scope.order.items[0];
 	
-
+	
 	// objects list
+	
 	$scope.objects = '';
 	$scope.loadObjects = function() {
 		$log.debug('main-controller: loadObjects');
@@ -93,14 +131,26 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 					$scope.objectsNew = response.objectsNew;
 					$scope.objectsPopular = response.objectsPopular;
 					$scope.objectsFavorites = response.objectsFavorites;
-					$log.debug('scope.objects', $scope.objects);
+
 				}
 			})
 			.error(function(error) {
 				$log.debug(error);
 			});
 	}
-	$scope.loadObjects();
+	
+/*
+	$interval(function() {
+		$log.debug('loaditerator');
+		$scope.loadObjects();
+	}, 10000);
+*/
+	
+	/*
+	$scope.allObjectImagesLoaded = false;
+	var checkLoadedImages 
+	*/
+// 	$scope.loadObjects();
 	
 	
 	// categories
@@ -110,10 +160,12 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 
 	// watch if authentication is changed	
 	$scope.$watch(function() { return AuthenticationService.authenticated; }, function(newVal, oldVal) {
-		$log.debug('changed');
+		$log.debug('authentication has changed');
+		
 		$scope.authenticated = AuthenticationService.authenticated;
 		$scope.loadCurrentNeighbor();
 		$scope.loadObjects();
+		
 		CategoryService.loadCategories(function(categories) {
 			$scope.categories = categories;
 		});
@@ -121,21 +173,13 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	
 	// profilMenu
 	$scope.showProfilMenu = function(event) {
-	    $log.debug(event.currentTarget);
-	    
 	    ContextBoxService.setTargetElement(event.currentTarget);
 	    ContextBoxService.setHorizontalAlign('right');
 	    ContextBoxService.setId('profil');	    
 	    ContextBoxService.show();
     }
 	
-	// watch if contextmenu has changed
-	$scope.contextmenu = ContextmenuService;
-	$scope.$watch(function() { return ContextmenuService.current; }, function(newVal, oldVal) {
-		$log.debug('current changed');
-		$scope.contextmenu = ContextmenuService;
-	});
-	
+
 	// current neighbor
 	$scope.currentNeighbor = '';
 	$scope.profilImageBG = {};
@@ -144,7 +188,6 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				$log.debug('loadCurrentNeighbor', response);
 				if (response.ok) {
 					$scope.currentNeighbor = response;
 					
@@ -162,7 +205,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	
 	// logout function
 	$scope.logoutUser = function() {
-		$log.debug('AuthenticationService.getLocalToken()', AuthenticationService.getLocalToken());
+		
 		$http.post('api/logout', '', {
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
@@ -189,18 +232,16 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	    });	
 	});
     var setResponsveVisibility = function() {
-	    $log.debug('showMobile', $scope.showMobile);
-	    $log.debug('resized', $window.innerWidth);
 	    if ($window.innerWidth > 624) {
+		    $('body').removeClass('screen-small');	
 		    $scope.showMobile = false;
 			$scope.showDesktop = true;
 	    } else {
+		    $('body').addClass('screen-small');
 		    $scope.showMobile = true;
 			$scope.showDesktop = false;
 			
 	    }
-	    
-	    $log.debug('showDesktop', $scope.showDesktop);
     }
     setResponsveVisibility();
 	
@@ -220,36 +261,57 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 		$scope.$apply(function() {
 			checkNavCloseClick(event);
 		});
-		
-		
     });
     var checkNavCloseClick = function(event) {
 		
 		var isContentChild = $("#outherContentWrap").find($(event.target)).size() > 0;
 		var isHamburgerChild = $(event.target)[0] == $("button.hamburger")[0] || $("button.hamburger").find($(event.target)).size() > 0;
-		$log.debug(isContentChild);
-		
-		
-		$log.debug($(event.target)[0]);
-		$log.debug($("button.hamburger")[0]);
-		$log.debug('isHamburger', isHamburgerChild);
-		$log.debug('isContentChild', isContentChild);
 		
 		if (!isHamburgerChild && isContentChild && $scope.mobileNav == 'show') {
+			event.preventDefault();
 			$scope.toggleMobileNav();
 		}
 		
-		/*
-		var outherContentWrap = document.querySelector("#outherContentWrap");
-		$log.debug(outherContentWrap.find(document.querySelector("nav")));
-		*/
-		/*
-		if ($scope.mobileNav == 'show') {
-		$scope.toggleMobileNav();
-		}
-		*/
     }
 	
+	$scope.openObject = function(objectId) {
+		PageVisibilityService.hide();
+
+		ScrollService.update();
+		
+		$timeout(function() {
+			$document.scrollToElement($("body"), 0, 300);
+		}, 400);
+		
+		$timeout(function() {
+			$state.go('object', {objectId: objectId});
+		}, 1000);
+		
+	}
+	
+	$scope.goPageObjects = function() {
+		$scope.closeResults(); 
+		$scope.loadObjects();
+		if (!$state.is('objects')) {
+			PageVisibilityService.hide();
+			$timeout(function() {
+				$state.go('objects');
+			}, 300);
+		}
+	}
+	
+	$scope.contextBox.goPageProfil = function(page) {
+		if (!$state.includes('profil')) {
+			$log.debug('hidecontent');
+			PageVisibilityService.hide();
+		}
+		if (!$state.is(page)) {
+			PageVisibilityService.hideProfil();
+			$timeout(function() {
+				$state.go(page);
+			}, 1000);
+		}
+	}
 	
 	/*
 	$interval(function() {

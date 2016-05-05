@@ -1,6 +1,13 @@
 angular.module('Leihnah').controller('LandingPageController', function($scope, AuthenticationService, $state, $log, $window, $document, $http, $timeout, Piwik, ContextBoxService) {
 	Piwik.trackPageView($window.location.origin+'/landingpage');
 	
+// 	$log.debug('$window.location.origin', $window.location.origin+$window.location.pathname);
+	
+	if (AuthenticationService.authenticated) {
+		$state.go('objects');
+	}
+	
+	
 	$scope.contextBox = ContextBoxService;	
 
 	
@@ -118,7 +125,11 @@ angular.module('Leihnah').controller('LandingPageController', function($scope, A
 					AuthenticationService.setUser(response.user);
 					
 					ContextBoxService.hide();
-					$state.go('objects');
+					
+					
+					$state.go('objects', {}, {reload: true});
+// 					$window.location.href = $window.location.origin+$window.location.pathname;
+
 					
 					$scope.fail = null;
 					

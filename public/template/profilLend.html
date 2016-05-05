@@ -1,110 +1,150 @@
-<h2>An die Nachbarn verliehene Gegenstände</h2>
-<p>Hier sind alle offenen Anfragen deiner Nachbarn sowie aktuell oder vergangene verliehene Gegenstände ersichtlich.</p>
-
-<h3 ng-if="!lends.past && !lends.current">Du hast noch keinen Gegenstand an einen Nachbarn über Leihnah verliehen.</h3>
-
-
-<div class="listContainer" ng-if="lends.past || lends.current">
+<div class="profilLendWrap" ng-show="pageVisibility.showContentProfil">
 	
-	<div ng-repeat="item in lends.current" class="itemLend" >
+	<h2>An die Nachbarn verliehene Gegenstände</h2>
+	<p>Hier sind alle offenen Anfragen deiner Nachbarn sowie aktuell oder vergangene verliehene Gegenstände ersichtlich.</p>
+	
+	<h3 ng-if="!lends.past && !lends.current">Du hast noch keinen Gegenstand an einen Nachbarn über Leihnah verliehen.</h3>
+	
+	
+	<div class="listContainer" ng-if="lends.past || lends.current">
 		
-		<div class="toolbar" ng-class="{'state-ok' : item.state == 'confirmed', 'state-wait': item.state == 'answered', 'state-alert': item.state == 'request'}">
-			<div class="status">
-				<span ng-if="item.state == 'request'">Offene Anfrage</span>
-				<span ng-if="item.state == 'answered'">Auf Terminbestätigung warten</span>
-				<span ng-if="item.state == 'confirmed' && !item.inTime">Ausleihe findet statt</span>
-				<span ng-if="item.state == 'confirmed' && item.inTime">Momentan Verliehen</span>
-			</div>
-			<a href class="bt_dark arrowRight" ng-click="state.go('lend', {lendId: item.id})">
-				<span ng-if="item.state == 'request'">Anfrage beantworten</span>
-				<span ng-if="item.state == 'answered' || (item.state == 'confirmed' && !item.inTime)">Details öffnen</span>
-				<span ng-if="item.state == 'confirmed' && item.inTime">Verleihung abschliessen</span>
-			</a>					
-		</div>
-		
-		
-		
-		
-		<div class="what">
-			<div class="img" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
-				<div class="height"></div>
+		<div ng-repeat="item in lends.current" class="itemLend" ng-click="goLend(item.id)">
+			
+			<div class="toolbar" ng-class="{'state-ok' : (item.state == 'confirmed' && !item.backPast), 'state-wait': item.state == 'answered', 'state-alert': (item.state == 'request') || (item.state == 'direct') || (item.state == 'confirmed' && item.backPast)}">
+				<div class="status">
+					<span ng-if="item.state == 'direct'">Kontakt aufnehmen</span>
+					<span ng-if="item.state == 'request'">Offene Anfrage</span>
+					<span ng-if="item.state == 'answered'">Auf Terminbestätigung warten</span>
+					<span ng-if="item.state == 'confirmed' && !item.getPast">Ausleihe findet statt</span>
+					<span ng-if="item.state == 'confirmed' && item.inTime">Momentan Verliehen</span>
+					<span ng-if="item.state == 'confirmed' && item.backPast">Ausleihe abgelaufen!</span>
+				</div>
+									
 			</div>
 			
-			<div class="person">
-				<span class="profilImage medium" preload-bg-image="{{'assets/img/profil/'+item.neighborBorrow.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
-				<div class="name">{{ item.neighborBorrow.accountName }}</div>
+			
+			
+			
+			<div class="what" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
+				
+				<div class="info">
+					<span class="profilImage small" preload-bg-image="{{'assets/img/profil/'+item.neighborBorrow.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
+					<div class="text">
+						<div class="objectName">{{ item.object.name }}</div>
+						<div class="name">An <span>{{ item.neighborBorrow.accountName }}</span></div>
+					</div>
+				</div>
+				
+			
 			</div>
-		
+			
+			<div ng-if="item.state == 'request' || item.state == 'direct'">
+				<div class="von">
+					<div class="title"><span>Erster Übergabe-Vorschlag</span></div>
+					<div class="date">{{ item.timeSuggestions.get[0].date | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.timeSuggestions.get[0].durations[0].start }}:00 Uhr</div>
+				</div>
+				<div class="bis">
+					<div class="title"><span>Letzter Rückgabe-Vorschlag</span></div>
+					<div class="date">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].date | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations[item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations.length-1].start }}:00 Uhr</div>
+				</div>
+			</div>
+			
+			<div ng-if="item.state == 'confirmed' || item.state == 'answered'">
+				<div class="von">
+					<div class="title"><span>Übergabe</span></div>
+					<div class="date">{{ item.getDatetime | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.getDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+				</div>
+				<div class="bis">
+					<div class="title"><span>Rückgabe</span></div>
+					<div class="date">{{ item.backDatetime | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.backDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+				</div>
+			</div>
+			
+			<div class="bottomBar">
+				<a href class="bt_dark arrowRight" ng-click="goLend(item.id)">
+					<span ng-if="item.state == 'request'">Anfrage beantworten</span>
+					<span ng-if="item.state == 'direct' || item.state == 'answered' || (item.state == 'confirmed' && !item.getPast)">Details öffnen</span>
+					<span ng-if="item.state == 'confirmed' && item.getPast">Verleihung abschliessen</span>
+				</a>
+			</div>
+			
 		</div>
 		
-		<div ng-if="item.state == 'request'">
-			<div class="von">
-				<div class="title">Erster Übergabe-Vorschlag</div>
-				<div class="date">{{ item.timeSuggestions.get[0].date | amDateFormat:'DD.MM.YY' }}</div>
-				<div class="time">{{ item.timeSuggestions.get[0].durations[0].start }}:00 Uhr</div>
-			</div>
-			<div class="bis">
-				<div class="title">Letzter Rückgabe-Vorschlag</div>
-				<div class="date">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].date | amDateFormat:'DD.MM.YY' }}</div>
-				<div class="time">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations[item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations.length-1].start }}:00 Uhr</div>
-			</div>
-		</div>
+		<h2 class="past" ng-if="lends.past.length > 0">Vergangene Verleihungen</h2>
 		
-		<div ng-if="item.state == 'confirmed' || item.state == 'answered'">
-			<div class="von">
-				<div class="title">Übergabe</div>
-				<div class="date">{{ item.getDatetime | amDateFormat:'DD.MM.YY' }}</div>
-				<div class="time">{{ item.getDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+		<div ng-repeat="item in lends.past" class="itemLend" ng-click="goLend(item.id)">
+			
+			
+			
+			<div class="toolbar" ng-class="{'state-abort' : item.state != 'closed' || item.closedType == 'refused' || item.closedType == 'stopped' || item.closedType == 'canceled', 'state-ok': item.closedType == 'successful'}">
+				<div class="status">
+					<span ng-if="item.closedType == 'refused'">Anfrage von dir abgelehnt</span>
+					<span ng-if="item.closedType == 'stopped'">Anfrage wurde gestoppt</span>
+					<span ng-if="item.closedType == 'canceled'">Verleihung von dir storniert</span>
+					<span ng-if="item.closedType == 'successful'">Verleihung beendet</span>
+					<span ng-if="item.state != 'closed'">Anfrage abgelaufen</span>
+				</div>
+				
 			</div>
-			<div class="bis">
-				<div class="title">Rückgabe</div>
-				<div class="date">{{ item.backDatetime | amDateFormat:'DD.MM.YY' }}</div>
-				<div class="time">{{ item.backDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+			
+			<div class="what" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
+				
+				<div class="info">
+					<span class="profilImage small" preload-bg-image="{{'assets/img/profil/'+item.neighborBorrow.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
+					<div class="text">
+						<div class="objectName">{{ item.object.name }}</div>
+						<div class="name">An <span>{{ item.neighborBorrow.accountName }}</span></div>
+					</div>
+				</div>
+				
+			
 			</div>
+			
+			
+			<div ng-if="item.state == 'request' || item.state == 'direct'">
+				<div class="von">
+					<div class="title"><span>Erster Übergabe-Vorschlag</span></div>
+					<div class="date">{{ item.timeSuggestions.get[0].date | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.timeSuggestions.get[0].durations[0].start }}:00 Uhr</div>
+				</div>
+				<div class="bis">
+					<div class="title"><span>Letzter Rückgabe-Vorschlag</span></div>
+					<div class="date">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].date | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations[item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations.length-1].start }}:00 Uhr</div>
+				</div>
+			</div>
+			
+			<div ng-if="item.state == 'confirmed' || item.state == 'answered'">
+				<div class="von">
+					<div class="title"><span>Übergabe</span></div>
+					<div class="date">{{ item.getDatetime | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.getDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+				</div>
+				<div class="bis">
+					<div class="title"><span>Rückgabe</span></div>
+					<div class="date">{{ item.backDatetime | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.backDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+				</div>
+			</div>
+			
+			<div class="closed" ng-if="item.state == 'closed'">
+				<div ng-if="item.closedType == 'refused' || item.closedType == 'canceled' || item.closedType == 'successful'" class="title">Dein Feedback</div>
+				<div ng-if="item.closedType == 'stopped'" class="title">Feedback von {{ item.neighborBorrow.accountName }}</div>
+				
+				<div class="statement">«{{ item.closedText }}»</div>
+			</div>
+			
+			<div class="bottomBar">
+				<a href class="delete bt_dark cancel" ng-click="">
+					<span ng-if="true">Löschen</span>
+				</a>
+			</div>
+			
 		</div>
 		
 	</div>
-	
-	<h3 ng-if="lends.past.length > 0">Vergangene Verleihungen</h3>
-	
-	<div ng-repeat="item in lends.past" class="itemLend" ng-click="state.go('lend', {lendId: item.id})">
-		
-		
-		
-		<div class="toolbar" ng-class="{'state-abort' : item.closedType == 'refused' || item.closedType == 'stopped' || item.closedType == 'canceled', 'state-ok': item.closedType == 'successful'}">
-			<div class="status">
-				<span ng-if="item.closedType == 'refused'">Anfrage von dir abgelehnt</span>
-				<span ng-if="item.closedType == 'stopped'">Anfrage von {{ item.neighborBorrow.accountName }} abgelehnt</span>
-				<span ng-if="item.closedType == 'canceled'">Verleihung von dir storniert</span>
-				<span ng-if="item.closedType == 'successful'">Verleihung beendet</span>
-			</div>
-			
-			<a href class="bt_dark arrowRight" ng-click="state.go('lend', {lendId: item.id})">
-				<span ng-if="true">Details öffen</span>
-			</a>		
-			
-		</div>
-		
-		<div class="what">
-			<div class="img" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
-				<div class="height"></div>
-			</div>
-			
-			<div class="person">
-				<span class="profilImage medium" preload-bg-image="{{'assets/img/profil/'+item.neighborBorrow.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
-				<div class="name">{{ item.neighborBorrow.accountName }}</div>
-			</div>
-		
-		</div>
-		
-		
-		<div class="closed">
-			<div ng-if="item.closedType == 'refused' || item.closedType == 'canceled' || item.closedType == 'successful'" class="title">Dein Feedback</div>
-			<div ng-if="item.closedType == 'stopped'" class="title">Feedback von {{ item.neighborLend.accountName }}</div>
-			
-			<div class="statement">«{{ item.closedText }}»</div>
-		</div>
-		
-	</div>
-	
 </div>

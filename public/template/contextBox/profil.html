@@ -1,10 +1,10 @@
 <div id="contextBoxWrap" class="arrowTopRight profil menu">
 	
 	
-	<a ui-sref="profil.base" ng-click="contextBox.hide()" ng-class="{current: state.is('profil.base')}">Dein Profil</a>
-	<a ui-sref="profil.objects" ng-click="contextBox.hide()" ng-class="{current: state.is('profil.objects')}">Deine Gegenstände</a>
-	<a ui-sref="profil.lend" ng-click="contextBox.hide()" ng-class="{current: state.is('profil.lend')}"><span ng-show="lends.mark > 0" class="mark small"></span>An die Nachbarn verliehen</a>
-	<a ui-sref="profil.borrow" ng-click="contextBox.hide()" ng-class="{current: state.is('profil.borrow')}"><span ng-show="borrows.mark > 0" class="mark small"></span>Von den Nachbarn geliehen</a>
+	<a href ng-click="contextBox.hide(); contextBox.goPageProfil('profil.base');" ng-class="{current: state.is('profil.base')}">Dein Profil</a>
+	<a href ng-click="contextBox.hide(); contextBox.goPageProfil('profil.objects');" ng-class="{current: state.is('profil.objects')}">Deine Gegenstände</a>
+	<a href ng-click="contextBox.hide(); contextBox.goPageProfil('profil.lend');" ng-class="{current: state.is('profil.lend')}">An die Nachbarn verliehen<span ng-show="lends.mark > 0" class="mark inline"></span></a>
+	<a href ng-click="contextBox.hide(); contextBox.goPageProfil('profil.borrow');" ng-class="{current: state.is('profil.borrow')}">Von den Nachbarn geliehen<span ng-show="borrows.mark > 0" class="mark inline"></span></a>
 	<a href ng-click="contextBox.hide(); logoutUser()" ng-click="">Abmelden</a>
 
 	

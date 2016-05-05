@@ -1,14 +1,15 @@
 <div class="objectContentWrapper">
-	<div class="topContainer" ng-class="{ filtered: (filter.search.length > 0 || filter.category != null) }" >
+	<div class="topContainer" ng-class="{filtered: filter.showSmallHead }"  ng-show="pageVisibility.showContent">
 		<div class="bgImage" preload-bg-image="{{'assets/img/static/'+headerImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 		<h1 ng-show="true || !(filter.search.length > 0 || filter.category != null)">Hallo {{ currentNeighbor.accountName }}</h1>
 		
 		<div class="searchContainer">
-			<input type="text" ng-model="filter.search" placeholder="Was möchtest du leihen?" ng-click="filter.category == null ? filter.category = 'all' : filter.category = filter.category">
+			<div class="input" ng-click="openResults()">Was möchtest du leihen?</div>
+			<input type="text" ng-model="filter.search" placeholder="Was möchtest du leihen?"  ng-click="openResults()">
 			
 			<div class="buttons">
 				
-				<a href class="bt_dark close" ng-click="filter.search = ''; contextBox.setFilterCategory(null)" ng-show="filter.search.length > 0 || filter.category != null"><span>X</span></a>
+				<a href class="bt_dark close" ng-click="closeResults()" ng-show="filter.showResults"><span>X</span></a>
 	
 				<a href class="bt_dark arrowDown" ng-click="showCategoryMenu($event)" ng-class="{active: contextBox.id == 'categoryMenu', 'category' : showMobile}"><span>{{ filter.categoryName == '' ? 'Kategorien' : 'Kategorie: '+filter.categoryName }}</span></a>
 			</div>
@@ -18,19 +19,18 @@
 	</div>
 	
 		
-	<div class="contentContainer">
+	<div class="contentContainer"  ng-show="pageVisibility.showContent">
 	
-		<div class="objectResultContainer" ng-show="filter.search.length > 0 || filter.category != null">
-			<div class="topBar">
-				<div class="text" ng-if="showDesktop"><b>{{ filtered.length }}</b> {{ filtered.length == 1 ? 'Gegenstand' : 'Gegenstände' }} in {{ filter.category == 'all' ? 'allen Kategorien' : 'der Kategorie' }} <b ng-show="filter.categoryName != 'Alle'">{{filter.categoryName}}</b> <span ng-show="filter.search != ''">mit <b>{{filter.search}}</b></span></div>
-				<div class="text" ng-if="showMobile"><b>{{ filtered.length }}</b> {{ filtered.length == 1 ? 'Gegenstand' : 'Gegenstände' }} gefunden</div>
+		<div class="objectResultContainer" ng-show="filter.showResults">
+			<div class="topBox">
+				<div class="text" ng-if="showDesktop"><b>{{ filter.filteredObjects.length }}</b> {{ filter.filteredObjects.length == 1 ? 'Gegenstand' : 'Gegenstände' }} in {{ filter.category == 'all' ? 'allen Kategorien' : 'der Kategorie' }} <b ng-show="filter.categoryName != 'Alle'">{{filter.categoryName}}</b> <span ng-show="filter.search != ''">mit <b>{{filter.search}}</b></span></div>
+				<div class="text" ng-if="showMobile"><b>{{ filter.filteredObjects.length }}</b> {{ filter.filteredObjects.length == 1 ? 'Resultat' : 'Resultate' }} {{ filter.category == 'all' ? 'in allen Kategorien' : 'bei' }}<b ng-show="filter.categoryName != 'Alle'"> {{filter.categoryName}}</b></div>
 				
 				<a ng-click="showOrderMenu($event)" ng-class="{active: contextBox.id == 'orderMenu'}" class="bt_light arrowDown small">{{ order.current.name }}</a>
 				
-				
 			</div>
 			<div class="results">
-				<div ng-repeat="object in objects | orderBy:order.current.field:order.current.reverse | filter:filterResults as filtered" class="itemObject" id="object_{{object.id}}">
+				<div ng-animate="'animate'" ng-repeat="object in (filter.filteredObjects = (objects | orderBy:order.current.field:order.current.reverse | filter:filterResults))" class="itemObject" id="object_{{object.id}}">
 					<div class="imageWrap" ng-click="openObject(object.id)">
 						<div class="img" preload-bg-image="{{'assets/img/object/tn_'+object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 						<div class="height"></div>
@@ -45,12 +45,12 @@
 			</div>
 		</div>
 		
-		<div class="objectPreviewContainer" ng-show="!(filter.search.length > 0 || filter.category != null)">
+		<div class="objectPreviewContainer" ng-show="!filter.showResults">
 			<div class="previewRow">
 				<h2>Neue Gegenstände</h2>
 				
 				<div class="objectContainer">
-					<div ng-repeat="object in objectsNew" class="itemObject" ng-click="openObject(object.id)" id="object_{{object.id}}">
+					<div ng-repeat="object in objectsNew" class="itemObject" ng-click="openObjectNew(object.id)" id="object_{{object.id}}">
 						<div class="imageWrap">
 							<div class="img" preload-bg-image="{{'assets/img/object/tn_'+object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 							<div class="height"></div>
@@ -73,7 +73,7 @@
 				<h2>Beliebte Gegenstände</h2>
 				
 				<div class="objectContainer">
-					<div ng-repeat="object in objectsPopular" class="itemObject" ng-click="openObject(object.id)" id="object_{{object.id}}">
+					<div ng-repeat="object in objectsPopular" class="itemObject" ng-click="openObjectPopular(object.id)" id="object_{{object.id}}">
 						<div class="imageWrap">
 							<div class="img" preload-bg-image="{{'assets/img/object/tn_'+object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 							<div class="height"></div>

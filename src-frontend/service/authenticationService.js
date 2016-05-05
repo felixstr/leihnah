@@ -14,10 +14,10 @@ angular.module('Leihnah').service('AuthenticationService', function($http, $log,
 				callback(true, self.currentUser);
 			}
 		} else {
-// 			$log.debug('check authentication - token: ', self.getLocalToken());
+			$log.debug('checkAuthentication: loadUserInfo');
 		
 			self.loadUserInfo(callback)
-		
+			self.authenticationChecked = true; // @todo: ok here?
 		}
 
 	}

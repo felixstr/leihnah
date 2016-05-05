@@ -1,7 +1,7 @@
 <div id="contextBoxWrap" class="arrowTopRight profilEditMenu menu">
 	
-	<a href ng-click="contextBox.hide(); contextBox.openModalProfilEdit()"><span class="mark small" ng-show="currentNeighbor.address == ''"></span>Profil bearbeiten</a>
-	<a href ng-click="contextBox.hide(); contextBox.openModalProfilPerson(1)"><span class="mark small" ng-show="currentNeighbor.person1_firstName == ''"></span>{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? 'Kontaktdaten bearbeiten' : currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName+' bearbeiten' }}</a>
+	<a href ng-click="contextBox.hide(); contextBox.openModalProfilEdit()">Profil bearbeiten <span class="mark inline" ng-show="currentNeighbor.address == ''"></span></a>
+	<a href ng-click="contextBox.hide(); contextBox.openModalProfilPerson(1)">{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? 'Kontaktdaten bearbeiten' : currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName+' bearbeiten' }}<span class="mark inline" ng-show="currentNeighbor.person1_firstName == ''"></span></a>
 	<a href ng-click="contextBox.hide(); contextBox.openModalProfilPerson(2)">{{ currentNeighbor.person2_firstName == '' && currentNeighbor.person2_lastName == '' ? '2. Bewohner hinzufügen' : currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName+' bearbeiten' }}</a>
 	<a href ng-click="contextBox.hide(); contextBox.openModalPasswordEdit()">Zugangsdaten ändern</a>
 

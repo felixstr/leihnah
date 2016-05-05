@@ -6,15 +6,50 @@ angular.module('Leihnah').service('ScrollService', function($document, $state, $
 	
 	self.update = function() {
 		self.lastScrollPosition = $document.scrollTop();
-		
-		
-		$log.debug('self.lastScrollPosition', self.lastScrollPosition);
-		
+			
 	}
 	self.updateState = function() {
 		self.lastState = $state.current.name;
 		
-		$log.debug('self.lastState', self.lastState);
 	}	
+	
+	
+	var position = $(window).scrollTop();
+	
+	if (position > 145) {
+		$('body').removeClass('scroll-header').addClass('scroll-body');
+	} else {
+		$('body').addClass('scroll-header').removeClass('scroll-body');
+	}
+	
+	$(window).scroll(function() {
+		
+		var scroll = $(window).scrollTop();
+		
+		
+		
+// 		$log.debug(position - scroll);
+		
+		
+		if (position - scroll > 0 || position - scroll < -50) {
+			if (scroll > position) {
+				$('body').addClass('scroll-down').removeClass('scroll-up');
+			} else {
+				$('body').removeClass('scroll-down').addClass('scroll-up');
+			}
+		
+		}
+		if (position - scroll > 50 || position - scroll < -50) {
+			position = scroll;
+		}
+		
+		if (scroll > 145) {
+			$('body').removeClass('scroll-header').addClass('scroll-body');
+		} else {
+			$('body').addClass('scroll-header').removeClass('scroll-body');
+		}
+		
+	});
+	
 	
 });

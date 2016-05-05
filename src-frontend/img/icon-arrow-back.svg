@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="101px" height="101px" viewBox="0 0 101 101" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="131px" height="131px" viewBox="0 0 131 131" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
     <title>Group 2 Copy</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Artboard-1" transform="translate(-198.000000, -384.000000)">
-            <g id="Group-2-Copy" transform="translate(248.500000, 434.500000) rotate(-180.000000) translate(-248.500000, -434.500000) translate(198.000000, 384.000000)">
-                <rect id="Rectangle-18" fill="#3069BC" x="0.5" y="0.5" width="100" height="100"></rect>
-                <g id="Group-3" transform="translate(19.000000, 19.000000)" fill="#FFFFFF">
-                    <polygon id="Shape-Copy-3" transform="translate(20.420000, 31.542141) scale(-1, 1) rotate(-180.000000) translate(-20.420000, -31.542141) " points="40.8400002 7.41240316 33.068826 -1.42108547e-14 -1.09682256e-14 31.5421411 33.068826 63.0842822 40.8400002 55.671879 15.5974629 31.5421411"></polygon>
-                    <rect id="Rectangle-18" x="13" y="26" width="50" height="11"></rect>
-                </g>
+        <g id="Artboard-1" transform="translate(-215.000000, -846.000000)">
+            <g id="Group-2-Copy" transform="translate(215.000000, 846.000000)">
+                <path d="M65.5,130.5 C101.398509,130.5 130.5,101.398509 130.5,65.5 C130.5,29.6014913 101.398509,0.5 65.5,0.5 C29.6014913,0.5 0.5,29.6014913 0.5,65.5 C0.5,101.398509 29.6014913,130.5 65.5,130.5 Z" id="Oval-8" fill="#6D97D3"></path>
+                <polygon id="Shape-Copy-7" fill="#FFFFFF" transform="translate(63.420000, 65.542141) scale(-1, 1) rotate(-180.000000) translate(-63.420000, -65.542141) " points="83.8400002 41.4124032 76.068826 34 43 65.5421411 76.068826 97.0842822 83.8400002 89.671879 58.5974629 65.5421411"></polygon>
             </g>
         </g>
     </g>

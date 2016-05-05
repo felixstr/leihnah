@@ -21,7 +21,10 @@
 			<input type="email" name="mail" ng-model="person.mail" ng-minlength="3"  ng-required="person.number == 1" autocomplete="off">
 			<div class="warning" ng-show="editPerson.mail.$error.required">Pflichtfeld</div>
 			<div class="warning" ng-show="editPerson.mail.$error.email">Keine Gültige eMail-Adresse</div>
-			<label class="checkbox" ng-show="person.mail != '' && !editPerson.mail.$error.required"><input  type="checkbox" ng-model="person.mailPublic"> Immer sichtbar für alle angemeldeten Nachbarn</label>
+			<label class="checkbox" ng-show="person.mail != '' && !editPerson.mail.$error.required">
+				<input  type="checkbox" ng-model="person.mailPublic"> 
+				<div class="label">Immer sichtbar für alle angemeldeten Nachbarn</div>
+			</label>
 	    </div>
 		
 		<div class="formRow" ng-class="{ error: editPerson.phone.$error.required }">
@@ -33,12 +36,15 @@
 				<span ng-show="editPerson.phone.$error.maxlength">Zuviele Zeichen. </span>
 			</div>
 			
-			<label class="checkbox" ng-show="person.phone != '' && !editPerson.phone.$error.required"><input type="checkbox" ng-model="person.phonePublic"> Immer sichtbar für alle angemeldeten Nachbarn</label>
+			<label class="checkbox" ng-show="person.phone != '' && !editPerson.phone.$error.required">
+				<input type="checkbox" ng-model="person.phonePublic">
+				<div class="label">Immer sichtbar für alle angemeldeten Nachbarn</div>
+			</label>
 		</div>
 		
 		
 		<div class="buttonContainer">
-			<input type="submit" class="bt_dark" type="submit" value="Ändern" ng-class="{inactive: !editPerson.$valid}">
+			<input type="submit" class="bt_dark ok" type="submit" value="Ändern" ng-class="{inactive: !editPerson.$valid}">
 		</div>
 		
 	</form>

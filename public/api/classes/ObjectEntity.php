@@ -22,7 +22,12 @@ class ObjectEntity {
 	protected $directContact_person2_mail = false;
 	protected $directContact_person2_phoen = false;
 	
+	protected $createDate = '';
+	
 	protected $viewCount = 0;
+	
+	protected $flagReservedDates = false;
+	protected $reservedDates = [];
 	
 	protected $error = false;
 	
@@ -83,6 +88,7 @@ class ObjectEntity {
 		$this->directContact_person1_phone = $row['directContact_person1_phone'];
 		$this->directContact_person2_mail = $row['directContact_person2_mail'];
 		$this->directContact_person2_phone = $row['directContact_person2_phone'];
+		$this->createDate = $row['createDate'];
 		
 		if (isset($row['viewCount'])) {	
 			$this->viewCount = $row['viewCount'];
@@ -96,7 +102,57 @@ class ObjectEntity {
 			->setId($this->categoryId)
 			->load();
 			
+		if ($this->flagReservedDates) {
+			$this->reservedDates = $this->loadReservedDates();
+		}
+			
 		return $this;
+	}
+	
+	private function loadReservedDates() {
+		$result = array();
+		
+		$sql = "
+			SELECT 
+				pk_lend as lendId,
+				DATE_FORMAT(getDatetime, '%Y-%m-%d') as getDatetime,
+				DATE_FORMAT(backDatetime, '%Y-%m-%d') as backDatetime
+			FROM lend
+			WHERE 
+				fk_object = :id AND 
+				getDatetime IS NOT NULL AND
+				backDatetime >= NOW() AND 
+				state != 'closed' AND
+				deleted = 0
+			ORDER BY getDatetime
+		";
+		$stmt = $this->db->prepare($sql);
+		$stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+		$stmt->execute();
+		
+		while($row = $stmt->fetch()) {
+			$result = array_merge($result, $this->getDates($row['getDatetime'], $row['backDatetime']));	
+		}
+		
+// 		echo print_r($result);	
+		
+		return $result;
+	}
+	
+	private function getDates($startTime, $endTime) {
+	    $day = 86400;
+	    $format = 'Y-m-d';
+	    $startTime = strtotime($startTime);
+	    $endTime = strtotime($endTime);
+	    $numDays = round(($endTime - $startTime) / $day) + 1;
+
+	    $days = array();
+	
+	    for ($i = 0; $i < $numDays; $i++) {
+	        $days[] = date($format, ($startTime + ($i * $day)));
+	    }
+	
+	    return $days;
 	}
 	
 	public function add() {
@@ -245,6 +301,7 @@ class ObjectEntity {
 	public function setDirectContact_person2_mail($value) { $this->directContact_person2_mail = ($value == 'yes') ? 1 : 0; return $this;}
 	public function setDirectContact_person2_phone($value) { $this->directContact_person2_phone = ($value == 'yes') ? 1 : 0; return $this;}
 	
+	public function enableLoadReservedDates() {  $this->flagReservedDates = true;  return $this; }
 	
 	public function toArray() { 
 		
@@ -269,7 +326,9 @@ class ObjectEntity {
 			'directContact_person2_phone' => $this->directContact_person2_phone == 1,
 			'neighbor' => $this->neighborEntity->toArray(),
 			'category' => $this->categoryEntity->toArray(),
-			'viewCount' => $this->viewCount
+			'viewCount' => $this->viewCount,
+			'createDate' => $this->createDate,
+			'reservedDates' => $this->reservedDates
 		);
 		
 		

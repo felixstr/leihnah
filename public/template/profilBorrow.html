@@ -1,110 +1,148 @@
-<h2>Von den Nachbarn geliehene Gegenstände</h2>
-<p>Hier sind alle deine offenen Anfragen und geliehenen Gegenstände ersichtlich.</p>
+<div class="profilBorrowWrap" ng-show="pageVisibility.showContentProfil">
 
-<h3 ng-if="!borrows.past && !borrows.current">Du hast noch keinen Gegenstand von einem Nachbarn über Leihnah geliehen.</h3>
-
-<div class="listContainer" ng-if="borrows.past || borrows.current">
+	<h2>Von den Nachbarn geliehene Gegenstände</h2>
+	<p>Hier sind alle deine offenen Anfragen und geliehenen Gegenstände ersichtlich.</p>
 	
-	<div ng-repeat="item in borrows.current" class="itemLend" >
+	<h3 ng-if="!borrows.past && !borrows.current">Du hast noch keinen Gegenstand von einem Nachbarn über Leihnah geliehen.</h3>
+	
+	<div class="listContainer" ng-if="borrows.past || borrows.current">
 		
-		<div class="toolbar" ng-class="{'state-ok' : item.state == 'confirmed', 'state-wait': item.state == 'request', 'state-alert': item.state == 'answered'}">
-			<div class="status">
-				<span ng-if="item.state == 'request'">Auf Antwort warten</span>
-				<span ng-if="item.state == 'answered'">Bestätige die Termine</span>
-				<span ng-if="item.state == 'confirmed'">Ausleihe findet statt</span>
+		<div ng-repeat="item in borrows.current" class="itemLend" ng-click="goBorrow(item.id)">
+			
+			<div class="toolbar" ng-class="{'state-ok' : (item.state == 'confirmed' && !item.backPast), 'state-wait': item.state == 'request' || item.state == 'direct', 'state-alert': (item.state == 'answered') || (item.state == 'confirmed' && item.backPast)}">
+				<div class="status">
+					<span ng-if="item.state == 'request'">Auf Antwort warten</span>
+					<span ng-if="item.state == 'answered'">Bestätige die Termine</span>
+					<span ng-if="item.state == 'confirmed' && !item.getPast">Ausleihe findet statt</span>
+					<span ng-if="item.state == 'confirmed' && item.inTime">Momentan Verliehen</span>
+					<span ng-if="item.state == 'confirmed' && item.backPast">Ausleihe abgelaufen!</span>
+					<span ng-if="item.state == 'direct'">Auf Kontaktaufnahme warten</span>
+				</div>
+
+			</div>
+			
+			<div class="what" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
+				
+				<div class="info">
+					<span class="profilImage small" preload-bg-image="{{'assets/img/profil/'+item.neighborLend.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
+					<div class="text">
+						<div class="objectName">{{ item.object.name }}</div>
+						<div class="name">Von <span>{{ item.neighborLend.accountName }}</span></div>
+					</div>
+				</div>
+				
+			
 			</div>
 			
 			
-			<a href class="bt_dark arrowRight" ng-click="state.go('borrow', {borrowId: item.id})">
-				<span ng-if="item.state == 'request'">Anfrage öffnen</span>
-				<span ng-if="item.state == 'answered'">Termine bestätigen</span>
-				<span ng-if="item.state == 'confirmed'">Details öffnen</span>
-			</a>		
+			<div ng-if="item.state == 'request' || item.state == 'direct'">
+				<div class="von">
+					<div class="title"><span>Erster Übergabe-Vorschlag</span></div>
+					<div class="date">{{ item.timeSuggestions.get[0].date | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.timeSuggestions.get[0].durations[0].start }}:00 Uhr</div>
+				</div>
+				<div class="bis">
+					<div class="title"><span>Letzter Rückgabe-Vorschlag</span></div>
+					<div class="date">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].date | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations[item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations.length-1].start }}:00 Uhr</div>
+				</div>
+			</div>
+			
+			<div ng-if="item.state == 'answered' || item.state == 'confirmed'">
+				<div class="von">
+					<div class="title"><span>Übergabe</span></div>
+					<div class="date">{{ item.getDatetime | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.getDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+				</div>
+				<div class="bis">
+					<div class="title"><span>Rückgabe</span></div>
+					<div class="date">{{ item.backDatetime | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.backDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+				</div>
+			</div>
+			
+			<div class="bottomBar">
+				<a href class="bt_dark arrowRight" ng-click="goBorrow(item.id)">
+					<span ng-if="item.state == 'request' || item.state == 'direct'">Anfrage öffnen</span>
+					<span ng-if="item.state == 'answered'">Termine bestätigen</span>
+					<span ng-if="item.state == 'confirmed'">Details öffnen</span>
+				</a>	
+			</div>
 			
 		</div>
 		
-		<div class="what">
-			<div class="img" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
-				<div class="height"></div>
+		<h2 class="past" ng-if="borrows.past.length > 0">Vergangene Leihungen</h2>
+		
+		<div ng-repeat="item in borrows.past" class="itemLend" ng-click="goBorrow(item.id)">
+			
+			<div class="toolbar" ng-class="{'state-abort' : item.state != 'closed' || item.closedType == 'refused' || item.closedType == 'stopped' || item.closedType == 'canceled', 'state-ok': item.closedType == 'successful'}">
+				<div class="status">
+					<span ng-if="item.closedType == 'refused'">Anfrage wurde abgelehnt</span>
+					<span ng-if="item.closedType == 'stopped'">Leihung von dir gestoppt</span>
+					<span ng-if="item.closedType == 'canceled'">Leihung wurde gestoppt</span>
+					<span ng-if="item.closedType == 'successful'">Verleihung beendet</span>
+					<span ng-if="item.state != 'closed'">Anfrage abgelaufen</span>
+				</div>
+
+				
 			</div>
 			
-			<div class="person">
-				<span class="profilImage medium" preload-bg-image="{{'assets/img/profil/'+item.neighborLend.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
-				<div class="name">{{ item.neighborLend.accountName }}</div>
+			<div class="what" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
+				
+				<div class="info">
+					<span class="profilImage small" preload-bg-image="{{'assets/img/profil/'+item.neighborLend.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
+					<div class="text">
+						<div class="objectName">{{ item.object.name }}</div>
+						<div class="name">Von <span>{{ item.neighborLend.accountName }}</span></div>
+					</div>
+				</div>
+				
+			
 			</div>
-		
+			
+			
+			<div ng-if="item.state == 'request' || item.state == 'direct'">
+				<div class="von">
+					<div class="title"><span>Erster Übergabe-Vorschlag</span></div>
+					<div class="date">{{ item.timeSuggestions.get[0].date | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.timeSuggestions.get[0].durations[0].start }}:00 Uhr</div>
+				</div>
+				<div class="bis">
+					<div class="title"><span>Letzter Rückgabe-Vorschlag</span></div>
+					<div class="date">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].date | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations[item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations.length-1].start }}:00 Uhr</div>
+				</div>
+			</div>
+			
+			<div ng-if="item.state == 'answered' || item.state == 'confirmed'">
+				<div class="von">
+					<div class="title"><span>Übergabe</span></div>
+					<div class="date">{{ item.getDatetime | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.getDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+				</div>
+				<div class="bis">
+					<div class="title"><span>Rückgabe</span></div>
+					<div class="date">{{ item.backDatetime | amDateFormat:'DD.MM.YY' }}</div>
+					<div class="time">{{ item.backDatetime | amDateFormat:'HH:mm' }} Uhr</div>
+				</div>
+			</div>
+			
+			
+			<div class="closed" ng-if="item.state == 'closed'">
+				
+				<div ng-if="item.closedType == 'refused' || item.closedType == 'canceled' || item.closedType == 'successful'" class="title">Feedback von {{ item.neighborLend.accountName }}</div>
+				<div ng-if="item.closedType == 'stopped'" class="title">Dein Feedback</div>
+	
+				<div class="statement">«{{ item.closedText }}»</div>
+			</div>
+			
+			<div class="bottomBar">
+				<a href class="bt_dark arrowRight" ng-click="goBorrow(item.id)">
+					<span ng-if="true">Details öffen</span>
+				</a>	
+			</div>
+			
 		</div>
-		
-		
-		<div ng-if="item.state == 'request'">
-			<div class="von">
-				<div class="title">Erster Übergabe-Vorschlag</div>
-				<div class="date">{{ item.timeSuggestions.get[0].date | amDateFormat:'DD.MM.YY' }}</div>
-				<div class="time">{{ item.timeSuggestions.get[0].durations[0].start }}:00 Uhr</div>
-			</div>
-			<div class="bis">
-				<div class="title">Letzter Rückgabe-Vorschlag</div>
-				<div class="date">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].date | amDateFormat:'DD.MM.YY' }}</div>
-				<div class="time">{{ item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations[item.timeSuggestions.back[item.timeSuggestions.back.length-1].durations.length-1].start }}:00 Uhr</div>
-			</div>
-		</div>
-		
-		<div ng-if="item.state == 'answered' || item.state == 'confirmed'">
-			<div class="von">
-				<div class="title">Übergabe</div>
-				<div class="date">{{ item.getDatetime | amDateFormat:'DD.MM.YY' }}</div>
-				<div class="time">{{ item.getDatetime | amDateFormat:'HH:mm' }} Uhr</div>
-			</div>
-			<div class="bis">
-				<div class="title">Rückgabe</div>
-				<div class="date">{{ item.backDatetime | amDateFormat:'DD.MM.YY' }}</div>
-				<div class="time">{{ item.backDatetime | amDateFormat:'HH:mm' }} Uhr</div>
-			</div>
-		</div>
-		
 		
 	</div>
-	
-	<h3 ng-if="borrows.past.length > 0">Vergangene Leihungen</h3>
-	
-	<div ng-repeat="item in borrows.past" class="itemLend">
-		
-		<div class="toolbar" ng-class="{'state-abort' : item.closedType == 'refused' || item.closedType == 'stopped' || item.closedType == 'canceled', 'state-ok': item.closedType == 'successful'}">
-			<div class="status">
-				<span ng-if="item.closedType == 'refused'">Anfrage von {{ item.neighborLend.accountName }} abgelehnt</span>
-				<span ng-if="item.closedType == 'stopped'">Leihung von dir gestoppt</span>
-				<span ng-if="item.closedType == 'canceled'">Leihung von {{ item.neighborLend.accountName }} gestoppt</span>
-				<span ng-if="item.closedType == 'successful'">Verleihung beendet</span>
-			</div>
-			
-			<a href class="bt_dark arrowRight" ng-click="state.go('borrow', {borrowId: item.id})">
-				<span ng-if="true">Details öffen</span>
-			</a>	
-			
-		</div>
-		
-		<div class="what">
-			<div class="img" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
-				<div class="height"></div>
-			</div>
-			
-			<div class="person">
-				<span class="profilImage medium" preload-bg-image="{{'assets/img/profil/'+item.neighborLend.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
-				<div class="name">{{ item.neighborLend.accountName }}</div>
-			</div>
-		
-		</div>
-		
-		
-		<div class="closed">
-			
-			<div ng-if="item.closedType == 'refused' || item.closedType == 'canceled' || item.closedType == 'successful'" class="title">Feedback von {{ item.neighborLend.accountName }}</div>
-			<div ng-if="item.closedType == 'stopped'" class="title">Dein Feedback</div>
-
-			<div class="statement">«{{ item.closedText }}»</div>
-		</div>
-		
-		
-	</div>
-	
 </div>

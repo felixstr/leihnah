@@ -80,16 +80,31 @@
 		
 		<div class="formRow">
 			<label>Kontaktaufnahme</label>
-			<label class="checkbox"><input type="checkbox" ng-model="currentObject.directContactFlag" ng-true-value="'yes'" ng-false-value="'no'">Direkte Kontaktaufnahme ermöglichen</label>
+			<label class="checkbox"><input type="checkbox" ng-model="currentObject.directContactFlag" ng-true-value="'yes'" ng-false-value="'no'"><div class="label">Direkte Kontaktaufnahme ermöglichen</div></label>
 			
 			<div ng-show="currentObject.directContactFlag == 'yes'" class="directContact">
 				<div class="label">Welche Daten sollen für die Kontaktaufnahme sichtbar sein?</div>
 				
-				<label ng-if="currentNeighbor.fixnetPhone" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_fixnetPhone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.fixnetPhone }}</label>
-				<label ng-if="currentNeighbor.person1_mail" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_person1_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_mail }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
-				<label ng-if="currentNeighbor.person1_phone" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_person1_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person1_phone }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</label>
-				<label ng-if="currentNeighbor.person2_mail" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_person2_mail" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_mail }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
-				<label ng-if="currentNeighbor.person2_phone" class="checkbox"><input type="checkbox" ng-model="currentObject.directContact_person2_phone" ng-true-value="'yes'" ng-false-value="'no'">{{ currentNeighbor.person2_phone }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</label>
+				<label ng-if="currentNeighbor.fixnetPhone" class="checkbox">
+					<input type="checkbox" ng-model="currentObject.directContact_fixnetPhone" ng-true-value="'yes'" ng-false-value="'no'">
+					<div class="label">{{ currentNeighbor.fixnetPhone }}</div>
+				</label>
+				<label ng-if="currentNeighbor.person1_mail" class="checkbox">
+					<input type="checkbox" ng-model="currentObject.directContact_person1_mail" ng-true-value="'yes'" ng-false-value="'no'">
+					<div class="label">{{ currentNeighbor.person1_mail }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</div>
+				</label>
+				<label ng-if="currentNeighbor.person1_phone" class="checkbox">
+					<input type="checkbox" ng-model="currentObject.directContact_person1_phone" ng-true-value="'yes'" ng-false-value="'no'">
+					<div class="label">{{ currentNeighbor.person1_phone }} ({{currentNeighbor.person1_firstName+' '+currentNeighbor.person1_lastName }})</div>
+				</label>
+				<label ng-if="currentNeighbor.person2_mail" class="checkbox">
+					<input type="checkbox" ng-model="currentObject.directContact_person2_mail" ng-true-value="'yes'" ng-false-value="'no'">
+					<div class="label">{{ currentNeighbor.person2_mail }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</div>
+				</label>
+				<label ng-if="currentNeighbor.person2_phone" class="checkbox">
+					<input type="checkbox" ng-model="currentObject.directContact_person2_phone" ng-true-value="'yes'" ng-false-value="'no'">
+					<div class="label">{{ currentNeighbor.person2_phone }} ({{currentNeighbor.person2_firstName+' '+currentNeighbor.person2_lastName }})</div>
+				</label>
 				
 				
 			
@@ -98,7 +113,8 @@
 		</div>
 		
 		<div class="buttonContainer">
-			<input type="submit" class="bt_dark" type="submit" value="{{currentObject.name == '' ? 'Gegenstand' : currentObject.name}} {{ currentObject.id == null ? 'hinzufügen' : 'ändern'}}" ng-class="{inactive: !editObject.$valid || formDisabled}" ng-disabled="formDisabled">
+
+			<input type="submit" class="bt_dark ok" type="submit" value="{{currentObject.name == '' || currentObject.name.length > 30 ? 'Gegenstand' : currentObject.name}} {{ currentObject.id == null ? 'hinzufügen' : 'ändern'}}" ng-class="{inactive: !editObject.$valid || formDisabled}" ng-disabled="formDisabled">
 		</div>
 		
 		

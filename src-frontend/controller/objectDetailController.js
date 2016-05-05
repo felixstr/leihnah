@@ -1,7 +1,7 @@
-angular.module('Leihnah').controller('ObjectDetailController', function($scope, $http, $stateParams, $window, $log, $document, $timeout, $window, AuthenticationService, ContextBoxService, auth, $uibModal, CategoryService, Piwik, $state, ContextmenuService) {
+angular.module('Leihnah').controller('ObjectDetailController', function($scope, $http, $stateParams, $window, $log, $document, $timeout, $window, $filter, AuthenticationService, ContextBoxService, ScrollService, auth, $uibModal, CategoryService, Piwik, $state, PageVisibilityService) {
 	Piwik.trackPageView($window.location.origin+'/object/'+$stateParams.objectId);
 	
-// 	document.body.scrollTop = document.documentElement.scrollTop = 0;
+
 	
 	$scope.$parent.lastObjectId = $stateParams.objectId; // @todo: needet?
 	
@@ -60,40 +60,14 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 	$scope.systemRequest.firstBackSuggestion = '';
 	
 	
-	$scope.sendRequest = function() {
-		$log.debug('sendRequest: request', $scope.systemRequest);
-		
-		var data = $scope.systemRequest;
-		data.suggestions = $scope.cleanedSuggestions;
-		data.objectId = $scope.object.id;
-// 		$log.debug('data', data);
-		
-		var url = 'api/lend/start';
-			
-		
-		$http.post(url, data, {
-			headers: { 'auth-token': AuthenticationService.getLocalToken() }
-		})
-		.success(function(response) {
-			$log.debug('sendRequest: response', response);
-			
-			$state.go('borrow', {borrowId: response.borrowId});
-			
-		})
-		.error(function(error) {
-			$log.debug(error);
-		});
-			
-		
-	}
 	
-	$scope.selectedDay = {
+	
+	var defaultSelectedDay = {
 		date: '',
 		type: 'get',
-		times: [
-			{ from: '', to: '' }
-		]
+		times: []
 	}
+	$scope.selectedDay = defaultSelectedDay;
 	
 	$scope.timeOption = [
 		{ from: '07', to: '08' },
@@ -125,11 +99,8 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 	
 	$scope.change = function(type) {
 		var currentDate = $scope.dt;
-		$log.debug('changed2', currentDate);
-		
-		
+				
 		var dateString = getDateString(currentDate);
-// 		$log.debug(dateString);
 		
 		// suggestion
 		var suggestion = {
@@ -138,12 +109,8 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 			times: []
 		};
 		
-		$log.debug('suggestion', suggestion);
-		
 		angular.forEach($scope.systemRequest.suggestions, function(value, key) {
-			$log.debug(value);
 			if (value.date == dateString) {
-				$log.debug(value);
 				suggestion = angular.copy(value);
 			}
 		});
@@ -158,23 +125,23 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		    ContextBoxService.setTargetElement($("#calendar-"+type+" button.btn.active"));
 		    ContextBoxService.setHorizontalAlign('right');
 		    ContextBoxService.setId('timepicker');	    
+		    ContextBoxService.setOnlyTopAlign(true);	    
+		    ContextBoxService.setCenterToElement($('.containerRequest'));	    
 		    ContextBoxService.show();
 		    ContextBoxService.onClose(function() {
-			    var calendar = document.querySelector("#requestContent");
-				$document.scrollToElement(angular.element(calendar), 20, 500);
+			    			    
+			    $scope.selectedDay = defaultSelectedDay;
+				$document.scrollToElement($('.containerRequest'), 150, 300);
+				
 		    });
 		    ContextBoxService.dt = $scope.dt;
 		    ContextBoxService.timeOption = $scope.timeOption;
    
 			
 		}, 5);
-		
-		$log.debug($scope.selectedDay);
-
-		
+				
 	}
-	
-	
+
 	$scope.contextBox.isTimeActive = function(currentTime) {
 		var result = false;
 		angular.forEach($scope.selectedDay.times, function(time, keyT) {
@@ -186,14 +153,8 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		return result;
 		
 	}
-
-	
 	$scope.contextBox.timeClicked = function(clickedTime, type) {
-		$log.debug('time', clickedTime);
-		$log.debug('type', clickedTime);
-		
-		$log.debug('selectedDay1', $scope.selectedDay);
-		
+			
 		var add = true;
 		var addPosition = 0;
 		angular.forEach($scope.selectedDay.times, function(time, keyT) {
@@ -211,38 +172,29 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		if (add) {
 			$scope.selectedDay.times.splice(addPosition, 0, clickedTime);
 		}
-		
+		/*
 		$scope.updateSuggestion();
-		
-		$log.debug('selectedDay2', $scope.selectedDay);
-		
+			*/	
+	}
+
+	$scope.contextBox.saveDay = function() {
+		$scope.updateSuggestion();
+		ContextBoxService.hide();
 	}
 	
 	$scope.updateSuggestion = function() {
-		$log.debug('updateSuggestion', $scope.selectedDay);
 		var selectedDay = angular.copy($scope.selectedDay);
-		
-
 		
 		if (selectedDay.times.length > 0) {
 			selectedDay.valid = true;
-
 		} else {
-
 			selectedDay.valid = false;
 		}
-		
-// 		$log.debug('selectedDay', selectedDay);
-		
-		
-		
-		$log.debug('systemRequest.suggestions1', $scope.systemRequest);
-		
+				
 		var newDay = true;
 		var newPosition = 0;
 		angular.forEach($scope.systemRequest.suggestions, function(value, key) {
-			$log.debug('sug', value);
-			
+					
 			if ($scope.selectedDay.type == value.type) {
 			
 				if (value.date == $scope.selectedDay.date) {
@@ -251,7 +203,6 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 					
 					if ($scope.selectedDay.times.length == 0 || $scope.selectedDay.times[0] == 'none') {
 						$scope.systemRequest.suggestions.splice(key, 1);
-// 						$log.debug('delete');
 					}
 					
 					newDay = false;
@@ -277,7 +228,6 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		
 		$scope.checkValidRequest();
 		
-		$log.debug('systemRequest.suggestion2', $scope.systemRequest);
 	}
 	
 	$scope.cleanedSuggestions = [];
@@ -287,18 +237,12 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		$scope.cleanedSuggestions = [];
 		
 		angular.forEach(oldOrder, function(suggestion, key) {
-			$log.debug('befor: ', suggestion);
 			var times = [];
 			angular.forEach(suggestion.times, function(time, keyT) {
 				if (times.length == 0) {
 					times.push(time);
 				} else {
-/*
-					$log.debug('times[times.length-1]', times[times.length-1]);
-					$log.debug('times[times.length-1].to', times[times.length-1].to);
-					$log.debug('time.from', time.from);
-*/
-					
+		
 					if (times[times.length-1].to == time.from) {
 						times[times.length-1].to = time.to;
 					} else {
@@ -316,7 +260,6 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 			
 		});
 		
-		$log.debug('scope.cleanedSuggestions: ', $scope.cleanedSuggestions);
 	}
 	
 	var calculateEnds = function() {
@@ -346,9 +289,7 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 
 
 	var getDayClass = function(data) {
-		
-// 		$log.debug('getDayClass', data);
-		
+			
 		var date = data.date
 		var dateString = getDateString(data.date);
 		var result = '';
@@ -372,29 +313,47 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		if (new Date(dateString).setHours(0,0,0,0) == new Date().setHours(0,0,0,0)) {
 			result += ' today';
 		}
-		
-// 		$log.debug('getDayClass', result);
 				
 		return result;
 	}
 	
 	var isDisabledBack = function(data) {
-// 		$log.debug(data);
 		var result = false;
 		var dateString = getDateString(data.date);
-		if (new Date(dateString) <= new Date($scope.systemRequest.lastGetSuggestion)) {
+		var activeDate = new Date(dateString);
+		var lastGetDate = new Date($scope.systemRequest.lastGetSuggestion);
+		
+		if (activeDate <= lastGetDate) {
+			result = true;
+		}
+		
+		if (!result && $scope.object.reservedDates.indexOf(dateString) >= 0) {
 			result = true;
 		}
 
+		if (!result) {
+			angular.forEach($scope.object.reservedDates, function(item, key) {
+				var reservedDate = new Date(item);
+							
+				if (reservedDate > lastGetDate && reservedDate < activeDate) {
+
+					result = true;
+				}
+			});
+		}
 
 		return result;
+
 	}
 	
 	var isDisabledGet = function(data) {
-// 		$log.debug(data);
 		var result = false;
 		var dateString = getDateString(data.date);
 		if (new Date(dateString) >= new Date($scope.systemRequest.firstBackSuggestion)) {
+			result = true;
+		}
+		
+		if ($scope.object.reservedDates.indexOf(dateString) >= 0) {
 			result = true;
 		}
 
@@ -432,8 +391,6 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 	$scope.checkValidRequest = function() {
 		var result = $scope.systemRequest.firstGetSuggestion != '' && $scope.systemRequest.firstBackSuggestion != '' && $scope.systemRequest.message != '';
 		
-		$log.debug('systemRequest', $scope.systemRequest);
-		$log.debug('validRequest1', result);
 		if (result) {
 			result = 
 				$scope.systemRequest.preferredContact_fixnetPhone == 'yes' || 
@@ -443,13 +400,35 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 				$scope.systemRequest.preferredContact_person2_phone == 'yes';
 		}
 		
-		$log.debug('validRequest2', result);
-		
+			
 		$scope.validRequest = result;
-		
 		
 	}
 	$scope.checkValidRequest();
+	
+	$scope.sendRequest = function() {
+		PageVisibilityService.hide();
+		
+		var data = $scope.systemRequest;
+		data.suggestions = $scope.cleanedSuggestions;
+		data.objectId = $scope.object.id;
+		
+		var url = 'api/lend/start';
+		
+		$http.post(url, data, {
+			headers: { 'auth-token': AuthenticationService.getLocalToken() }
+		})
+		.success(function(response) {
+			$timeout(function() {
+				$state.go('borrow', {borrowId: response.borrowId});
+			}, 300);
+		})
+		.error(function(error) {
+			$log.debug(error);
+		});
+			
+		
+	}
 	
 	
 	// step navigation
@@ -510,12 +489,13 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 			
 		}, function () {
 			$log.debug('Modal dismissed at: ' + new Date());
-		});
+		});	
+
 	}
 	
 	
 	// object data
-	$scope.object = '';
+	$scope.object = { reservedDates: [] };
 	$scope.images = [];
 	$scope.profilImageBG = {};
 	$scope.loadObject = function() {
@@ -523,9 +503,11 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				$log.debug('loadObject', response);
+// 				$log.debug('loadedObject', response);
 				if (response.ok) {
 					$scope.object = response.objects;
+					
+					renderDatepicker();
 					
 					$scope.object.directContactTypes = [];
 					if ($scope.object.directContact_fixnetPhone || $scope.object.directContact_person1_phone || $scope.object.directContact_person2_phone) {
@@ -552,7 +534,11 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 					$scope.profilImageBG = {
 						'background-image':'url('+($scope.object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+$scope.object.neighbor.accountImage)+')'
 					}
-	
+					
+					$timeout(function() {
+						PageVisibilityService.show();
+					}, 100);
+					
 					
 				}
 			})
@@ -562,6 +548,106 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 	}
 	$scope.loadObject();
 	
+	// object navigation
+	$scope.labelBack = 'Alle Gegenstände';
+	if (ScrollService.lastState != $state.current.name) {
+		$scope.$parent.backState = ScrollService.lastState;
+		
+		$scope.labelBack = 'Deine Gegenstände';
+		if (ScrollService.lastState == 'objects') {
+			if ($scope.$parent.filter.category != 'all' || $scope.$parent.filter.search != '') {
+				$scope.labelBack = 'Suchresultate';
+			} else {
+				$scope.labelBack = 'Alle Gegenstände';
+			}
+		}
+		/*
+
+		$log.debug('$scope.backState', $scope.backState);		
+		$log.debug('$scope.parent.backState', $scope.$parent.backState);	
+*/	
+	}
+
+
+	$scope.nextId = '';
+	$scope.prevId = '';
+	$scope.resultNav = {}; 
+			
+	var getNavStates = function() {
+		
+// 		$log.debug('filteredObjects', $scope.filter.filteredObjects);
+		
+		
+		if ($scope.backState == 'objects') {
+			
+// 			$log.debug('$scope.loadObjects', $scope.objects);
+/*
+			var orderBy = $filter('orderBy');
+			var newList = orderBy($scope.objects, $scope.order.current.field, $scope.order.current.reverse);
+			*/
+			var findCurrent = $filter('filter');
+			var filteredArray = findCurrent($scope.filter.filteredObjects, {id: $stateParams.objectId});
+			var index = -1;
+			angular.forEach($scope.filter.filteredObjects, function(item, key) {
+				if (item.id == $stateParams.objectId) {
+					index = key;
+				}
+			});
+			
+// 			$log.debug('filteredArray', filteredArray);
+			
+// 			var index = $scope.filter.filteredObjects.indexOf(filteredArray[0]);
+			
+// 			$log.debug(newList);
+			
+			
+			if ($scope.filter.filteredObjects[index-1]) {
+				$scope.prevId = $scope.filter.filteredObjects[index-1].id;
+			}
+			if ($scope.filter.filteredObjects[index+1]) {
+				$scope.nextId = $scope.filter.filteredObjects[index+1].id;
+				
+			}
+			
+			$scope.resultNav = {
+				currentIndex: index+1,
+				total: $scope.filter.filteredObjects.length,
+				label: 'Gegenstände' 
+			}
+			
+			
+		}
+		
+/*
+		$log.debug('$scope.prevId',$scope.prevId);
+		$log.debug('$scope.nextID',$scope.nextId);
+*/
+	}
+	getNavStates();
+	
+	$scope.goPrevObject = function() {
+		if ($scope.prevId != '') {
+			PageVisibilityService.hide();
+			$timeout(function() {
+				$state.go('object', {objectId: $scope.prevId});
+			}, 300);
+		}
+	};
+	$scope.goNextObject = function() {
+		if ($scope.nextId != '') {
+			PageVisibilityService.hide();
+			$timeout(function() {
+				$state.go('object', {objectId: $scope.nextId});
+			}, 300);
+		}
+	};
+	$scope.goBack = function() {
+		PageVisibilityService.hide();
+		$timeout(function() {
+			$state.go($scope.backState);
+		}, 300);
+	}
+	
 	
 	// track view
 	var trackObjectView = function() {
@@ -569,7 +655,7 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				$log.debug('trackObjectView', response);
+// 				$log.debug('trackObjectView', response);
 			})
 			.error(function(error) {
 				$log.debug(error);

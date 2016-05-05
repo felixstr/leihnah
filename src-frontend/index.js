@@ -6,6 +6,7 @@ require('./angular-carousel.scss');
 
 require('./img/placeholder-load.jpg');
 require('./img/placeholder-notfound.png');
+require('./img/placeholder-notUploaded.png');
 require('./img/leihnah-logo.svg');
 require('./img/leihnah-logo-negativ.svg');
 require('./img/profil-default.svg');
@@ -44,6 +45,17 @@ require('./img/lp-header-4.jpg');
 require('./img/lp-header-5.jpg');
 require('./img/lp-header-6.jpg');
 require('./img/lp-header-7.jpg');
+require('./img/header-ukulele.jpg');
+require('./img/header-teigwaren.jpg');
+require('./img/header-stoepsel.jpg');
+require('./img/header-schneeschuhe.jpg');
+require('./img/header-bohrmaschine.jpg');
+require('./img/header-spiel1.jpg');
+require('./img/header-strom.jpg');
+require('./img/header-waage.jpg');
+require('./img/header-barivox.jpg');
+require('./img/header-heissleim.jpg');
+require('./img/header-ente.jpg');
 
 
 require('angular');
@@ -66,7 +78,7 @@ require('./angular-preload-image.min.js');
 
 var appModule = require('./main.js');
 
-require('./controller/homeController.js');
+// require('./controller/homeController.js');
 require('./controller/landingPageController.js');
 require('./controller/mainController.js');
 require('./controller/objectsController.js');
@@ -92,9 +104,9 @@ require('./controller/modal/lendCheckDataController.js');
 require('./controller/modal/lendConfirmController.js');
 require('./service/authenticationService.js');
 require('./service/categoryService.js');
-require('./service/contextmenuService.js');
 require('./service/contextBoxService.js');
 require('./service/scrollService.js');
+require('./service/pageVisibilityService.js');
 
 angular.element(document).ready(function () {  
   angular.bootstrap(document, [appModule.name], {

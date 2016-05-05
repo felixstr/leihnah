@@ -63,9 +63,9 @@ class LendEntity {
 				fk_userBorrow AS userBorrowId,
 				fk_userLend AS userLendId,
 				fk_postit AS postitId,
-				(DATE(NOW()) between getDatetime and backDatetime) AS inTime,
-				(DATE(NOW()) >= getDatetime) AS getPast,
-				(DATE(NOW()) > backDatetime) AS backPast
+				(NOW() between getDatetime and backDatetime) AS inTime,
+				(NOW() >= getDatetime) AS getPast,
+				(NOW() > backDatetime) AS backPast
 			FROM lend
 			WHERE 
 				pk_lend = :id AND
@@ -473,6 +473,7 @@ class LendEntity {
 	public function getUserLendId() { return $this->userLendId; }
 	public function getObjectEntity() { return $this->objectEntity; }
 	public function getState() { return $this->state; }
+	public function getTimeSuggestions() { return $this->timeSuggestions; }
 	
 	public function getError() { return $this->error == true; }
 

@@ -349,31 +349,30 @@ $app->get('/object[/{id}]', function (Request $request, Response $response, $arg
 
 			    $objects = ObjectEntity::factory($this->db)
 					->setId($args['id'])
+					->enableLoadReservedDates()
 					->load()
 					->toArray();
 		    }
 	    } else {
-		    // alle objekte zurückgeben
-		    $objects = ObjectMapper::factory($this->db)
-		    	->setSortDESC()
-		    	->get();
+		    $objectMapper = ObjectMapper::factory($this->db)
+		    	->setSettlementId(Authentication::getUser()->isSuperUser() ? null : Authentication::getUser()->getSettlementId())
+		    	->setSortDesc();
 		    
-		    $result['objectsNew'] = ObjectMapper::factory($this->db)
+		    // alle objekte zurückgeben
+		    $objects = $objectMapper->get();
+		    
+		    $result['objectsNew'] = $objectMapper
 		    	->setLimit(8)
-		    	->setSortDESC()
 		    	->get();
 		    
 
-		    $result['objectsPopular'] = ObjectMapper::factory($this->db)
-		    	->setLimit(8)
+		    $result['objectsPopular'] = $objectMapper
 		    	->setOrderByViewCount()
-		    	->setSortDESC()
 		    	->get();
 		    
-		    $result['objectsFavorites'] = ObjectMapper::factory($this->db)
+		    $result['objectsFavorites'] = $objectMapper
 		    	->setOrderByName()
 		    	->setLimit(4)
-		    	->setSortDESC()
 		    	->get();
 		    	
 	    }
@@ -543,7 +542,10 @@ $app->get('/category', function (Request $request, Response $response, $args) {
     $result['ok'] = false;
     if (Authentication::isAuthenticated()) {
 	    
-	    $categories = CategoryMapper::factory($this->db)->get();
+	    $categories = CategoryMapper::factory($this->db)
+	    	->setSettlementId(Authentication::getUser()->isSuperUser() ? null : Authentication::getUser()->getSettlementId())
+	    	->get();
+		    	
 			
 		if (is_array($categories)) {
 			$result['categories'] = $categories;

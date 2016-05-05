@@ -5,6 +5,9 @@ class ObjectMapper extends Mapper {
 	private $sort = 'ASC';
 	private $limit = PHP_INT_MAX;
 	
+	private $settlementId = 1;
+	private $restriction = false;
+	
 	public static function factory($db) {
 		return new ObjectMapper($db);
 	}
@@ -46,15 +49,24 @@ class ObjectMapper extends Mapper {
 				o.fk_category AS categoryId,
 				count(`pk_view`) AS viewCount
 			FROM object AS o
-			LEFT JOIN view ON
-				`fk_object` = `pk_object`
-			WHERE deleted = 0 AND active = 1
+			LEFT JOIN view AS v ON
+				v.`fk_object` = o.`pk_object`
+			JOIN user AS u ON
+				o.`fk_user` = u.`pk_user`
+			WHERE 
+				o.deleted = 0 AND 
+				o.active = 1 AND
+				o.image_1 != ''
+				".($this->restriction && $this->settlementId != null ? 'AND u.fk_settlement = :settlementId' : '')."
 			GROUP BY `pk_object`
 			ORDER BY $this->orderBy $this->sort
 			LIMIT :limit
 		";
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':limit', $this->limit, PDO::PARAM_INT);
+		if ($this->restriction && $this->settlementId != null) {
+			$stmt->bindParam(':settlementId', $this->settlementId, PDO::PARAM_INT);
+		}
 		$stmt->execute();
 		
 // 		echo $this->limit;
@@ -72,6 +84,7 @@ class ObjectMapper extends Mapper {
 		return $results;
 	}
 	
+	public function setSettlementId($value){ $this->settlementId = $value; return $this;}
 	public function setOrderByName(){ $this->orderBy = 'name'; return $this;}
 	public function setOrderByViewCount(){ $this->orderBy = 'viewCount'; return $this;}
 	public function setSortDESC(){ $this->sort = 'DESC'; return $this;}

@@ -1,24 +1,28 @@
-<h2>Deine Gegenstände für die Nachbarn</h2>
-<p>Hier sind alle deine Gegenstände, die du der Nachbarschaft zur Verfügung stellst, zu sehen.<br>Du kannst neue erfassen und bestehende anpassen, deaktivieren und löschen.</p>
+<div class="profilObjectWrap" ng-show="pageVisibility.showContentProfil">
 
-<div class="btContainer"><a class="bt_dark add" href ng-click="contextBox.openModalObject()">Gegenstand hinzufügen</a></div>
-
-<div class="objectContainer">
-	<div ng-repeat="object in objects" class="itemObject" ng-class="object.active ? '' : 'deactivated'">
-		<div class="imageWrap" ng-click="state.go('object', {objectId: object.id})">
-			<div class="img" preload-bg-image="{{'assets/img/object/tn_'+object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
-			<div class="height"></div>
-		</div>
-		
-		<div class="info">
-			<div class="objectName">{{ object.name }}</div>
-			
-			
-			<a class="edit" href ng-click="showObjectMenu($event, object)">Menu</a>
-			
+	<h2>Deine Gegenstände für die Nachbarn</h2>
+	<p>Hier sind alle deine Gegenstände, die du der Nachbarschaft zur Verfügung stellst, zu sehen.<br>Du kannst neue erfassen und bestehende anpassen, deaktivieren und löschen.</p>
 	
+	<div class="btContainer"><a class="bt_light add" href ng-click="contextBox.openModalObject()">Gegenstand hinzufügen</a></div>
+	
+	<div class="objectContainer">
+		<div ng-repeat="object in objects" class="itemObject" ng-class="object.active ? '' : 'deactivated'">
+			<div class="imageWrap" ng-click="openObject(object.id)">
+				<div class="img" preload-bg-image="{{'assets/img/object/tn_'+object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notUploaded.png"></div>
+				<div class="height"></div>
+			</div>
 			
-			
+			<div class="info">
+				<div class="objectName">{{ object.name }}</div>
+				
+				
+				<a class="bt_light small arrowDown edit" href ng-click="showObjectMenu($event, object)"><span>Menu</span></a>
+				
+		
+				
+				
+			</div>
 		</div>
 	</div>
+
 </div>

@@ -7,7 +7,9 @@ angular.module('Leihnah').service('ContextBoxService', function($log, resize) {
 	self.targetElement = null;
 	self.horizontalAlign = 'left';
 	self.verticalAlign = 'bottom';
-	self.noPositionBelow = 0;
+	self.fullBelow = 0;
+	self.onlyTopAlign = false;
+	self.centerToElement = false;
 	self.callbackLoaded = function() {};
 	self.callbackClosed = function() {};
 
@@ -21,19 +23,32 @@ angular.module('Leihnah').service('ContextBoxService', function($log, resize) {
 	}
 	
 	self.hide = function() {
+		self.callbackClosed();
 		self.visible = false;
 		self.targetElement = null;
 		self.id = 0;
 		self.callbackLoaded = function() {};
+		self.callbackClosed = function() {};
 		self.template = '';
+		self.fullBelow = 0;
+		self.onlyTopAlign = false;
+		self.centerToElement = false;
+		
+		$('body').removeClass('contextBox-full');
 	}
 	
 	self.setTargetElement = function(element) {
 		self.targetElement = element;
 	}
 	
-	self.setNoPositionBelow = function(width) {
-		self.noPositionBelow = width;
+	self.setFullBelow = function(width) {
+		self.fullBelow = width;
+	}
+	self.setOnlyTopAlign = function(value) {
+		self.onlyTopAlign = value;
+	}
+	self.setCenterToElement = function(value) {
+		self.centerToElement = value;
 	}
 	self.setVerticalAlign = function(direction) {
 		self.verticalAlign = direction;
@@ -53,8 +68,26 @@ angular.module('Leihnah').service('ContextBoxService', function($log, resize) {
 		var top = $(self.targetElement).offset().top;
 		var windowWidth = $(window).width();
 		
-		if (windowWidth < self.noPositionBelow) {
+		if (self.onlyTopAlign && self.centerToElement) {
+			
+			if (self.verticalAlign == 'bottom') {
+				top += $(self.targetElement).outerHeight();
+			}
+			
+			var boxLeft = self.centerToElement.offset().left;
+
+			$('#contextBoxWrap').css({
+				top: top+'px',
+				left: boxLeft+'px'
+			});
+			
+			$('#contextBoxWrap > .arrow').css({
+				left: (left - boxLeft) + 'px'
+			});
+			
+		} else if (windowWidth < self.fullBelow) {
 			$('#contextBoxWrap').removeAttr('style');
+			$('body').addClass('contextBox-full');
 		} else {
 		
 			if (self.horizontalAlign == 'right') {
@@ -64,17 +97,20 @@ angular.module('Leihnah').service('ContextBoxService', function($log, resize) {
 				top += $(self.targetElement).outerHeight();
 			}
 			
+			
 			$('#contextBoxWrap').css({
 				top: top+'px',
 				left: left+'px'
 			});
-		
+			
+			$('body').removeClass('contextBox-full');
 		}
 	}
 	
 	self.loaded = function() {
 		self.setPositions();
 		self.callbackLoaded();
+		
 	}
 	
 	$(window).resize(function() {

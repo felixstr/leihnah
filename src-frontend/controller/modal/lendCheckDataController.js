@@ -36,6 +36,8 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 		ContextBoxService.setTargetElement(event.currentTarget);
 	    ContextBoxService.setHorizontalAlign('right');
 	    ContextBoxService.setId('boxBack');	    
+	    ContextBoxService.setOnlyTopAlign(true);	    
+		ContextBoxService.setCenterToElement($('.modalBody'));	
 	    ContextBoxService.show();
 	    ContextBoxService.currentLend = $scope.currentLend;
 	    ContextBoxService.formInfo = $scope.formInfo;
@@ -47,7 +49,9 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 		
 		ContextBoxService.setTargetElement(event.currentTarget);
 	    ContextBoxService.setHorizontalAlign('right');
-	    ContextBoxService.setId('boxGet');	    
+	    ContextBoxService.setId('boxGet');	 
+	    ContextBoxService.setOnlyTopAlign(true);	    
+		ContextBoxService.setCenterToElement($('.modalBody'));   
 	    ContextBoxService.show();
 	    ContextBoxService.currentLend = $scope.currentLend;
 	    ContextBoxService.formInfo = $scope.formInfo;

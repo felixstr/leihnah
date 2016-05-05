@@ -1,26 +1,34 @@
-<div class="contentContainer">
+<div class="contentContainer" ng-show="pageVisibility.showContent">
+	
+	<div class="topBar">
+		<a href class="bt_light small arrowLeft" ng-click="goBack()">Geliehene Gegenstände</a>
+	</div>
 	
 	<div class="header">
-		<div class="lender">
-			
+		<div class="arrowBG"></div>
+		
+		<div class="firstPerson" ng-class="{showContact: currentBorrow.answerDatetime != null }">
 			<div class="profilImage large" ng-style="lendProfilImageBG"></div>
-			<div class="name">{{ currentBorrow.object.neighbor.accountName }}</div>
+			<div class="info">
+				<div class="name" ng-show="currentBorrow.answerDatetime == null">{{ currentBorrow.object.neighbor.accountName }}</div>
+				<a class="bt_light small arrowDown contact" ng-click="showContactData()" ng-show="currentBorrow.answerDatetime != null"><span>{{ currentBorrow.object.neighbor.accountName }}</span></a>
+			</div>
 		</div>
 		
 		<div class="img" ng-style="objectImageBG">
 			<div class="arrow"></div>
 		</div>
 		
-		<div class="borrower">
+		<div class="secondPerson">
 			<div class="profilImage large" ng-style="profilImageBG"></div>
-			<div class="name">{{ currentNeighbor.accountName }}</div>
-			
 		</div>
+		
+		
 	</div>	
 	
 	<div class="conversationContainer">
 		
-		<div class="timeline" ng-class="{ 'show': currentBorrow.confirmedDatetime  != null && currentBorrow.state != 'closed' }">
+		<div class="timeline" ng-class="{ 'show': states.showBottomBackBar }">
 			<div class="timelinePast">
 				<div class="now"></div>
 			</div>
@@ -29,6 +37,8 @@
 		
 		<div class="messageItem right">	
 			<div class="content">
+				<div class="profilImage" ng-style="profilImageBG"></div>
+				
 				<div class="title">Deine Anfrage</div>
 				<div class="text">«{{ currentBorrow.requestText }}»</div>
 				<div class="suggestions" ng-class="'max_day-'+(currentBorrow.timeSuggestions.get.length > currentBorrow.timeSuggestions.back.length ? currentBorrow.timeSuggestions.get.length : currentBorrow.timeSuggestions.back.length) ">
@@ -54,36 +64,64 @@
 					</div>
 					
 				</div>
-				<div class="date">{{ currentBorrow.requestDatetime | amDateFormat:'dd, DD.MM.YY'  }}</div>
+				<div class="date">{{ currentBorrow.requestDatetime | amDateFormat:'DD.MM.YY, HH:mm'  }}</div>
 			</div>
 		</div>
 		
 		<div id="directContactMessage" class="messageItem left" ng-show="currentBorrow.directContactDatetime != null">	
 			<div class="content">
+				<div class="profilImage" ng-style="lendProfilImageBG"></div>
+				
 				<div class="title">Keine passende Termine gefunden</div>
-				<div class="message">{{ currentBorrow.object.neighbor.accountName }} hat keine passende Termine gefunden, möchte aber im direkten Kontakt mit dir neue Termine finden.</div>
-				<div class="date">{{ currentBorrow.directContactDatetime | amDateFormat:'dd, DD.MM.YY' }}</div>
+				<div class="message"><p>{{ currentBorrow.object.neighbor.accountName }} hat keine passende Termine gefunden, möchte aber im direkten Kontakt mit dir neue Termine finden.</p></div>
+				<div class="date">{{ currentBorrow.directContactDatetime | amDateFormat:'DD.MM.YY, HH:mm' }}</div>
 			</div>
 		</div>
 		
 		<div class="messageItem left" ng-if="currentBorrow.answerDatetime != null">	
 			<div class="content">
+				<div class="profilImage" ng-style="lendProfilImageBG"></div>
+				
 				<div class="title">Anfrage wurde akzeptiert</div>
-				<div class="text">«{{ currentBorrow.answerText }}»</div>
-				<div class="dates"><b>{{ currentBorrow.getDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }} Uhr</b>bis<b>{{ currentBorrow.backDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }} Uhr</b></div>
-				<div class="date">{{ currentBorrow.answerDatetime | amDateFormat:'dd, DD.MM.YY' }}</div>
+				<div class="text" ng-if="currentBorrow.answerText != ''">«{{ currentBorrow.answerText }}»</div>
+				<div class="dates">
+					
+					
+					<div class="get">
+						<div class="title">Abholen</div>
+						<div class="datum">{{ currentBorrow.getDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }} Uhr</div>
+					</div>
+
+					<div class="back">
+						<div class="title">Zurückbringen</div>
+						<div class="datum">{{ currentBorrow.backDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }} Uhr</div>
+					</div>
+					
+					
+				
+				</div>
+				<div class="date">{{ currentBorrow.answerDatetime | amDateFormat:'DD.MM.YY, HH:mm' }}</div>
 			</div>
 		</div>
 		
 		<div class="messageItem right" ng-if="currentBorrow.confirmedDatetime != null">	
 			<div class="content">
+				<div class="profilImage" ng-style="profilImageBG"></div>
+				
 				<div class="title">Du hast die Termine bestätigt</div>
 				<div class="message">Toll, die Ausleihe findet statt!</div>
-				<div class="date">{{ currentBorrow.answerDatetime | amDateFormat:'dd, DD.MM.YY' }}</div>
+				<div class="date">{{ currentBorrow.answerDatetime | amDateFormat:'DD.MM.YY, HH:mm' }}</div>
 			</div>
 		</div>
 		
-		<div class="messageItem both" ng-if="currentBorrow.confirmedDatetime != null && (currentBorrow.inTime || (currentBorrow.closedDatetime > currentBorrow.getDatetime))">	
+		
+		<div class="messageItem both messageExpired" ng-if="states.expired">	
+			<div class="content expired">	
+				<div class="title">Die Anfrage ist abgelaufen</div>
+			</div>
+		</div>
+		
+		<div class="messageItem both" ng-if="currentBorrow.confirmedDatetime != null && (currentBorrow.getPast)">	
 			<div class="content get">
 				<div class="title ">Übergabe war am {{ currentBorrow.getDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }}</div>
 			</div>
@@ -91,69 +129,89 @@
 		
 		<div class="messageItem both" ng-if="currentBorrow.confirmedDatetime != null && (currentBorrow.backPast)">
 			<div class="content back">	
-				<div class="title">Rückgabe am {{ currentBorrow.backDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }}</div>
+				<div class="title">Rückgabe war am {{ currentBorrow.backDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }}</div>
 			</div>
 		</div>
 		
-		<div class="actionBox">
+		<div class="actionBox {{'state-'+currentBorrow.state}}" ng-if="!states.expired">
+			
 			<div class="closed {{'type-'+currentBorrow.closedType}}" ng-if="currentBorrow.state == 'closed'" ng-class="{left: currentBorrow.closedType == 'refused' || currentBorrow.closedType == 'canceled' || currentBorrow.closedType == 'successful', right: currentBorrow.closedType == 'stopped'}">
+				
+				<div class="profilImage" ng-style="lendProfilImageBG" ng-if="currentBorrow.closedType == 'refused' || currentBorrow.closedType == 'canceled' || currentBorrow.closedType == 'successful'"></div>
+				<div class="profilImage" ng-style="profilImageBG" ng-if="currentBorrow.closedType == 'stopped'"></div>
+				
 				<div class="title" ng-if="currentBorrow.closedType == 'refused'">Die Ausleihe wurde von {{ currentBorrow.object.neighbor.accountName }}  abgelehnt</div>
 				<div class="title" ng-if="currentBorrow.closedType == 'canceled'">Die Ausleihe wurde von {{ currentBorrow.object.neighbor.accountName }}  gestoppt</div>
-				<div class="title" ng-if="currentBorrow.closedType == 'stopped'">Die Ausleihe wurde von dir abgelehnt</div>
+				<div class="title" ng-if="currentBorrow.closedType == 'stopped'">Die Anfrage wurde von dir gestoppt</div>
 				<div class="title" ng-if="currentBorrow.closedType == 'successful'">Die Ausleihe wurde von {{ currentBorrow.object.neighbor.accountName }} abgeschlossen</div>
 				<div class="text">«{{ currentBorrow.closedText }}»</div>
-				<div class="date">{{ currentBorrow.closedDatetime | amDateFormat:'dd, DD.MM.YY' }}</div>
+				<div class="date">{{ currentBorrow.closedDatetime | amDateFormat:'DD.MM.YY, HH:mm' }}</div>
 			</div>
 			
-			<div class="content" ng-if="currentBorrow.state != 'closed'">
+			<div class="content actionContent" ng-if="currentBorrow.state != 'closed'">
+				
+				<div class="profilImage" ng-style="profilImageBG"></div>
+				
+				<div class="contentWrap">
+					
+					<div ng-if="currentBorrow.state == 'request'">
+							
+						<h3>Warte, bis {{ currentBorrow.object.neighbor.accountName }} deine Anfrage akzeptiert oder ablehnt.</h3>
+						<p> Du wirst per eMail benachrichtigt.</p>
+						<p>Bis dahin kannst du die Anfrage, falls nötig, abbrechen.</p>
+						<div class="bt_light" ng-if="false"><a href>Terminvorschläge anpassen</a></div>
+						<a class="bt_light cancel small" href ng-click="openModalClose()">Anfrage abbrechen</a>
+					
+					</div>
+					
+					<div ng-if="currentBorrow.state == 'direct'">
+						<h3>Warte bis {{ currentBorrow.object.neighbor.accountName }} dich kontaktiert.</h3>
+						<p>Um die Ausleihe zu stornieren kontaktiere {{ currentBorrow.object.neighbor.accountName }} möglichst frühzeitig.</p>
+						<p>{{ currentBorrow.object.neighbor.accountName }} kann die Ausleihe im System stornieren.</p>
+					
+					</div>
+					
+					<div ng-if="currentBorrow.state == 'answered'">
+						<h3>Bestätige möglichst bald die Termine für das Abholen und Zurückbringen des Gegenstandes</h3>
 			
-				<div ng-if="currentBorrow.state == 'request'">
+						<a class="bt_dark small arrowRight" href ng-click="openModalConfirm()">Termine bestätigen</a>
+						<a class="bt_light cancel small" href ng-click="openModalClose()">Anfrage abbrechen</a>
+					
+					</div>
+					
+					<div ng-if="currentBorrow.state == 'confirmed' && !currentBorrow.getPast">
+						<h3>Warte bis zum Abholtermin</h3>
 						
-					<h3>Warte bis, {{ currentBorrow.object.neighbor.accountName }} deine Anfrage akzeptiert oder ablehnt. Du wirst per eMail benachrichtigt.</h3>
-					<p>Bis dahin kannst du die Anfrage, falls nötig, abbrechen.</p>
-					<div class="bt_light" ng-if="false"><a href>Terminvorschläge anpassen</a></div>
-					<a class="bt_light cancel small" href ng-click="openModalClose()">Anfrage abbrechen</a>
-				
+						<p>Um die Ausleihe zu stornieren kontaktiere {{ currentBorrow.object.neighbor.accountName }} möglichst frühzeitig.</p>
+						<p>Die Verleihende Person kann die Ausleihe im System stornieren.</p>
+					
+					</div>
+					
+					<div ng-if="currentBorrow.state == 'confirmed' && currentBorrow.inTime">
+						<h3>Thankyou-Post-It hinzufügen!</h3>
+						<p>Erstelle ein Foto von dir mit dem Gegenstand als Dank für die Leihe. {{ currentBorrow.object.neighbor.accountName }} wird sich  freuen!</p>
+						
+						<a class="bt_dark small arrowRight" href>Jetzt hinzufügen</a>
+					</div>
+					
+					<div ng-if="currentBorrow.state == 'confirmed' && currentBorrow.backPast">
+						<h3>Hast du den Gegenstand noch nicht zurückgebracht?</h3>
+						<p>Nimm mit {{ currentBorrow.object.neighbor.accountName }} kontakt auf, um die Rückgabe neu zu organisieren!</p>
+					</div>
 				</div>
 				
-				<div ng-if="currentBorrow.state == 'direct'">
-					<h3>Warte bis {{ currentBorrow.object.neighbor.accountName }} dich kontaktiert.</h3>
-					<p>Um die Ausleihe zu stornieren kontaktiere {{ currentBorrow.object.neighbor.accountName }} möglichst fürhzeitig.</p>
-					<p>{{ currentBorrow.object.neighbor.accountName }} kann die Ausleihe im System stornieren.</p>
-				
-				</div>
-				
-				<div ng-if="currentBorrow.state == 'answered'">
-					<h3>Bestätige möglichst bald die Termine für das Abholen und Zurückbringen des Gegenstandes</h3>
-		
-					<a class="bt_dark small arrowRight" href ng-click="openModalConfirm()">Termine bestätigen</a>
-					<a class="bt_light cancel small" href ng-click="openModalClose()">Anfrage abbrechen</a>
-				
-				</div>
-				
-				<div ng-if="currentBorrow.state == 'confirmed' && !currentBorrow.inTime">
-					<p>Um die Ausleihe zu stornieren kontaktiere {{ currentBorrow.object.neighbor.accountName }} möglichst frühzeitig.</p>
-					<p>{{ currentBorrow.object.neighbor.accountName }} kann die Ausleihe im System stornieren.</p>
-				
-				</div>
-				
-				<div ng-if="currentBorrow.state == 'confirmed' && currentBorrow.inTime">
-					<h3>Thankyou-Post-It hinzufügen!</h3>
-					<p>Erstelle ein Foto von dir mit dem Gegenstand als Dank für die Leihe. {{ currentBorrow.object.neighbor.accountName }} wird sich  freuen!</p>
-				</div>
-			
 			</div>
 			
 		</div>
 		
-		<div class="messageItem both" ng-if="currentBorrow.confirmedDatetime != null && !currentBorrow.inTime && currentBorrow.state != 'closed'">	
+		<div class="messageItem both" ng-if="states.showBottomGetBar">	
 			<div class="content get">
 				<div class="title">Übergabe am {{ currentBorrow.getDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }}</div>
 				<div class="message">Sofern nicht anders vereinbart, musst du den Gegenstand bei {{ currentBorrow.object.neighbor.accountName }} abholen.</div>
 			</div>
 		</div>
 		
-		<div class="messageItem both" ng-if="currentBorrow.confirmedDatetime != null && (currentBorrow.state != 'closed' || currentBorrow.closedType == 'successful')">
+		<div class="messageItem both" ng-if="states.showBottomBackBar">
 			<div class="content back">	
 				<div class="title">Rückgabe am {{ currentBorrow.backDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }}</div>
 				<div class="message" ng-if="currentBorrow.inTime && currentBorrow.state != 'closed'">Sofern nicht anders vereinbart, musst du den Gegenstand bei {{ currentBorrow.object.neighbor.accountName }} zurückbringen.</div>

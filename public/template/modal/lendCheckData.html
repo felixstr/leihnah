@@ -11,23 +11,22 @@
 		</div>
 		
 		<div class="buttonRow">
-			<a href class="bt_dark" ng-click="showBoxGet($event)" ng-class="{ 'noMatching': formInfo.noFindingGet }">Abholen am {{ checkData.getDatetime | amDateFormat:'DD.MM.YY - HH:mm' }}</a>
-			<a href class="bt_dark" ng-click="showBoxBack($event)" ng-class="{ 'noMatching': formInfo.noFindingBack }">Rückgabe am {{ checkData.backDatetime | amDateFormat:'DD.MM.YY - HH:mm' }}</a>
+			<a href class="bt_dark arrowDown" ng-click="showBoxGet($event)" ng-class="{ 'noMatching': formInfo.noFindingGet }">Abholen am {{ checkData.getDatetime | amDateFormat:'DD.MM.YY - HH:mm' }}</a>
+			<a href class="bt_dark arrowDown" ng-click="showBoxBack($event)" ng-class="{ 'noMatching': formInfo.noFindingBack }">Rückgabe am {{ checkData.backDatetime | amDateFormat:'DD.MM.YY - HH:mm' }}</a>
 		</div>
 		
 		<div class="formRow" ng-show="formInfo.dateStatus == 'yes'">
-			<label>Mitteilung</label>
 			<textarea name="description" ng-model="checkData.message" placeholder="Deine Mitteilung an {{ currentLend.neighborBorrow.accountName }}"></textarea>
 		</div>
 		
 		<div class="buttonContainer" ng-show="formInfo.dateStatus == 'yes'">
-			<input type="submit" class="bt_dark" type="submit" value="Anfrage akzeptieren">
+			<input type="submit" class="bt_dark ok" type="submit" value="Anfrage akzeptieren">
 		</div>
 		
 		<div class="buttonContainer" ng-show="formInfo.dateStatus == 'no'">
 			<p>Die Vorschläge von {{ currentLend.neighborBorrow.accountName }} sind für dich nicht passend. Du hast jetzt die Möglichkeit, direkt Kontakt aufzunehmen, um andere Termine zu finden oder die Anfrage abzulehnen.</p>
 			
-			<a class="bt_dark" ng-click="directContact()">Direkter Kontakt</a>
+			<a class="bt_dark arrowRight" ng-click="directContact()">Direkter Kontakt</a>
 			<a class="bt_light cancel" ng-click="openModalClose()">Anfrage ablehnen</a>
 		</div>
 		

@@ -1,4 +1,4 @@
-<div class="modalHead">
+<div class="modalHead" ng-class="{warning: closeData.type != 'successful'}">
 	<a href class="bt_dark close" ng-click="cancel()"><span>schliessen</span></a>
 </div>
 
@@ -10,20 +10,19 @@
 			<h3>{{ formInfo.titleText }}</h3>
 		</div>
 		
-		<div ng-if="closeData.type == 'successful'">
+		<div ng-if="false && closeData.type == 'successful'">
 		    <div class="formRow">
 				<label><input type="checkbox" ng-model="closeData.objectBack" ng-true-value="'yes'" ng-false-value="'no'">Ich habe den Gegenstand (noch) <b>nicht</b> zurückerhalten, möchte aber trotzdem abschliessen.</label>
 		    </div>
 		</div>
 		
 		<div class="formRow">
-			<label>Feedback an {{ formInfo.otherNeighbor.accountName }}</label>
-			<textarea name="description" ng-model="closeData.feedback" placeholder="{{ formInfo.feedbackPlaceholder }}"></textarea>
+			<textarea name="description" ng-model="closeData.feedback" placeholder="{{ formInfo.feedbackPlaceholder }}" required></textarea>
 		</div>
 		
 		
 		<div class="buttonContainer">
-			<input type="submit" class="bt_dark" type="submit" value="{{ formInfo.buttonText }}" ng-class="{inactive: !lendClose.$valid}">
+			<input type="submit" class="bt_dark" type="submit" value="{{ formInfo.buttonText }}" ng-class="{inactive: !lendClose.$valid, arrowRight: closeData.type != 'successful', ok: closeData.type == 'successful'}">
 		</div>
 		
 	</form>

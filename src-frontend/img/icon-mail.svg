@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="85px" height="66px" viewBox="0 0 85 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+    <title>mail-icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-1" transform="translate(-547.000000, -435.000000)" fill="#333333">
+            <g id="mail-icon" transform="translate(547.000000, 435.000000)">
+                <path d="M42.3700276,45.6239847 L31.8864722,35.7431331 L1.9127041,63.410821 C3.0022191,64.4992789 4.47306434,65.177121 6.09523111,65.177121 L78.6448241,65.177121 C80.260938,65.177121 81.7257304,64.4992789 82.8091925,63.410821 L52.853583,35.7431331 L42.3700276,45.6239847 L42.3700276,45.6239847 Z" id="Shape"></path>
+                <path d="M82.8273511,1.76629998 C81.7378361,0.671324346 80.2730437,0 78.6448241,0 L6.09523111,0 C4.4791172,0 3.01432482,0.677842058 1.92480983,1.7793354 L42.3700276,39.1062726 L82.8273511,1.76629998 L82.8273511,1.76629998 Z" id="Shape"></path>
+                <polygon id="Shape" points="0 5.72255122 0 59.8717033 29.2534776 33.1034597"></polygon>
+                <polygon id="Shape" points="55.4865776 33.1034597 84.7400552 59.8717033 84.7400552 5.70299808"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

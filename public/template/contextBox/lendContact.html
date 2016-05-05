@@ -1,0 +1,41 @@
+<div id="contextBoxWrap" class="arrowTopLeft lendContact">
+	
+	<div ng-if="!contextBox.dataAll">
+		<div class="iconAddress">{{ contextBox.person.address }}</div>
+		<div class="iconPhone" ng-if="contextBox.currentLend.preferredContact_fixnetPhone">{{ contextBox.person.fixnetPhone }}</div>
+		
+		<div class="single" ng-if="!(contextBox.currentLend.preferredContact_person2_phone || contextBox.currentLend.preferredContact_person2_mail)">
+			<div class="iconMail" ng-if="contextBox.currentLend.preferredContact_person1_mail"><a class="text" href="mailto:{{ contextBox.person.person1_mail }}">{{contextBox.person.person1_mail}}</a></div>
+			<div class="iconPhone" ng-if="contextBox.currentLend.preferredContact_person1_phone">{{ contextBox.person.person1_phone }}</div>
+		</div>
+		
+		<div class="group" ng-if="contextBox.currentLend.preferredContact_person2_phone || contextBox.currentLend.preferredContact_person2_mail">
+			<div class="name" ng-if="contextBox.currentLend.preferredContact_person1_mail || contextBox.currentLend.preferredContact_person1_phone">{{ contextBox.person.person1_firstName }} {{ contextBox.person.person1_lastName }}</div>
+			<div class="iconMail" ng-if="contextBox.currentLend.preferredContact_person1_mail"><a class="text" href="mailto:{{ contextBox.person.person1_mail }}">{{contextBox.person.person1_mail}}</a></div>
+			<div class="iconPhone" ng-if="contextBox.currentLend.preferredContact_person1_phone">{{ contextBox.person.person1_phone }}</div>
+			<div class="name">{{ contextBox.person.person2_firstName }} {{ contextBox.person.person2_lastName }}</div>
+			<div class="iconMail" ng-if="contextBox.currentLend.preferredContact_person2_mail"><a class="text" href="mailto:{{ contextBox.person.person2_mail }}">{{contextBox.person.person2_mail}}</a></div>
+			<div class="iconPhone" ng-if="contextBox.currentLend.preferredContact_person2_phone">{{ contextBox.person.person2_phone }}</div>
+		</div>
+	</div>
+	<div ng-if="contextBox.dataAll">
+		<div class="iconAddress">{{ contextBox.person.address }}</div>
+		<div class="iconPhone" ng-if="contextBox.person.fixnetPhone != ''">{{ contextBox.person.fixnetPhone }}</div>
+		
+		<div class="single" ng-if="contextBox.person.person2_phone == '' && contextBox.person.person2_mail == ''">
+			<div class="iconMail" ng-if="contextBox.person.person1_mail != ''"><a class="text" href="mailto:{{ contextBox.person.person1_mail }}">{{contextBox.person.person1_mail}}</a></div>
+			<div class="iconPhone" ng-if="contextBox.person.person1_phone != ''">{{ contextBox.person.person1_phone }}</div>
+		</div>
+		
+		<div class="group" ng-if="contextBox.person.person2_phone != '' || contextBox.person.person2_mail != ''">
+			<div class="name" ng-if="contextBox.person.person1_mail != '' || contextBox.person.person1_phone != ''">{{ contextBox.person.person1_firstName }} {{ contextBox.person.person1_lastName }}</div>
+			<div class="iconMail" ng-if="contextBox.person.person1_mail != ''"><a class="text" href="mailto:{{ contextBox.person.person1_mail }}">{{contextBox.person.person1_mail}}</a></div>
+			<div class="iconPhone" ng-if="ontextBox.person.person1_phone != ''">{{ contextBox.person.person1_phone }}</div>
+			<div class="name">{{ contextBox.person.person2_firstName }} {{ contextBox.person.person2_lastName }}</div>
+			<div class="iconMail" ng-if="contextBox.person.person2_mail != ''"><a class="text" href="mailto:{{ contextBox.person.person2_mail }}">{{contextBox.person.person2_mail}}</a></div>
+			<div class="iconPhone" ng-if="contextBox.person.person2_phone != ''">{{ contextBox.person.person2_phone }}</div>
+		</div>
+	</div>
+	
+	
+</div>

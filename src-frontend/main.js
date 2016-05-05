@@ -40,16 +40,35 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $logProvi
 				}
 			}
 		})
+		/*
 		.state('home', {
 			url: '/home',
 			controller: 'HomeController',
 			templateUrl: 'template/home.html',
 			parent: 'layout'		
 		})
+		*/
 		.state('landingpage', {
 			url: '/landingpage',
 			controller: 'LandingPageController',
-			templateUrl: 'template/landingPage.html'
+			templateUrl: 'template/landingPage.html',
+			resolve: {
+				auth: function($q, $timeout, AuthenticationService){
+					var deferred = $q.defer();
+					
+					AuthenticationService.checkAuthentication(function(authenticated, user) {
+						deferred.resolve(authenticated);
+					}); 
+					
+/*
+					$timeout(function(){
+                    deferred.resolve("ok");
+                 }, 5000);
+*/
+					
+					return deferred.promise;
+				}
+			}
 		})
 		.state('objects', {
 			url: '/objects',
@@ -141,7 +160,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $logProvi
 		});
 });
 
-app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache, $uibModalStack, AuthenticationService, Piwik, amMoment, ScrollService) {
+app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache, $uibModalStack, AuthenticationService, Piwik, amMoment, ScrollService, $document) {
 	
 	amMoment.changeLocale('de');
 	
@@ -170,12 +189,12 @@ app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache
 	
 	var toHome = function($q){
 		var deferred = $q.defer();
-				
+
 		AuthenticationService.checkAuthentication(function(authenticated, user) {
 			if (authenticated) {
 				deferred.resolve(true);
 			} else {
-				deferred.resolve($state.target('home'));
+				deferred.resolve($state.target('landingpage'));
 			}
 		}); 
 		
@@ -189,6 +208,8 @@ app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache
 	$transitions.onBefore({ to: 'profil' }, toHome);
 	$transitions.onBefore({ to: 'profil.base' }, toHome);
 	$transitions.onBefore({ to: 'profil.objects' }, toHome);
+	$transitions.onBefore({ to: 'profil.lend' }, toHome);
+	$transitions.onBefore({ to: 'profil.borrow' }, toHome);
 	
 	
 	
@@ -198,6 +219,6 @@ app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache
 		$('body').addClass('click-device');	
 	}
 	
-	
+
 	
 });

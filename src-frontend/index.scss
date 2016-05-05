@@ -24,11 +24,12 @@ $color-grey-dark-bg: #f5f5f5; /* navigation-hover-border, a-link-border */
 $color-grey-dark-text: #888888; /* a-link-border */
 $color-black-light: #42413E; /* footer */
 
-$color-special-get: #2CBD7A;
-$color-special-get-light: #96DDBC;
-$color-special-back: #3069BC;
-$color-special-back-light: #98B5DC;
+$color-special-get: #d28ae5;
+$color-special-get-light: #ECD9F1;
+$color-special-back: #6D97D3;
+$color-special-back-light: #D3E0F0;
 $color-special-red: #d01003;
+$color-special-red-active: #b60d02;
 $color-special-green: #36ae03;
 $color-special-orange: #f68e05;
 
@@ -45,6 +46,16 @@ $zIndex-contextmenu: 2001;
 
 /* image */
 $image-ratio: 75%;
+
+/* font-size */
+$font-size-xLarge: 42px;
+$font-height-xLarge: 53px;
+
+$font-size-normal: 16px;
+$font-height-normal: 22px;
+
+$font-size-small: 14px;
+$font-height-small: 19px;
 
 
 * {
@@ -64,7 +75,7 @@ $image-ratio: 75%;
 }
 
 body {  
-    background-color: $color-grey-light;
+    background-color: white;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     
@@ -73,7 +84,23 @@ body {
 	
 	&.modal-open {
 		overflow: hidden;
+		.mobile-nav {
+			display: none;
+		}
+		
+		
+		
 	}
+	
+	&.modal-open,
+	&.contextBox-full {
+		&.screen-small #outherContentWrap {
+			overflow: hidden;
+			height: 5px;
+		}
+	}
+	
+	
 }
 body, textarea {
 	font-family: Roboto-Regular, Arial;
@@ -88,7 +115,7 @@ header,nav,section,article,aside,footer,hgroup { display: block; }
 */
 
 header.site {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -137,7 +164,7 @@ header.site {
 		color: $color-text;
 
 		font-family: Roboto-Medium;
-		
+/*		
 		&:hover {
 			border-bottom: 5px solid $color-grey-dark;
 		}
@@ -149,7 +176,7 @@ header.site {
 		&:active {
 			border-bottom: 5px solid $color-main-dark;
 		}
-			
+	*/		
 	}
 	
 	a.profil {
@@ -176,28 +203,68 @@ header.site {
 	
 	button.hamburger {
 		position: absolute;
-		padding-right: calc($space-small * 4);
-		padding-left: $space;
-		right: 0;
+		padding-right: calc($space-small * 3);
+		padding-left: calc($space-small * 6);
+		right: 12px;
 		top: 0;
 		font-size: 20px;
 		
-		width: calc(30px + ($space-small * 4) +  $space);
+		width: calc(25px + ($space-small * 4) +  $space);
 		height: 50px;
 		background: white;
 		
 		span.mark {
-			top: 5px;
-			right: 41px;
+			top: 8px;
+			right: 21px;
 			left: auto;
+			z-index: 2;
 		}
 		
 		div {
 			width: 100%;
-			height: 3px;
+			height: 2px;
 			background: $color-black-light;
-			margin: 6px 0;
+			
+			transform: translateX(50%);
+			
+			transition: all 0.4s 0s ease;
+			
+			z-index: 1;
+			
 		}
+		div:first-of-type {
+			
+			transform: translateX(50%) translateY(-245%);
+			
+		}
+		div:last-of-type {
+			
+			transform: translateX(50%) translateY(245%);
+			
+		}
+		
+		
+		&.active {
+			div {
+				opacity: 0;
+			}
+			div:first-of-type {
+				opacity: 1;
+				transform: translateX(50%) translateY(100%) rotate(45deg);
+			}
+			div:last-of-type {
+				opacity: 1;
+				transform: translateX(50%) translateY(-100%) rotate(-45deg);
+			}
+		}
+		/*
+		div {
+			width: 100%;
+			height: 2px;
+			background: $color-black-light;
+			margin: 5px 0;
+		}
+		*/
 	}
 	
 }
@@ -210,9 +277,18 @@ header.site {
 	height: 100vh;
 	
 	overflow: hidden;
-	background-image: url(img/lp-header-1.jpg);
-	background-size: cover;
-	background-position: center center;
+	
+	.bg {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100vw;
+		height: 100vh;
+		background-image: url(img/lp-header-7.jpg);
+		background-size: cover;
+		background-position: center center;
+		filter: blur(5px);
+	}
 	
 	.content {
 		width: 100vw;
@@ -223,7 +299,7 @@ header.site {
 		padding-top: 4vh;
 		padding-left: 10vw;
 		background: $color-black-light;
-		background: rgba(66, 65, 62, 0.96);
+		background: rgba(0, 0, 0, 0.8);
 		
 		transition: transform 0.2s ease-in-out;
 		transition-property: opacity, transform;
@@ -236,17 +312,17 @@ header.site {
 			width: 100%;
 			padding-left: 60px;
 			font-size: 16px;
-			margin-top: calc($space/2);
-			padding-top: calc($space/2);
-			color: white;
+			margin-top: calc($space-small*5);
+			color: $color-grey-light;
 			position: relative;
 			font-family: Roboto-Light;
 			
 			span.mark {
 				width: 11px;
 				height: 11px;
-				top: 17px;
+				top: 4px;
 				left: 40px;
+				border: none;
 			}
 			
 			&.current {
@@ -255,43 +331,65 @@ header.site {
 		}
 		a.profil {
 			margin-bottom: 0;
-			margin-top: 0;
+			margin-top: 10px;
 			border-top: none;
 			
 			.name {
 				font-family: Roboto-Medium;
-				font-size: 22px;
+				font-size: 20px;
 				position: relative;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				width: 95%;
 				
 				span {
 					display: block;
 					font-size: 16px;
 					font-family: Roboto-Light;
-					margin-top: 5px;
+					margin-top: 10px;
 				}
 			}
 			.profilImage {
 				width: 75px;
 				height: 75px;
-				margin-bottom: 5px;
-				border: 2px solid white;
+				margin-bottom: 10px;
+				border: 0px solid white;
 			}
 		}
 		
+		div.pages, div.logout {
+			float: left;
+			width: 100%;
+			margin-top: calc($space-small*5);
+			border-top: 1px solid $color-text;
+			
+			a {
+				font-size: 20px;
+			}
+		}
+		div.profil {
+			float: left;
+			width: 100%;
+			margin-top: calc($space-small*2);
+
+		}
+		/*
 		div.profil, div.pages, div.logout {
 			float: left;
 			width: 100%;
-			padding-bottom: calc($space*3/2);
+			padding-bottom: calc($space-small*1);
 			border-bottom: 1px solid $color-text;
 		}
 		
 		div.pages, div.logout {
-			padding-top: calc($space/2);
+			margin-top: calc($space-small*1);
 		}
 		
 		div.logout {
 			border-bottom: none;
 		}
+		*/
 	}
 	
 	
@@ -303,6 +401,8 @@ header.site {
 }
 
 #outherContentWrap {
+	position: relative;
+		
 	transition: transform .2s ease-in-out;
 	transition-property: transform, height;
 	
@@ -317,8 +417,10 @@ header.site {
 	&.showMobileNav {
 		height: 90vh;
 		overflow: hidden;
+		
 		transform: scale3d(0.8, 0.8, 0.8) translateX(-95vw);
 		box-shadow: 0px 1px 3px rgba(0,0,0, 0.2);
+		
 	}
 }
 
@@ -326,27 +428,28 @@ header.site {
 #containerMain {
 	float: left;
 	width: 100%;
-	top: 70px;
-	min-height: calc(100vh - 70px);
-	position: absolute;
+	padding-top: 70px;
+	min-height: calc(100vh);
+	position: relative;
 	z-index: $zIndex-content;
-	padding-bottom: 350px;
+	
+	box-shadow: 0px 2px 3px rgba(0, 0, 0, 1);
 		
 	.contentContainer {
 		float: left;
 		width: 100%;
 		padding: calc($space*2) calc((50% - 720px) + ($space*1));
-		padding-bottom: calc($space*6);
+		padding-bottom: calc($space*2);
 		position: relative;
 		background: white;
-		min-height: calc(100vh - 120px);
+		min-height: calc(100vh - 70px);
 		
 	}
 	
 	&.page_objects {
 		.contentContainer {
 			margin-top: 0;
-			padding: calc($space*6) calc((50% - 720px) + ($space*0));
+			padding: calc($space*2) calc((50% - 720px) + ($space*0));
 			padding-top: 0;
 		}
 	}
@@ -354,6 +457,10 @@ header.site {
 	&.page_object {
 		.contentContainer {
 			padding-top: calc($space + 5px);
+			
+			&.hasTopBar {
+				padding-top: calc($space + 60px + 5px);
+			}
 		}
 	}
 	
@@ -384,12 +491,29 @@ footer {
 	z-index: $zIndex-footer;
 	background: $color-black-light;
 	width: 100vw;
-	position: fixed;
-	bottom: 0;
-	left: 0;
 	height: 400px;
+	overflow: hidden;
 	
-	
+	.bg {
+		position: absolute;
+		left: -100px;
+		top: -100px;
+		width: calc(100% + 200px);
+		height: calc(100% + 200px);
+		background-image: url(img/lp-header-7.jpg);
+		background-size: cover;
+		background-position: center calc(50% + 130px);
+		background-color: green;
+		filter: blur(20px);
+	}
+	.contentWrap {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.8);
+	}
 	.content {
 		position: absolute;
 		bottom: 0;
@@ -413,7 +537,7 @@ footer {
 				float: left;;
 				margin-top: 9px;
 
-				color: $color-grey-light;
+				color: $color-grey-dark;
 				font-family: Roboto-Medium;
 				font-size: 16px;
 			}
@@ -425,7 +549,7 @@ footer {
 			border-top: 1px solid white;
 			margin-top: 15px;
 			padding-top: 15px;
-			color: $color-grey-light;
+			color: $color-grey-dark;
 
 			font-size: 16px;
 			line-height: 23px;
@@ -433,7 +557,7 @@ footer {
 		
 		a {
 			color: $color-main-dark;
-			border-bottom: 1px solid $color-grey-light;
+			border-bottom: 1px solid $color-grey-dark;
 			
 			&:hover {
 				border-color: $color-main-dark;
@@ -446,32 +570,15 @@ footer {
 
 
 
-.linkFeedback {
-	position: fixed;
-	bottom: 5px;
-	right: 5px;
-	background: $color-special-red;
-	color: white;
-	padding: 15px;
-	border-radius: 5px;
-	text-transform: uppercase;
-	font-size: 13px;
-	font-family: Roboto-Medium;
-	z-index: 200;
-	
-	&:hover {
-		background: #f30202;
-	}
-}
-
 
 
 /**
 * text
 */
 h1 {
-	font-size: 42px;
-	margin-bottom: $space;
+	font-size: $font-size-xLarge;
+	line-height: $font-height-xLarge;
+	margin-bottom: calc($space-small*3);
 	font-family: Roboto-Medium;
 	font-family: RobotoSlab-Bold;
 	font-weight: normal;
@@ -515,9 +622,11 @@ a {
 a.text {
 	border-bottom: 1px solid $color-grey-dark;
 	
+	/*
 	&:hover {
 		border-color: $color-title-normal;
 	}
+	*/
 }
 b, strong {
 	font-family: Roboto-Medium;
@@ -530,28 +639,147 @@ span.accountName {
 	font-style: italic;
 	white-space: nowrap;
 }
+.iconMail,
+.iconPhone,
+.iconAddress {
+	background-position: left calc(50% - 1px);
+	background-repeat: no-repeat;
+	background-size: 15px;
+	padding-left: 19px;
+	color: $color-text;
+}
+.iconAddress {
+	background-image: url(img/icon-address.svg);
+	background-position: left 3px;
+}
+.iconPhone {
+	background-image: url(img/icon-phone.svg);
+	background-size: 13px;
+}
+.iconMail {
+	background-image: url(img/icon-mail.svg);
+	background-size: 14px;
+	background-position: left calc(50% - 0px);
+}
+
+/**
+* page transitions
+*/
+
+.slidePageContainer .requestInfo,
+.slidePageContainer .objectInfo, 
+.slidePageContainer > h1,
+.objectContentWrapper .topContainer,
+.objectContentWrapper .contentContainer,
+.profilBaseWrap,
+.profilObjectWrap,
+.profilLendWrap,
+.profilBorrowWrap,
+.contentContainer {
+	&.ng-hide-add {
+		transition: all 0.3s 0s ease-in-out;
+	}
+	&.ng-hide-remove {
+		transition: all 0.5s 0s ease-in-out;
+	}
+	
+	&.ng-hide {
+		opacity: 0;
+	}
+	
+	
+}
+
+.mobile-nav,
+footer {
+	&.ng-hide-add {
+		transition: opacity 0.01s 0s ease-in-out;
+	}
+	&.ng-hide-remove {
+		transition: opacity 0.01s 0.4s ease-in-out;
+	}
+	
+	&.ng-hide {
+		opacity: 0;
+	}
+}
 
 
 /**
 * page object
 */
 #containerMain {
+	.topBar {
+		width: 100%;
+		padding: calc($space-small * 3) calc((50% - 720px) + (25px*1));
+		transform: translateX(0);
+		z-index: 20;
+		background: $color-grey-dark-bg;
+		height: 59px;
+		
+		position: fixed;
+		transform: translateY(0);
+		top: 0;
+		box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
+		border: none;
+		
+		
+		transition: transform 0.3s 0s ease-in-out;
+		
+		.nav {
+			float: right;
+			a {
+				float: left;
+				margin-left: calc($space-small *2);
+			}
+			margin-left: $space;
+			
+			.labelNav {
+				float: left;
+				margin-left: calc($space-small *2);
+				height: 30px;
+				line-height: 30px;
+				font-size: 14px;
+				color: $color-text-lighter;
+			}
+		}
+		
+		a.edit {
+			float: right;
+		}
+		a.back {
+			span.short {
+				display: none;
+			}
+		}
+	}
+	
+	.objectDetailWrapper {
+		float: left;
+		width: 100%;
+		background: white;
+	}
+	
 	.objectContentWrapper {
 		float: left;
 		width: 100%;
 		background: white;
-		
+		min-height: calc(100vh - 70px);
 		
 		.topContainer, 
-		.topContainer .searchContainer,
+		.topContainer h1,
+		.topContainer .searchContainer {
+			transition: all 0.3s ease-in-out;
+		}
+		
 		.topContainer .bgImage {
-		/*	transition: all 0.3s ease-in-out;*/
+			transition: opacity 0.3s ease-in-out;
 		}
 		
 		.topContainer {
 			float: left;
 			width: 100%;
-			height: calc(100vh - 300px);
+			height: calc(100vh - 250px);
 			min-height: 500px;
 			position: relative;
 			
@@ -562,7 +790,7 @@ span.accountName {
 			background-repeat: no-repeat;
 			background-size: cover;
 			background-position: center center;
-			background-color: $color-grey-dark;
+			background-color: $color-grey-light;
 					
 			&.filtered {
 				height: 0;
@@ -573,15 +801,21 @@ span.accountName {
 				.bgImage {
 					opacity: 0;
 				}
+				
+				h1 {
+					opacity: 0;
+				}
 				.searchContainer {
 					box-shadow: none;
+					border: 1px solid $color-grey-dark;
 					margin-top: 0;
 					input {
-						font-size: 16px;
+						font-size: 18px;
 						font-family: Roboto-Regular;
 						
-						
 					}
+					
+			
 				}
 			}
 			
@@ -601,6 +835,9 @@ span.accountName {
 				font-family: RobotoSlab-Bold;
 				color: $color-text;
 				position: absolute;
+				max-width: calc(100% - ($space * 4));
+				overflow: hidden;
+				text-overflow: ellipsis;
 				
 			}
 			
@@ -611,10 +848,18 @@ span.accountName {
 				background: white;
 				position: relative;
 				
-				margin-top: 100px;
+				margin-top: 160px;
 				
 				box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
+				
+				background-image: url(img/icon-search-black.svg);
+				background-repeat: no-repeat;
+				background-position: calc($space-small*3) center;
+				background-size: 18px;
+				
+				border: 1px solid white;
 							
+				.input,
 				input {
 					width: 100%;
 					height: 45px;
@@ -624,7 +869,9 @@ span.accountName {
 					font-size: 24px;
 					font-family: Roboto-Regular;
 					color: $color-text;
-					padding-left: $space;
+					padding-left: calc($space-small*9);
+					background: transparent;
+					border: none;
 					
 					&::placeholder {
 						color: $color-text; 
@@ -635,6 +882,10 @@ span.accountName {
 							color: $color-grey-light-text;
 						}
 					}
+				}
+				
+				.input {
+					display: none;
 				}
 				
 				.buttons {
@@ -663,10 +914,10 @@ span.accountName {
 		}
 		
 		
-		.topBar {
+		.topBox {
 			margin-left: calc(50% - 650px + ($space*4));
 			margin-right: calc(50% - 650px + ($space*4));
-	
+			
 			position: relative;
 			
 			.text {
@@ -708,8 +959,47 @@ span.accountName {
 				margin-top: calc($space*2);
 			}
 		}
+		
+		.objectResultContainer {
+			
+			&.ng-hide-add {
+				transition: all 0.3s 0s ease-in-out;
+			}
+			&.ng-hide-remove {
+				transition: all 0.3s 0.5s ease-in-out;
+			}
+			
+			&.ng-hide {
+				opacity: 0;
+			}
+			
+		}
+		
+		
+		.objectPreviewContainer {
+			
+			
+			&.ng-hide-add {
+				transition: all 0.3s 0s ease-in-out;
+			}
+			&.ng-hide-remove {
+				transition: all 0.3s 1s ease-in-out;
+			}
+			
+			&.ng-hide {
+				opacity: 0;
+			}
+			
+			
+			
+		}
 	}
 	
+}
+
+body.scroll-header #containerMain .topBar,
+body.scroll-up #containerMain .topBar {
+	transform: translateY(70px);
 }
 
 #contextBoxWrap.category {
@@ -750,15 +1040,19 @@ span.accountName {
 			margin-left: 0;
 		}
 		
+		/*
 		&:hover {
 			
 			.info {
 				background-color: $color-main-dark-active;
 			}
 		}
+		*/
+		/*
 		&:active {
 			transform: scale3d(0.95,0.95,0.95);
 		}
+		*/
 		
 		.imageWrap {
 			float: left;
@@ -766,6 +1060,8 @@ span.accountName {
 			position: relative;
 			cursor: pointer;
 			background: $color-grey-light;
+			
+			
 			
 			.height {
 				float: left;
@@ -840,6 +1136,7 @@ span.accountName {
 	
 	box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
 	
+	> .arrow,
 	&::before {
 		background-color: white;
 	    content: "\00a0";
@@ -859,6 +1156,13 @@ span.accountName {
 		}
 	}
 	
+	&.arrowTopLeft {
+		&::before {
+			top: -8px;
+			left: 30px;
+		}
+	}
+	
 	&.login {
 		width: 300px;
 		margin-left: calc(-300px);
@@ -867,8 +1171,8 @@ span.accountName {
 	
 	&.profil,
 	&.profilEditMenu {
-		width: 250px;
-		margin-left: calc(-250px);
+		width: 270px;
+		margin-left: calc(-270px);
 		margin-top: 18px;
 	}
 	
@@ -887,16 +1191,34 @@ span.accountName {
 	&.boxBack,
 	&.timepicker {
 		width: 300px;
-		margin-left: calc(-150px - 18px);
+		margin-left: 23px;
 		margin-top: 18px;
+		
+		> .arrow {
+			margin-left: -10px;
+		}
 	}
+	
+	&.boxGet {
+		> .arrow {
+			margin-left: 30px;
+		}
+	}
+	
+	&.boxBack {
+		margin-left: 280px;
+		> .arrow {
+			margin-left: -220px;
+		}
+	}
+
 	
 	&.category {
 		width: 1100px;
 		margin-left: calc(-1069px - 18px);
 		margin-top: 18px;
 		&.filtered {
-			margin-left: calc(-1010px - 18px);
+			margin-left: calc(-1004px - 18px);
 			&::before {
 				top: -8px;
 				right: 83px;
@@ -904,15 +1226,21 @@ span.accountName {
 		}
 	}
 	
+	&.lendContact {
+		width: 300px;
+		margin-left: calc(-55px);
+		margin-top: 18px;
+	}
+	
 	&.menu {
 		a {
-			padding: 14px 20px;
+			padding: 13px 20px;
 			display: inline-block;
 			width: 100%;
 			font-size: 16px;
 			position: relative;
 			color: $color-text;
-			
+			/*
 			&.current {
 				background-color: $color-grey-light;
 				font-family: Roboto-Medium;
@@ -925,7 +1253,7 @@ span.accountName {
 			&:active {
 				background-color: $color-grey-dark;
 			}
-	
+			*/
 		}
 	}
 	
@@ -976,12 +1304,13 @@ span.mark {
 	margin-top: 0;
 	margin-left: 0;
 	
-	&.small {
-		width: 7px;
-		height: 7px;
-		top: 19px;
-		left: 6px;
-		border-width: 1px;
+	&.inline {
+		width: 14px;
+		height: 14px;
+		position: relative;
+		top: 2px;
+		left: 3px;
+		display: inline-block
 	}
 }
 
@@ -1022,10 +1351,11 @@ span.mark {
 .modalHead {
 	float: left;
 	width: 100%;
-	height: 40px;
+	height: calc($space*2);
 	position: absolute;
 	top: 0;
 	left: 0;
+	background: $color-black-light;
 	background: $color-main-dark;
 	z-index: 11;
 	box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
@@ -1034,17 +1364,200 @@ span.mark {
 		position: absolute;
 		right: 0;
 		top: 0;
+		width: calc($space*2);
+		height:  calc($space*2);
+	}
+	
+	&.warning {
+		background-color: $color-special-red;
+		
+		a.close {
+			background-color: $color-special-red;
+			background-image: url(img/icon-close-white.svg);
+			
+			&:hover {
+				background-color: $color-special-red-active;
+			}
+		}
 	}
 	
 }
 .modalBody {
+	padding: calc($space*2);
+	
 	max-height: calc(100vh - 100px);
 	overflow: auto;
 	float: left;
-	margin-top: 40px;
+	margin-top: calc($space*2);
 	
-	&.space {
-		padding-top: calc($space*2);
+	form {
+		float: left;
+		width: 100%;
+		.formText {
+			float:left;
+			width: 100%;
+			margin-bottom: $space;
+			text-align: center;
+			
+			h3 {
+				text-align: center;
+				margin-top: 0;
+			}
+		}
+
+		.formRowImage {
+			float:left;
+			width: calc(100% + ($space*4));
+			margin-left: calc($space*2 * -1);
+			margin-top: calc($space*2 * -1);
+			
+			padding-top: $space;
+			padding-bottom: $space;
+			background: $color-grey-light;
+			margin-bottom: $space;
+			text-align: center;
+			
+			.picAdd {
+				display: inline-block;
+				width: 150px;
+				height: 150px;
+				margin: 0 10px;
+				
+				background: white;
+				overflow: hidden;
+				border: 1px solid $color-grey-dark;
+				position: relative;
+				
+				.new,
+				.delete {
+					position: absolute;
+					bottom: 13px;
+					left: 0;
+					width: 100%;
+					text-align: center;
+					background: white;
+					padding: 2px;
+					font-size: 12px;
+					text-transform: uppercase;
+				}
+				
+				.delete {
+					bottom: auto;
+					top: 13px;
+				}
+				
+				.image {
+					position: absolute;
+					width: 100%;
+					height: 100%;
+					left: 0;
+					top:0;
+					background-position: center center;
+					background-size: cover;
+				}
+				
+				input {
+					display: block !important;
+					width: 100% !important;
+					height: 100% !important;
+					opacity: 0 !important;
+					overflow: hidden !important;
+					cursor: pointer;
+				}
+				
+				&.round {
+					border-radius: 50%;
+				}
+			}
+		}
+		
+		.formRow {
+			position: relative;
+			float: left;
+			width: 100%;
+			margin-bottom: 6px;
+			padding-bottom: 16px;
+			
+			> label:first-of-type {
+				display: block;
+				font-size: 14px;
+				margin-bottom: 3px;
+				color: $color-grey-dark-text;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				
+				&.checkbox {
+					color: black;
+					margin-top: 5px;
+					
+					input {
+						margin-right: 1px;
+					}
+				}
+			}
+			
+			input[type=text],
+			input[type=password],
+			input[type=email],
+			textarea {
+				float: left;
+				font-size: 14px;
+				padding: 10px;
+				width: 100%;
+				
+				
+			}
+			
+			textarea {
+				height: 80px;
+			}
+			
+			select {
+				font-size: 14px;
+				float:left; margin-right: 10px;
+			}
+			
+			label.checkbox {
+				.label {
+					font-size: 14px;
+					line-height: 22px;
+				}
+			}
+			
+			
+			&.error {
+				input[type=text],
+				input[type=password],
+				input[type=email],
+				textarea {
+					border-color: $color-special-red;
+				}
+			}
+			
+			.warning {
+				font-size: 12px;
+				padding: 4px;
+				color: white;
+				background: $color-special-red;
+				float:left;
+			}
+			
+			
+			
+		}
+		
+		
+		
+		.buttonContainer {
+			float: left;
+			width: 100%;
+			text-align: center;
+			margin-top: $space;
+			
+			input.ok {
+				background-position: calc(100% - ($space-small*3)) center;
+			}
+		}
 	}
 }
 
@@ -1060,142 +1573,8 @@ img.thumb {
 button {
 	cursor: pointer;
 }
-.formText {
-	float:left;
-	width: 100%;
-	width: calc(100% - (4*$space));
-	margin-left: calc(2*$space);
-	margin-bottom: $space;
-	margin-top: $space;
-	h3 {
-		margin-top: $space-small;
-	}
-}
 
-.formRowImage {
-	float:left;
-	width: 100%;
-	padding-top: $space;
-	padding-bottom: $space;
-	background: $color-grey-light;
-	margin-bottom: $space;
-	text-align: center;
-	
-	.picAdd {
-		display: inline-block;
-		width: 150px;
-		height: 150px;
-		margin: 0 10px;
-		
-		background: white;
-		overflow: hidden;
-		border: 1px solid $color-grey-dark;
-		position: relative;
-		
-		.new,
-		.delete {
-			position: absolute;
-			bottom: 13px;
-			left: 0;
-			width: 100%;
-			text-align: center;
-			background: white;
-			padding: 2px;
-			font-size: 12px;
-			text-transform: uppercase;
-		}
-		
-		.delete {
-			bottom: auto;
-			top: 13px;
-		}
-		
-		.image {
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			left: 0;
-			top:0;
-			background-position: center center;
-			background-size: cover;
-		}
-		
-		input {
-			display: block !important;
-			width: 100% !important;
-			height: 100% !important;
-			opacity: 0 !important;
-			overflow: hidden !important;
-			cursor: pointer;
-		}
-		
-		&.round {
-			border-radius: 50%;
-		}
-	}
-}
-.formRow {
-	position: relative;
-	float: left;
-	width: calc(100% - (4*$space));
-	margin-bottom: 6px;
-	padding-bottom: 16px;
-	margin-left: calc(2*$space);
-	
-	label {
-		display: block;
-		font-size: 14px;
-		margin-bottom: 5px;
-		color: $color-grey-dark-text;
-		
-		&.checkbox {
-			color: black;
-			margin-top: 5px;
-			
-			input {
-				margin-right: 1px;
-			}
-		}
-	}
-	
-	input[type=text],
-	input[type=password],
-	input[type=email],
-	textarea {
-		font-size: 14px;
-		border: 1px solid $color-grey-dark;
-		padding: 10px;
-		width: 100%;
-	}
-	
-	textarea {
-		height: 80px;
-	}
-	
-	select {
-		font-size: 14px;
-		float:left; margin-right: 10px;
-	}
-	
-	&.error {
-		input[type=text],
-		input[type=password],
-		input[type=email],
-		textarea {
-			border-color: $color-special-red;
-		}
-	}
-	
-	.warning {
-		font-size: 12px;
-		padding: 4px;
-		color: white;
-		background: $color-special-red;
-		float:left;
-	}
-	
-	
-}
+
 .formMessage {
 	float: left;
 	width: 100%;
@@ -1206,15 +1585,18 @@ button {
 	background: $color-special-red;
 	color: white;
 }
-.buttonContainer {
-	float: left;
-	width: calc(100% - (4*$space));
-	margin-left: calc(2*$space);
-	margin-bottom: calc(2*$space);
-	margin-top: 16px;
+
+
+input[type=text],
+input[type=password],
+input[type=email],
+textarea {
+	-webkit-appearance:none;
 }
 
 input, select, textarea, button {
+	border-radius: 0;
+
 	&:focus {
 		outline: none;		
 	}
@@ -1228,26 +1610,41 @@ form {
 		border: 1px solid $color-grey-dark;
 		font-size: 14px;
 		padding: 8px;
-		
+				
 		&:focus {
-			background-color: $color-main-light;	
+/*			background-color: $color-main-light;*/
 			border-color: $color-main-dark;	
 		}
+	}
+}
+
+label.checkbox {
+	float: left;
+	width: 100%;
+	margin-bottom: $space-small;
+	input {
+		float: left;
+		width: 20px;
+		height: 20px;
+	}
+	.label {
+		float: left;
+		width: calc(100% - 20px);
+		
 	}
 }
 
 /* special */
 .directContact {
 	float:left;
-	margin-left: 15px;
-	width: calc(100% - 15px);
+	width: 100%;
 	background: $color-grey-light;
-	padding: calc($space/2);
+	padding: calc($space-small*3);
 	font-size: 14px;
 	
-	.label {
+	> .label {
 		font-family: Roboto-Medium;
-		margin-bottom: 5px;
+		margin-bottom: calc($space-small*2);
 	}
 }
 
@@ -1258,7 +1655,7 @@ form {
 */
 a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
 	position: relative;
-	padding: 0 calc($space/2);
+	padding: 0 calc($space-small*3);
 	height: 40px;
 	
 	display: inline-block;
@@ -1271,27 +1668,40 @@ a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
 	
 	transition: background-position 0.1s ease-in-out;
 	
-	&.arrowDown, &.arrowRight, &.add, &.cancel, &.close, &.ok, &.category {
-		padding-right: calc(($space/2) + 10px + 12px);
+	&.arrowDown, &.arrowRight, &.arrowLeft, &.add, &.cancel, &.close, &.ok, &.category {
+		padding-right: calc(($space-small*3) + 10px + 12px);
 		background-size: 12px;
-		background-position: calc(100% - ($space/2)) center;
+		background-position: calc(100% - ($space-small*3)) center;
 		background-repeat: no-repeat;
 	}
 	&.arrowRight {
-		padding-right: calc(($space/2) + 10px + 7px);
+		padding-right: calc(($space-small*3) + 10px + 7px);
 		background-size: 7px;
+		background-image: url(img/arrow-right-black.svg);
 		
+		
+	}
+	&.arrowLeft {
+		padding-right: calc($space-small*3);
+		padding-left: calc(($space-small*3) + 10px + 7px);
+		background-position: calc($space/2) center;
+		background-size: 7px;
+		background-image: url(img/arrow-left-black.svg);
+		
+		/*
 		&:hover {
-			background-position-x: calc((100% - ($space/2)) + 3px);
+			background-position-x: calc(($space-small*3) - 3px);
 		}
+		*/
 	}
 	&.arrowDown {
 		background-image: url(img/arrow-down-black.svg);
-		
+		/*
 		&.active,
 		&:hover {
 			background-position-y: calc(50% + 3px);
 		}
+		*/
 	}
 	&.close {
 		background-image: url(img/icon-close-black.svg);
@@ -1304,17 +1714,21 @@ a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
 		background-image: url(img/icon-close-black.svg);
 	}
 	&.ok {
+		padding-right: calc(($space-small*3) + 10px + 15px);
 		background-image: url(img/icon-ok-black.svg);
 		background-position: center center;
 		background-size: 15px;
+		
+		/*
 		span {
 			display: none;
 		}
+		*/
 	}
 	&.category {
 		background-image: url(img/icon-filter-black.svg);
 		background-position: center center;
-		background-size: 20px;
+		background-size: 15px;
 		span {
 			display: none;
 		}
@@ -1329,35 +1743,30 @@ a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
 		box-shadow: none;
 		cursor: default;
 		
+		/*
 		&:hover,
 		&:active {
-			background-position: calc(100% - ($space/2)) center;
+			background-position: calc(100% - ($space-small*3)) center;
 		}
+		*/
 	}
 	
 }
 a.bt_light, input.bt_light {
-	background: $color-grey-light;
 	background: $color-main-light;
 	border: 2px solid $color-main-dark;
 	background: white;
 	
-	line-height: 38px;
+	line-height: 37px;
 	color: $color-text;
 	
+	/*
 	&:hover,
 	&.active,
 	&:active {
 		background-color: $color-main-light;
 	}
-	
-
-	&.arrowRight {
-		background-image: url(img/arrow-right-black.svg);
-	}
-	
-
-	
+	*/
 }
 
 a.bt_dark, button.bt_dark, input.bt_dark {
@@ -1365,52 +1774,79 @@ a.bt_dark, button.bt_dark, input.bt_dark {
 	background: $color-main-dark;
 
 	border: none;
-	line-height: 42px;
-	
+	line-height: 41px;
+	/*
+	&.active,
 	&:hover {
 		background-color: $color-main-dark-active;
 	}
-	&:active {
-
-	}
-	
-	&.arrowRight {
-		background-image: url(img/arrow-right-black.svg);
-	}
+	*/
 }
 input.bt_dark {
-	width: 100%;
+	display: inline-block;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-a.bt_light.small, a.bt_dark.small, button.bt_dark.small {
+a.bt_light.small, a.bt_dark.small, button.bt_dark.small, input.bt_dark.small {
 	font-size: 12px;
 	height: 29px;
 	cursor: pointer;
 	background-size: 10px;
-	padding-right: calc(($space-small*1) +  10px + ($space-small*2));
+	padding-right: calc($space-small*2);
 	padding-left: calc($space-small*2);
 	
 	background-position-x: calc(100% - ($space-small*2));
 	
+	&.cancel {
+		background-size: 8px;
+		padding-right: calc(($space-small*1) +  8px + ($space-small*2));
+	}
+	
+	&.ok {
+		background-size: 11px;
+		padding-right: calc(($space-small*1) +  11px + ($space-small*2));
+	}
+	
 	&.arrowDown {
+		padding-right: calc(($space-small*1) +  10px + ($space-small*2));
+		/*
 		&:hover {
 			background-position-y: calc(50% + 2px);
 		}
+		*/
 	}
+	
 	
 	&.arrowRight {
 		background-size: 6px;
 		padding-right: calc(($space-small*1) +  8px + ($space-small*2));
+		/*
 		&:hover {
 			background-position-x: calc((100% - ($space-small*2)) + 3px);
 		}
+		*/
+	}
+	
+	&.arrowLeft {
+		background-size: 6px;
+		padding-right: calc($space-small*2);
+		padding-left: calc(($space-small*1) +  8px + ($space-small*2));
+		background-position-x: calc($space-small*2);
+		
+		/*
+		&:hover {
+			background-position-x: calc(($space-small*2) - 3px);
+		}
+		*/
 	}
 }
 
 a.bt_light.small {
 	line-height: 26px;
 }
-a.bt_dark.small, button.bt_dark.small {
+a.bt_dark.small, button.bt_dark.small, input.bt_dark.small {
 	line-height: 30px;
 }
 
@@ -1421,7 +1857,7 @@ a.bt_dark.small, button.bt_dark.small {
 */
 .itemObject {
 	float: left;
-	width: calc((100% / 4) - ($space / 4*3));
+	
 	margin-left: $space;
 	margin-top: $space;
 	
@@ -1452,8 +1888,16 @@ a.bt_dark.small, button.bt_dark.small {
 		float: left;
 		width: 100%;
 		position: relative;
+		overflow: hidden;
 		
-		
+		> img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+			
 		.height {
 			float: left;
 			width: 1px;
@@ -1479,7 +1923,7 @@ a.bt_dark.small, button.bt_dark.small {
 		position: relative;
 		
 		transition: all 0.2s ease-in-out;
-		
+		transition-property: width, background-color;
 		
 		width: 60px;
 		height: 60px;
@@ -1518,70 +1962,117 @@ a.bt_dark.small, button.bt_dark.small {
 			margin-top: 3px;
 		}
 		
-		a.edit {
-			position: absolute;
-			right: 0;
-			top: 0;
-			font-size: 13px;
-			margin-top: 0;
-			height: 30px;
-			width: 40px;
-			text-indent: 1000px;
-			overflow: hidden;
-			
-
-			
-			background-image: url(img/arrow-down-black.svg);
-			background-size: 12px;
-			background-position: calc(100% - 10px) center;
-			background-repeat: no-repeat;
-			
-			transition: all 0.1s ease-in-out;
-			
-			&:hover {
-				background-position-y: calc(50% + 3px);
-			}
-			
-			
-		}
 		
+		
+	}
+	/*
+
+	&.ng-enter {
+		transition: 0.5s linear all;
+		opacity: 0;
+	}
+ 
+	&.ng-enter.ng-enter-active {
+		opacity: 1;
 	}
 	
-	&.deactivated {
-		.imageWrap,
-		.objectName {
-			opacity: 0.5;
-		}
-		
+	&.ng-leave {
+		transition: 0.5s linear all;
+		opacity: 1;
 	}
+ 
+	&.ng-leave.ng-leave-active {
+		opacity: 0;
+	}
+	
+*/
 }
 
-.page_profil-objects .itemObject {
+
+.profilObjectWrap .itemObject {
+	width: calc((100% / 3) - ($space-small / 3*2));
+	
+	&:nth-child(4n+1) {
+		margin-left: $space-small;
+	}
+	
+	&:nth-child(3n+1) {
+		margin-left: 0;
+	}
 	
 	transition: none;
 	transform: none;
 	
 	.info {
 		overflow: visible;
-		height: 30px;
-		margin-top: calc(-$space-small*2 - 30px);
+		height: 40px;
+		margin-top: calc(-$space-small*2 - 40px);
 		width: calc(100% - ($space-small*4));
-		background: $color-main-dark;
+		background: white;
 		padding-top: 0;
+		
 		.objectName {
-			line-height: 30px;
+			line-height: 40px;
 			margin: 0;
 		}
+		
+		a.edit {
+			position: absolute;
+			right: $space-small;
+			top: $space-small;
+			
+			padding-left: $space-small;
+
+			
+			span {
+				display: none;
+			}
+			
+			/*
+			&:active,
+			&:hover {
+				background-position-y: calc(50% + 3px);
+				background-color: $color-main-dark-active;
+			}
+			*/
+			
+		}
+	}
+	
+	&.deactivated {
+		.imageWrap {
+			opacity: 0.5;
+		}
+		
+		.info {
+			background-image: url(img/icon-deactivated-black.svg);
+			background-position: calc($space-small*2) center;
+			background-size: 16px;
+			background-repeat: no-repeat;
+			
+			padding-left: calc(($space-small*2) + 16px + $space-small)
+		}
+		
 	}
 }
 
 body.click-device {
 	.itemObject {
+		.img {
+			transition: transform 0.3s ease-in-out;
+			transform: scale3d(1.1,1.1,1.1);
+		}
+		
 		&:hover {
+			.img {
+				transform: scale3d(1,1,1);
+			}
 			.info {
-				background: $color-main-dark;
+						
+
+				background-color: $color-main-dark;
 				width: calc(100% - ($space-small*4));
-				border-radius: 0;
+				
 				.profilImage {
 					width: 40px;
 					height: 40px;
@@ -1594,24 +2085,434 @@ body.click-device {
 		}
 		
 	}
+	
+	
+	/* hover only in click-devices */
+	header.site {
+		a {
+			&:hover {
+				border-bottom: 5px solid $color-grey-dark;
+			}
+			
+			&.current,
+			&:active {
+				border-bottom: 5px solid $color-main-dark;
+			}
+		}
+	}
+	
+	a.text {
+		&:active,
+		&:hover {
+			border-color: $color-title-normal;
+		}
+	}
+	
+	#contextBoxWrap.category {
+		.itemCategory {
+			&:hover {
+				.info {
+					background-color: $color-main-dark-active;
+				}
+			}
+			&:active {
+				transform: scale3d(0.95,0.95,0.95);
+			}
+		}
+	}
+	
+	#contextBoxWrap.menu {
+		a {
+			&.current {
+				background-color: $color-grey-light;
+				font-family: Roboto-Medium;
+			}
+			
+			&:hover {
+				background-color: $color-grey-light;
+			}
+			
+			&:active {
+				background-color: $color-grey-dark;
+			}
+		}
+	}
+	
+	a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
+		&.arrowRight {
+			&:hover {
+				background-position-x: calc((100% - ($space/2)) + 3px);
+			}
+		}
+		&.arrowDown {
+			&.active,
+			&:hover {
+				background-position-y: calc(50% + 3px);
+			}
+		}
+		&:disabled,
+		&.inactive {
+			&:hover,
+			&:active {
+				background-position: calc(100% - ($space-small*3)) center;
+			}
+		}
+	}
+	
+	a.bt_light, input.bt_light {
+		&:hover,
+		&.active,
+		&:active {
+			background-color: $color-main-light;
+		}
+	}
+	
+	a.bt_dark, button.bt_dark, input.bt_dark {
+		&.active,
+		&:hover {
+			background-color: $color-main-dark-active;
+		}
+	}
+	
+	a.bt_light.small, a.bt_dark.small, button.bt_dark.small, input.bt_dark.small {
+		&.arrowDown {
+			&:hover {
+				background-position-y: calc(50% + 2px);
+			}
+		}
+		&.arrowRight {
+			&:hover {
+				background-position-x: calc((100% - ($space-small*2)) + 3px);
+			}
+		}
+		&.arrowLeft {
+			&:hover {
+				background-position-x: calc(($space-small*2) - 3px);
+			}
+		}
+	}
+	
+	.profilObjectWrap .itemObject {
+		&:hover {
+			.info {
+				background-color: white;
+			}
+			
+		}
+		
+		
+	}
+	
+	nav.sub a {
+		&:hover {
+			border-bottom: 5px solid $color-grey-dark;
+		}
+		&.current {
+			font-family: Roboto-Medium;
+			border-bottom: 5px solid $color-main-dark;
+		}
+		&:active {
+			border-bottom: 5px solid $color-main-dark;
+		}
+	}
+	
+	.page_object {
+		.objectInfo {
+			.containerImage {
+				.containerCarousel {
+					.rn-carousel-controls {
+						.rn-carousel-control {
+							&:hover {
+								background-color: $color-main-dark-active;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		.requestInfo {
+			.containerRequest .content .wizardContainer .inner .calendar .uib-datepicker table.uib-daypicker {
+				tr:first-child th {
+					button.uib-right {
+						&:hover {
+							background-color: $color-main-dark-active;
+							background-position-x: calc(50% + 3px);
+						}
+					}
+					
+					button.uib-left {
+						background-color: $color-main-dark-active;
+						&:hover {
+							background-position-x: calc(50% - 3px);
+						}
+					}
+				}
+				tr td button {
+					&:hover {
+						background: $color-main-light;
+					}
+					&:active {
+						color: $color-text;
+						background: $color-main-light-acitve;
+					}
+					
+					&:disabled {
+						cursor: default;
+						background: $color-grey-light;
+						color: $color-grey-light-text;
+					}
+				}
+			}
+		}
+	}
+	
+	#contextBoxWrap.boxGet,
+	#contextBoxWrap.boxBack,
+	#contextBoxWrap.timepicker {
+		.times .time button {
+			&:hover {
+				background: $color-main-light;
+			}
+			
+			&.active {
+				background: $color-main-dark;
+			}
+			
+			&:active {
+				background: $color-main-dark-active;
+				color: $color-text;
+			}
+		}
+	}
+	
+	.modalBody.lendCheckData {
+		form .buttonRow a {
+			&:hover {
+				background-color: $color-special-back;
+			}
+			&:first-of-type {
+				&:hover {
+					background-color: $color-special-get;
+				}
+			}
+		}
+	
+	}
+	
+	
 }
 
 body.touch-device {
 	.itemObject {
 		.info {
 			width: 100%;
-			height: 60px;
 			background: white;
 			margin-left: 0;
 			margin-top: 0;
+			
+			.profilImage {
+				border: none;
+				margin: 0;
+				margin-right: 10px;
+				width: 38px;
+				height: 38px;
+			}
 		}
 		
 		&:active {
 			.info {
 				background: $color-main-dark;
 			}
+			
+			transform: none;
 		}
 	}
+	
+	
+	/* hover only in click-devices */
+	header.site {
+		a {
+			&.current,
+			&:active {
+				border-bottom: 5px solid $color-main-dark;
+			}
+		}
+	}
+	
+	a.text {
+		&:active {
+			border-color: $color-title-normal;
+		}
+	}
+	
+	#contextBoxWrap.category {
+		.itemCategory {
+			&:active {
+				.info {
+					background-color: $color-main-dark-active;
+				}
+			}
+		}
+	}
+	
+	#contextBoxWrap.menu {
+		a {
+			&.current {
+				background-color: $color-grey-light;
+				font-family: Roboto-Medium;
+			}
+			
+			&:active {
+				background-color: $color-grey-dark;
+			}
+		}
+	}
+	
+	a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
+		&.arrowRight {
+			&:active {
+				background-position-x: calc((100% - ($space/2)) + 3px);
+			}
+		}
+		&.arrowDown {
+			&.active,
+			&:active {
+				background-position-y: calc(50% + 3px);
+			}
+		}
+		&:disabled,
+		&.inactive {
+			&:active {
+				background-position: calc(100% - ($space-small*3)) center;
+			}
+		}
+	}
+	
+	a.bt_light, input.bt_light {
+		&.active,
+		&:active {
+			background-color: $color-main-light;
+		}
+	}
+	
+	a.bt_dark, button.bt_dark, input.bt_dark {
+		&.active {
+			background-color: $color-main-dark-active;
+		}
+	}
+	
+	a.bt_light.small, a.bt_dark.small, button.bt_dark.small, input.bt_dark.small {
+		&.arrowDown {
+			&:active {
+				background-position-y: calc(50% + 2px);
+			}
+		}
+		&.arrowRight {
+			&:active {
+				background-position-x: calc((100% - ($space-small*2)) + 3px);
+			}
+		}
+		&.arrowLeft {
+			&:active {
+				background-position-x: calc(($space-small*2) - 3px);
+			}
+		}
+	}
+	
+	.profilObjectWrap .itemObject {
+		
+	}
+	
+	nav.sub a {
+		&.current {
+			font-family: Roboto-Medium;
+			border-bottom: 5px solid $color-main-dark;
+		}
+		&:active {
+			border-bottom: 5px solid $color-main-dark;
+		}
+	}
+	
+	
+	.page_object {
+		.objectInfo {
+			.containerImage {
+				.containerCarousel {
+					.rn-carousel-controls {
+						.rn-carousel-control {
+							&:active {
+								background-color: $color-main-dark-active;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		.requestInfo {
+			.containerRequest .content .wizardContainer .inner .calendar .uib-datepicker table.uib-daypicker {
+				tr:first-child th {
+					button.uib-right {
+						&:active {
+							background-color: $color-main-dark-active;
+							background-position-x: calc(50% + 3px);
+						}
+					}
+					
+					button.uib-left {
+						background-color: $color-main-dark-active;
+						&:active {
+							background-position-x: calc(50% - 3px);
+						}
+					}
+				}
+				tr td button {
+					&:active {
+						color: $color-text;
+						background: $color-main-light-acitve;
+					}
+					
+					&:disabled {
+						cursor: default;
+						background: $color-grey-light;
+						color: $color-grey-light-text;
+					}
+				}
+			}
+		}
+	}
+
+
+	#contextBoxWrap.boxGet,
+	#contextBoxWrap.boxBack,
+	#contextBoxWrap.timepicker {
+		.times .time button {
+			&.active {
+				background: $color-main-dark;
+			}
+			
+			&:active {
+				background: $color-main-dark-active;
+				color: $color-text;
+			}
+		}
+	}
+	
+	.modalBody.lendCheckData {
+		form .buttonRow a {
+			&:active {
+				background: $color-special-back;
+			}
+			&:first-of-type {
+				&:active {
+					background: $color-special-get;
+				}
+			}
+		}
+	
+	}
+
 }
 
 
@@ -1680,41 +2581,45 @@ body.touch-device {
 */
 nav.sub {
 	float: left;
-	width: calc((100% / 4) - ($space));
+	width: calc((100% / 4) - ($space*2));
 
-	
-	a {
-		padding: 15px 15px;
-		display: inline-block;
+	div {
+		float: left;
 		width: 100%;
-		position: relative;
-		color: $color-text;
-		border-bottom: 5px solid white;
-		padding-bottom: 10px;
-		
-		
-		&:hover {
-			border-bottom: 5px solid $color-grey-dark;
-		}
-		&.current {
-			font-family: Roboto-Medium;
-			border-bottom: 5px solid $color-main-dark;
-		}
-		
-		&:active {
-			border-bottom: 5px solid $color-main-dark;
-		}
-		
-		.mark {
-			top: 19px;
+	
+		a {
+			padding: 15px 15px;
+			display: inline-block;
+			position: relative;
+			color: $color-text;
+			border-bottom: 5px solid white;
+			padding-bottom: 10px;
+			
+			/*
+			&:hover {
+				border-bottom: 5px solid $color-grey-dark;
+			}
+			&.current {
+				font-family: Roboto-Medium;
+				border-bottom: 5px solid $color-main-dark;
+			}
+			
+			&:active {
+				border-bottom: 5px solid $color-main-dark;
+			}
+			*/
+			
+			.mark {
+				
+			}
 		}
 	}
 }
 
-.page_profil-objects {
+.profilObjectWrap {
 	.btContainer {
 		margin-top: 35px;
-		margin-bottom: $space;
+		margin-bottom: calc($space*2);
 	}
 }
 #containerProfil {
@@ -1723,9 +2628,14 @@ nav.sub {
 	width: calc((100% / 4 * 3) - ($space));
 
 	margin-left: $space;
+	
+	
+
 }
 
-.page_profil-base #containerProfil {
+.profilBaseWrap {
+	float: left;
+	width: 100%;
 	
 	.profilImage {
 		float: left;
@@ -1799,24 +2709,30 @@ nav.sub {
 	}
 }
 
-.page_profil-lend, .page_profil-borrow {
+.profilLendWrap, .profilBorrowWrap {
+	float: left;
+	width: 100%;
+	
 	.listContainer {
 		float: left;
 		width: 100%;
-		margin-top: calc($space*2);
+		margin-top: calc($space);
 		
 		.itemLend {
 			float: left;
 			width: 100%;
-			margin-bottom: calc($space*2);
+			margin-bottom: calc($space);
+			cursor: pointer;
 			
 			.toolbar {
 				float: left;
 				width: 100%;
-				background: $color-grey-dark-bg;
+				
+				background: white;
 				
 				line-height: 40px;
 				height: 40px;
+				
 				.status {
 					position: relative;
 					float: left;
@@ -1824,41 +2740,32 @@ nav.sub {
 					text-transform: uppercase;
 					font-size: 14px;
 					padding: 0 calc($space-small*4);
-					padding-left: calc(($space-small*4) + 15px);
-					background-position: calc($space-small * 2) center;
+					padding-left: calc(($space-small*4) + 17px);
+					background-position: calc($space-small * 2) calc(50% - 1px);
 					background-repeat: no-repeat;
-					background-size: 15px;
+					background-size: 20px;
 					letter-spacing: 0.5px;
-					
-				
+
 				}
-				a {
-					float: right;
-				}
+
 			
 				&.state-alert .status {
 					color: $color-special-red;
 					background-image: url(img/icon-alert-red.svg);
-					background-position-y: calc(50% - 1px);
-					background-size: 16px;
-					padding-left: calc(($space-small*4) + 15px);
 				}
 				&.state-abort .status {
 					color: $color-special-red;
 					background-image: url(img/icon-close-red.svg);
-					background-position-y: calc(50% - 1px);
-					background-size: 10px;
-					padding-left: calc(($space-small*4) + 10px);
+
 				}
 				&.state-wait .status {
 					color: $color-special-orange;
 					background-image: url(img/icon-wait-orange.svg);
-					background-position-y: calc(50% - 1px);
 				}
 				&.state-ok .status {
-					background-image: url(img/icon-ok-green.svg);
-					background-position-y: calc(50% - 1px);
 					color: $color-special-green;
+					background-image: url(img/icon-ok-green.svg);
+		
 				}
 				
 				
@@ -1867,63 +2774,64 @@ nav.sub {
 			
 			.what {
 				float: left;
-				width: calc(100% / 3);
+				width: calc(250px * 1.25);
 				background: $color-grey-light;
-				padding: calc($space*2) $space;
-				padding-bottom: 0;
+				position: relative;
 				
-				background-image: url(img/arrow-right-color.svg);
-				background-position: calc(50% + $space-small) calc($space-small*12);
+				
+				background-position: center center;
+				background-size: cover;
 				background-repeat: no-repeat;
-				background-size: 25px;
 				
-				.img {
-					float: left;
-					width: calc(38%);
-					background-position: center center;
-					background-size: cover;
+				.info {
+					position: absolute;
+					bottom: calc($space-small*2);
+					left: calc($space-small*2);
+					width: calc(100% - ($space-small*4));
+					padding: calc($space-small*2);
+					background: white;
 					
-					.height {
-						float: left;
-						width: 1px;
-						padding-top: $image-ratio;
-					}
-				}
-				
-				.person {
-					float: right;
-					width: calc(38%);
-					text-align: center;
 					.profilImage {
-						margin-bottom: 5px;
+						float: left;
 					}
-					.name {
-						font-family: Roboto-Medium;
-						font-size: 14px;
+					.text {
+						float: left;
+						margin-left: calc($space-small*2);
+						font-size: 13px;
+						line-height: 20px;
+						width: calc(100% - 50px);
+						.objectName {
+							font-family: Roboto-Italic;
+							
+						}
+						.name {
+							span {
+								font-family: Roboto-Medium;
+							}
+						}
+						.name, .objectName {
+							width: 100%;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+						}
 					}
+					
 				}
-			}
-			
-			
-			
-			.von, .bis, .closed, .what {
-				min-height: 190px;
-			}
-			
-			
-			.von, .bis, .closed {
-				float: left; 
-				width: calc((100% / 3) - ($space-small));
-				background: $color-grey-light;
-				text-align: center;
-				padding: $space;
+				
 				
 			}
+						
+			.von, .bis, .closed, .what {
+				min-height: 250px;
+			}
+			.von, .bis {
+				width: calc((100% - (250px * 1.25) - ($space-small*2)) / 2);
+			}
+
 			
 			.closed {
-				width: calc((100% / 3 *2) - ($space-small));
-				
-			
+				width: calc((100% - (250px * 1.25) - ($space-small*1)));
 				.statement {
 					font-family: Roboto-Italic;
 				}
@@ -1931,65 +2839,85 @@ nav.sub {
 			
 			
 			.von, .bis, .closed {
+				float: left; 
+				background: $color-grey-light;
+				text-align: center;
+				padding: calc($space-small *2);
 				margin-left: $space-small;
 				
 				.title {
 					float: left; 
 					width: 100%;
-					font-size: 14px;
+					font-size: 16px;
 					font-family: RobotoSlab;
 					color: $color-text-lighter;
 					margin-bottom: calc($space-small*4);
+					margin-top: calc($space-small*4);
 					
-					
+					span {
+						background-repeat: no-repeat;
+						background-size: 20px;
+						background-position: left 1px;
+						padding-left: 25px;
+					}
 				}
 				.date {
 					float: left;
 					width: 100%;
-					font-size: 30px;
-					
+					font-size: 40px;
+					font-family: Roboto-Light;
 					margin-bottom:calc($space-small*1);
 				}
 				.time {
 					float: left;
 					width: 100%;
-					font-size: 25px;
+					font-size: 30px;
+					font-family: Roboto-Light;
 				}
+			}
+			
+			.von .title span {
+				background-image: url(img/icon-arrow-get.svg);
+			}
+			.bis .title span {
+				background-image: url(img/icon-arrow-back.svg);
+			}
+			
+			.bottomBar {
+				float: left;
+				width: 100%;
+				text-align: right;
+				/*
+				a.delete {
+					background-color: $color-special-red;
+					color: white;
+				}
+				*/
 			}
 			
 		}
 		
-		h3 {
+		h2.past {
 			float: left;
 			width: 100%;
-			margin-top: calc($space*2);
+			margin-top: calc($space);
+			padding-top: calc($space);
 			margin-bottom: calc($space*2);
+			font-size: 23px;
+			
+			border-top: 1px solid $color-grey-dark;
 		}
 	}
 }
 
-.page_profil-borrow .listContainer .itemLend .what {
-	background-position: calc(50% - 5px) calc(5px*12);
-	    
-	.img {
-		float: right;
-	}
-	
-	.person {
-		float: left;
-	}
-			
-}
 
 /**
 * object-detail
 */
 .page_object {
-	#btEditObject {
-		position: absolute;
-		right: calc($space*2);
-		right: calc((50% - 720px) + ($space*1));
-		top: $space;
+	
+	h1 {
+		margin-bottom: calc($space-small*6);
 	}
 	
 	.objectInfo {
@@ -2002,8 +2930,8 @@ nav.sub {
 			float: left;
 			width: 100%;
 			
-/*			border: 5px solid white;*/
-			background: $color-black-light;
+			
+
 			
 			.containerCarousel {
 				float: left;
@@ -2031,7 +2959,7 @@ nav.sub {
 						left: 0;
 						width: 100%;
 						height: 100%;
-						
+						background: $color-grey-dark-bg;
 						
 						.img {
 							height: 100%;
@@ -2042,10 +2970,44 @@ nav.sub {
 							background-repeat: no-repeat;
 							background-position: center center;
 							
+							
 						}
 						
 					}
 				}
+				
+				.rn-carousel-controls {
+					
+					.rn-carousel-control {
+						opacity: 1;
+						background: $color-main-dark;
+						background-size: 7px;
+						background-position: center center;
+						background-repeat: no-repeat;
+						width: 42px;
+						height: 42px;
+						top: calc(50% - 25px);
+						
+						&::before {
+							display: none;
+						}
+						/*
+						&:hover {
+							background-color: $color-main-dark-active;
+						}
+						*/
+					}
+					.rn-carousel-control-next {
+						background-image: url(img/arrow-right-black.svg);
+						
+					}
+					
+					.rn-carousel-control-prev {
+						background-image: url(img/arrow-left-black.svg);
+					}
+				}
+				
+				
 			}
 			
 			.footer {
@@ -2065,16 +3027,17 @@ nav.sub {
 					margin-left: 25px;
 				}
 				.accountName, .address {
-					float: left;
-					width: calc(100% - 100px - $space);
+					float: right;
+					width: calc(100% - 85px - $space);
 			
 					line-height: 22px;
 				}
 				.accountName {
 					font-family: Roboto-Medium;
-					font-size: 28px;
-					margin-bottom: 8px;
-					margin-top: 7px;
+					font-size: 25px;
+					line-height: 27px;
+					margin-bottom: 5px;
+					margin-top: 3px;
 				}
 			}
 		}
@@ -2084,10 +3047,13 @@ nav.sub {
 			width: 100%;
 			background: $color-grey-light;
 			padding:  $space 10px;
+			padding-bottom: 5px;
 			
 			.textRow {
 				float: left;
 				width: 100%;
+				margin-bottom: 10px;
+				
 				.label {
 					float: left;
 					width: calc(100px + 2px);
@@ -2114,6 +3080,9 @@ nav.sub {
 		margin-left: calc($space*2);
 		font-size: 16px;
 		line-height: 19px;
+		
+		border-top: 1px solid $color-grey-dark;
+		padding-top: $space;
 		
 		h2 {
 			margin-bottom: 25px;
@@ -2161,6 +3130,7 @@ nav.sub {
 				.name {
 					font-family: Roboto-Medium;
 					margin-top: 10px;
+					color: $color-text;
 				}
 				
 				
@@ -2193,6 +3163,14 @@ nav.sub {
 					&.step2 .inner form {
 						display: none;
 					}
+					&.step2 .inner #calendar-get,
+					&.step3 .inner #calendar-get,
+					&.step1 .inner #calendar-back,
+					&.step3 .inner #calendar-back {
+						height: 400px;
+						overflow: hidden;
+					}
+					
 					&.step2 .inner {
 						transform: translateX(calc((100% /3 * -1)));
 					}
@@ -2213,15 +3191,17 @@ nav.sub {
 							
 							span {
 								background-image: url(img/icon-arrow-get.svg);
-								background-size: 14px;
-								background-repeat: no-repeat;
+								background-size: 20px;
 								background-position: left center;
-								padding-left: 20px;
+								background-repeat: no-repeat;
+								padding-left: 27px;
+								padding-right: 0;
 								
 								&.back {
 									background-image: url(img/icon-arrow-back.svg);
 								}
 							}
+							
 						}
 						
 						a.arrowRight {
@@ -2245,6 +3225,7 @@ nav.sub {
 								h3 {
 									text-align: left;
 									margin-bottom: calc($space-small*2);
+																		
 								}
 								div.get, div.back {
 									float: left;
@@ -2252,16 +3233,17 @@ nav.sub {
 									margin-bottom: calc($space-small*3);
 								}
 								div.get {
-									margin-bottom: calc($space-small*6);
+									margin-bottom: calc($space-small*3);
 								}
 								.day {
 									float: left;
 									width: calc(100% / 3);
-									line-height: 20px;
+									line-height: $font-height-small;
+									font-size: $font-size-small;
+									
 									
 									.name {
 										font-family: Roboto-Medium;
-										margin-bottom: $space-small;
 									}
 								}
 							}
@@ -2269,7 +3251,7 @@ nav.sub {
 							form {
 								float: left;
 								width: 100%;
-								margin-top: $space;
+								margin-top: $space-small;
 								
 								textarea {
 									font-size: 14px;
@@ -2279,26 +3261,18 @@ nav.sub {
 									width: 100%;
 								}
 								
-								.label {
+								> .label {
 									font-size: 16px;
 									color: $color-text-lighter;
 									float: left;
 									width: 100%;
-									margin-top: $space;
+									margin-top: calc($space-small*3);
 									margin-bottom: calc($space-small*2);
 								}
 								
 								label.checkbox {
-									float: left;
-									width: 100%;
-									padding-left: 20px;
-									position: relative;
-									font-size: 14px;
-									margin-bottom: $space-small;
-									input {
-										position: absolute;
-										left: 0;
-										top: 3px;
+									.label {
+										font-size: 14px;
 									}
 								}
 								
@@ -2360,30 +3334,35 @@ nav.sub {
 									
 									}
 									tr:first-child {
-										th {									
+										th {	
+											height: 40px;
+																			
 											button.uib-left,  button.uib-right {
-												min-height: 20px;
 												background: url(img/arrow-right-black.svg);
 												background-repeat: no-repeat;
 												background-size: 7px;
 												background-position: center center;
 												background-color: $color-main-dark;
 												width: 100%;
-												min-height: 40px;
+												min-height: 30px;
+												width: 30px;
 												
 												transition: all 0.1s ease-in-out;
-												
+												/*
 												&:hover {
 													background-color: $color-main-dark-active;
 													background-position-x: calc(50% + 3px);
 												}
+												*/
 											}
 											
 											button.uib-left {
 												background-image: url(img/arrow-left-black.svg);
+												/*
 												&:hover {
 													background-position-x: calc(50% - 3px);
 												}
+												*/
 											}
 										}
 									}
@@ -2409,7 +3388,7 @@ nav.sub {
 												font-size: 12px;
 												
 								
-												
+												/*
 												&:hover {
 													background: $color-main-light;
 												}
@@ -2423,16 +3402,10 @@ nav.sub {
 													background: $color-grey-light;
 													color: $color-grey-light-text;
 												}
+												
+												*/
 												&.other-month {
 													display: none;
-													/*
-													cursor: default;
-													color: $color-grey-light-text;
-													
-													&:hover {
-														background: white;
-													}
-													*/
 												}
 												
 												
@@ -2482,10 +3455,17 @@ nav.sub {
 								padding: $space-small;
 								margin-top: $space-small;
 								text-align: center;
-								p {
-									font-size: 14px;
-									line-height: 18px;
-									font-family: Roboto-Medium;
+								
+							}
+							
+							p {
+								font-size: 14px;
+								line-height: 18px;
+								font-family: Roboto-Medium;
+								text-align: center;
+								
+								&.warning {
+									color: $color-special-red;
 								}
 							}
 							
@@ -2507,6 +3487,24 @@ nav.sub {
 	}
 }
 
+#contextBoxWrap.lendContact {
+	padding: calc($space-small*4);
+	font-size: $font-size-small;
+	line-height: $font-height-small;
+	
+	
+	
+	.name {
+		font-family: Roboto-Medium;
+		margin-top: 10px;
+	}
+	
+	.iconAddress {
+		margin-bottom: 10px;
+	}
+				
+}
+
 #contextBoxWrap.boxGet,
 #contextBoxWrap.boxBack {
 	.title {
@@ -2519,7 +3517,7 @@ nav.sub {
 		float: left;
 		width: 100%;
 		margin-top: 50px;
-		max-height: calc(100vh - 350px);
+		max-height: calc(100vh - 400px);
 		overflow: scroll;
 		
 		a.cancel {
@@ -2537,19 +3535,26 @@ nav.sub {
 		
 	text-align: center;
 	
+	
+	
 	&::before {
-		right: calc(150px - 8px);
+		display: none;
+	}
+	
+	> .arrow {
+		/*right: calc(150px - 8px);*/
 		top: -8px;
-		background: $color-main-dark;
+		background: $color-black-light;
 	}
 	
 	.title {
 		width: 100%;
-		background: $color-main-dark;
+		background: $color-black-light;
 		line-height: 20px;
 		font-size: 14px;
 		float: left;
 		padding: calc($space-small*2);
+		color: white;
 		
 		font-family: Roboto-Medium;
 		
@@ -2576,8 +3581,8 @@ nav.sub {
 		text-align: center;
 		padding: $space-small;
 		font-size: 14px;
-		font-family: RobotoSlab;
-		color: $color-black-light;
+		font-family: RobotoSlab-Bold;
+		color: $color-text;
 	}
 	
 	.times {
@@ -2586,7 +3591,7 @@ nav.sub {
 		padding: calc($space-small*2);
 		
 		.time {
-			float: left;
+			display: inline-block;
 			width: calc(100%/5 - ($space-small/5*4));
 			margin-left: $space-small;
 			margin-bottom: $space-small;
@@ -2607,7 +3612,7 @@ nav.sub {
 				text-align: center;
 				
 				cursor: pointer;
-				
+				/*
 				&:hover {
 					background: $color-main-light;
 				}
@@ -2620,7 +3625,7 @@ nav.sub {
 					background: $color-main-dark-active;
 					color: $color-text;
 				}
-				
+				*/
 			}
 		}
 	}
@@ -2631,6 +3636,9 @@ nav.sub {
 	
 }
 
+#contextBoxWrap.timepicker {
+	padding-bottom: calc($space-small*4);
+}
 
 
 /**
@@ -2643,80 +3651,128 @@ nav.sub {
 	.contentContainer {
 		padding: 0;
 	}
+	.topBar {
+		top: 0px;
+	}
 	.header {
 		float: left;
 		width: 100%;
-		background: $color-grey-light;
-		padding: calc($space*2) calc(50% - (1200px/2));
+
+		padding: calc($space*1) calc(50% - (1200px/2));
+		margin-top: 80px;
+		position: relative;
 		
+		.arrowBG {
+			position: absolute;
+			width: 290px;
+			left: calc(50% - (290px / 2));
+			top: 62px;
+			height: 3px;
+			background-image: url(img/arrow-left-black-light.svg);
+			background-image: url(img/arrow-left-color.svg);
+			background-position: 4px center;
+			background-repeat: no-repeat;
+			background-size: 8px;
+			height: 20px;
+			
+			&::before {
+				content: '';
+				position: absolute;
+				width: calc(100% - 6px);
+				height: 2px;
+				top: 9px;
+				right: 0;
+				background: $color-grey-dark-text;
+				background: $color-main-dark;
+			}
+		}
 		.img {
 			position: absolute;
-			left: calc(50% - (150px / 3 * 4) /2);
-			width: calc(150px / 3 * 4);
-			height: 150px;
+			left: calc(50% - (190px/2));
+			width: 190px;
+			height: 100px;
 			top: $space;
 			margin-right: -20px;
 			background-size: cover;
 			background-position: center center;
-			border: 0px solid white;
+			border: 2px solid $color-grey-dark-text;
+			border: 4px solid $color-main-dark;
 			
 			.arrow {
+				display: none;
 				position: absolute;
 				width: 100%;
 				height: 100%;
 				top: 0;
 				left: 0;
-				background-color: rgba(0, 0, 0, 0.2);
-				background-image: url(img/arrow-right-color.svg);
-				background-size: 50px;
+/*				background-color: rgba(0, 0, 0, 0.2);*/
+				background-image: url(img/arrow-right-grey.svg);
+				background-size: 20%;
 				background-repeat: no-repeat;
 				background-position: center center;
 				
+				/*
 				&:hover {
 					background: none;
+				}
+				*/
+			}
+		}
+		
+		.firstPerson, .secondPerson {
+			width: calc(50% - (190px / 2) - ($space*2));
+		}
+		
+		.firstPerson {
+			float: left;
+			.name {
+				font-size: 18px;
+			}
+			
+			.profilImage {
+				float: right;
+			}
+			
+			.info {
+				float: right;
+				text-align: right;
+				line-height: 90px;
+				padding-right: $space;
+			}
+			
+			&.showContact {
+				.info {
+					line-height: 22px;
+					padding-top: $space;
+					padding-right: $space;
+					
+					a.contact {
+						margin-top: $space-small;
+					}
 				}
 			}
 		}
 		
-		.lender, .borrower {
-			float: left;
-			width: calc(50% - 150px);
-			.name {
-				float: right;
-				font-size: 20px;
-				line-height: 100px;
-				margin-right: $space;
-			}
+		.secondPerson {
+			float: right;
 			.profilImage {
-				float: right;
-				position: relative;
-				z-index: 2;
-				border: 2px solid white;
+				float: left;
 			}
-			
 		}
 		
-		.borrower {
-			float: right;
-			.name {
-				float: left;
-				margin-left: $space;
-			}
-			.profilImage {
-				float: left;
-			}
-		}
+		
 	}
+	
 	.conversationContainer {
 		float: left;
-		padding: calc($space/1) calc(50% - (1200px/2) + $space);
+		padding: $space calc(50% - (1200px/2) + $space);
 		position: relative;
 		
 		.timeline {
 			position: absolute;
 			width: 2px;
 			left: calc(50% - 1px);
-			top: 0;
+			top: $space;
 			
 			&.show {
 				background: $color-grey-light;
@@ -2753,7 +3809,7 @@ nav.sub {
 		.messageItem {
 			float: left;
 			width: 100%;
-			margin-top: $space;
+			margin-bottom: calc($space * 2);
 			padding-right: $space;
 			padding-left: $space;
 			
@@ -2766,8 +3822,11 @@ nav.sub {
 				position: relative;
 				margin-bottom: $space;
 				background: $color-grey-light;
+				background: white;
+				border-bottom: 1px solid $color-grey-dark-bg;
 				
 				&::before {
+					background-color: $color-main-light-acitve;
 					background-color: $color-main-dark;
 				    content: "\00a0";
 				    display: block;
@@ -2780,12 +3839,17 @@ nav.sub {
 					transform: rotate( 225deg );
 				}
 				
+				.profilImage {
+					display: none;
+				}
+				
 				> .title {
-					line-height: 40px;
+					line-height: 22px;
 					font-size: 16px;
+					background: $color-main-light-acitve;
 					background: $color-main-dark;
 					font-family: Roboto-Medium;
-					padding: 0 calc($space-small*3);
+					padding: 9px calc($space-small*3);
 					float: left;
 					width: 100%;
 				}
@@ -2793,21 +3857,28 @@ nav.sub {
 					font-family: Roboto-Italic;
 					float: left; 
 					width: 100%;
-					padding: calc($space-small*3);
 					padding: calc($space);
-					
+					padding: calc($space-small*3);
+					border: 1px solid $color-grey-dark-bg;
+					border-bottom: none;
 				}
 				.message {
 					font-family: Roboto-Regular;
-					
+					background: $color-grey-light;
+					border-bottom: 1px solid $color-grey-dark-bg;
+					border-bottom: none;
 				}
-				.suggestions {
+				.suggestions,
+				.dates {
 					float: left;
 					width: 100%;
-					background: $color-grey-dark-bg;
+					background: $color-grey-light;
+					border: 1px solid $color-grey-dark-bg;
+					border-bottom: none;
 					font-size: 14px;
-					padding: calc($space-small*3);
 					padding: calc($space);
+					padding: calc($space-small*3);
+					
 					
 					.get {
 						float: left;
@@ -2825,24 +3896,26 @@ nav.sub {
 						}
 					}
 					.title {
-						font-family: RobotoSlab-Bold;
+						font-family: RobotoSlab;
+						color: $color-text-lighter;
 						
-						background-size: 14px;
+						background-size: 16px;
 						background-repeat: no-repeat;
 						background-position: left center;
-						padding-left: 20px;
+						padding-left: 21px;
 					
 					}
 					.day {
 						float: left;
-						width: calc(100% / 4);
+						width: 100px;
 						margin-top: 10px;
-						color: $color-text;
+						margin-right: 10px;
+						
 						.datum {
 							font-family: Roboto-Medium;
 						}
 						.time {
-							margin-top: 3px;
+							margin-top: 2px;
 						}
 					}
 					
@@ -2851,34 +3924,36 @@ nav.sub {
 						.get, .back {
 							width: 50%;
 							margin-top: 0;
-							.day {
-								width: calc(100% / 2);
-							}
+							
 						}
 					}
 					
+					
 				}
 				.dates {
-					float: left;
-					width: 100%;
-					padding: calc($space-small*3);
-					background: $color-grey-dark-bg;
-					font-size: 14px;
-					text-align: center;
-					
-					b {
-						font-size: 18px;
-						margin: 0 10px;
+					.datum {
+						font-size: 16px;
+						font-family: Roboto-Medium;
+						margin-top: $space-small;
+						color: $color-text;
+						
 					}
+					.get, .back {
+						width: 50%;
+						margin: 0;
+					}
+					
+				
 				}
 				.date {
 					position: absolute;
-					bottom: -18px;
-					right: 0;
+					bottom: -20px;
+					right: 2px;
 					left: auto;
 					font-size: 12px;
 					color: $color-grey-dark-text;
 					text-align: right;
+					
 					
 				}
 			}
@@ -2887,11 +3962,13 @@ nav.sub {
 			
 			&.both {
 				.content {
-					margin-left: calc(50% - (45%/2));
+					width: 50%;
+					margin-left: calc(50% - 25%);
+					text-align: center;
 					
 					&::before {
 					    top: -7px;
-						left: calc(50% - 9px);
+						left: calc(50% - 7px);
 						transform: rotate( 135deg );
 					}
 					
@@ -2903,13 +3980,22 @@ nav.sub {
 						.title,
 						&:before {
 							background-color: $color-special-get-light;
+							background-color: $color-special-get;
 						}
 					}
 					
 					&.back {
 						.title,
 						&:before {
-							background-color: $color-special-back-light;
+							background-color: $color-special-back;
+						}
+					}
+					
+					&.expired {
+						.title,
+						&:before {
+							background-color: $color-special-red;
+							color: white;
 						}
 					}
 				}
@@ -2930,15 +4016,53 @@ nav.sub {
 			
 			.date {
 				text-align: left;
-				left: 0px;
+				left: 2px;
 			}
 		}
 			
 		.actionBox { 
+			float: left;
+			width: 100%;
+			padding: $space;
+			
 			.content {
+				margin-top: -5px;
+				float: right;
+				
+				
+				border: 2px solid $color-grey-dark;
+				
 				&::before {
-					display: none;
+					top: 15px;
+					left: -9px;
+					right: auto;
+					background: $color-grey-dark;
 				}
+				
+				.contentWrap {
+					float: left;
+					width: 100%;
+					background: $color-grey-light;
+					padding: $space;
+					position: relative;
+					
+					h3 {
+						margin-top: 0;
+						margin-bottom: calc($space-small*3);
+					}
+					p {
+						color: $color-text;
+						margin-bottom: calc($space-small*1);
+					}
+					a {
+						margin-top: calc($space-small*2);
+						float: left;
+					}
+					a:first-of-type {
+						margin-right: $space;
+					}
+				}
+				
 			}
 			
 			.closed {
@@ -2965,71 +4089,47 @@ nav.sub {
 		}
 		
 		
-		.actionBox {
-			float: left;
-			width: 100%;
-			padding: $space;
+		
+		
+	}
+}
+#containerMain.page_borrow {
+	.header {
+		.arrowBG {
+			background-image: url(img/arrow-right-black-light.svg);
+			background-image: url(img/arrow-right-color.svg);
+			background-position: calc(100% - 4px) center;
+			&::before {
+				right: auto;
+				left: 0;
+			}
+		}
 			
-			
-			.content {
-				float: right;
-				background: $color-grey-light;
-				padding: calc($space-small*3);
-				padding: $space;
-				border: 5px solid $color-grey-dark;
-				
-				h3 {
-					margin-top: 0;
-					margin-bottom: $space;
-				}
-				p {
-					color: $color-text;
-				}
-				a {
-					float: right;
-				}
-				a:first-of-type {
-					float: left;
-				}
-				
+	}
+	
+	.conversationContainer {
+		.actionBox.state-direct .content {
+			&::before {
+				display: none;
 			}
 		}
 	}
 }
-
 #containerMain.page_lend {
 	.header {
 		
 		.img {
 			.arrow {
-				background-image: url(img/arrow-left-color.svg);
+				background-image: url(img/arrow-left-grey.svg);
 			}
 		}
 		
-		.lender {
-			float: right;
-			.name {
-				
-			}
-			.name, .profilImage {
-				float: left;
-				margin-right: $space;
-			}
-			.img {
-				float: left;
-				margin-right: 0;
-				margin-left: -20px;
-			}
-		}
-		.borrower {
-			float: left;
-			.name {
-				float: right;
-				margin-right: 0;
-			}
-			.profilImage {
-				float: right;
-				margin-left: $space;
+	}
+	
+	.conversationContainer {
+		.actionBox.state-answered .content {
+			&::before {
+				display: none;
 			}
 		}
 	}
@@ -3040,25 +4140,30 @@ nav.sub {
 	position: relative;
 
 	form {
-		float: left;
 	
 		.buttonRow {
 			float: left;
 			width: 100%;
 			text-align: center;
 			a {
-				margin: 5px;
+				margin: calc($space-small * 2);
 				border: none;
-				background: $color-special-back-light;
+				background-color: $color-special-back-light;
+				
+				/*
 				&:hover {
 					background: $color-special-back;
 				}
+				*/
+				
 				&:first-of-type {
-					background: $color-special-get-light;
+					background-color: $color-special-get-light;
 					
+					/*
 					&:hover {
 						background: $color-special-get;
 					}
+					*/
 				}
 				
 				&.noMatching {
@@ -3066,7 +4171,7 @@ nav.sub {
 				}
 			}
 			
-			margin-bottom: $space;
+			margin-bottom: calc($space-small * 3);
 		}
 		
 		.buttonContainer {
@@ -3087,109 +4192,6 @@ nav.sub {
 
 	
 }
-/*
-.modal-content {
-	.boxGet, .boxBack {
-		position: absolute;
-		top: 240px;
-		left: 40px;
-		
-		background: white;
-		width: 300px;
-		
-		box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
-		
-		padding: calc($space/2);
-		
-		&::before {
-			background-color: white;
-		    content: "\00a0";
-		    display: block;
-		    height: 16px;
-		    width:  16px;
-		    position: absolute;
-		    top: -9px;
-			left: calc(50% - 8px);
-		    transform: rotate( 45deg );
-		    box-shadow: -2px -2px 3px rgba(0, 0, 0, 0.05);
-		    border: 1px solid $color-grey-dark;
-		    border-right: none;
-		    border-bottom: none;
-		}
-		
-		.date {
-			float: left;
-			width: 100%;
-			font-family: Roboto-Medium;
-			font-size: 14px;
-			margin-bottom: 15px;
-		}
-		
-		.times {
-			float: left;
-			margin-bottom: 15px;
-			width: 100%;
-			 
-			.time {
-				float: left;
-				width: calc((100%/6) - (5px/6*5));
-				margin-left: 5px;
-				margin-bottom: 5px;
-		
-				
-				&:nth-child(6n+1) {
-					margin-left: 0;
-				}
-				
-				button {
-					width: 100%;
-					font-size: 12px;
-					font-family: Roboto-Regular;
-					height: 30px;
-					border: 1px solid green;
-					background: white;
-					
-					&:hover {
-						border-color: blue;
-					}
-					
-					&.active {
-						border-color: red;
-					}
-				}
-			}
-		}
-		
-		.none {
-			float: left;
-			width: 100%;
-			
-			button {
-				font-size: 12px;
-				width: 100%;
-				height: 30px;
-				border: 1px solid red;
-				background: white;
-				
-				&:hover {
-					border-color: blue;
-				}
-				
-				&.active {
-					border-color: green;
-				}
-			}
-		}
-	}
-	
-	.boxBack {
-		right: 40px;
-		left: auto;
-	}
-	
-	
-}
-*/
 .modal-content {
 	.confirmData {
 		background: $color-grey-light;
@@ -3197,9 +4199,32 @@ nav.sub {
 		width: 100%;
 		padding: $space;
 		text-align: center;
-		font-family: Roboto-Medium;
-		font-size: 18px;
+		
+		
 		margin-bottom: $space;
+		
+		.title {
+			font-size: 16px;
+			font-family: RobotoSlab;
+			color: $color-text-lighter;
+			background-size: 14px;
+			background-image: url(img/icon-arrow-get.svg);
+			background-repeat: no-repeat;
+			background-position: left center;
+			padding-left: 20px;
+			display: inline-block;
+			margin-bottom:$space-small;
+			&.back {
+				margin-top: $space;
+				background-image: url(img/icon-arrow-back.svg);
+			}
+		}
+		
+		.date {
+			font-size: 16px;
+			font-family: Roboto-Bold;
+		}
+		
 	}
 }
 
@@ -3258,9 +4283,6 @@ nav.sub {
 				margin-bottom: 20px;
 			}
 			
-			h1 {
-				margin-bottom: 10px;
-			}
 			h2 {
 				font-family: Roboto-Light;
 				font-size: 23px;
@@ -3296,7 +4318,6 @@ nav.sub {
 		float: left;
 		width: 100%;
 		
-		margin-bottom: 500px;
 		
 		.titleAdd {
 			font-family: Roboto-Light;
@@ -3340,12 +4361,16 @@ nav.sub {
 			
 			.btContainer {
 				margin-top: 50px;
-				margin-right: $space;
+				
+				a:first-of-type {
+					margin-right: $space;
+				}
 			}
 		}
 		
 		.rowDescription {
 			margin-top: calc(-$space*3);
+			padding-top: 30px;
 			
 			.titleAdd {
 				border: none;
@@ -3378,7 +4403,6 @@ nav.sub {
 					float: left;
 					a {
 						float: left;
-						margin-right: $space;
 						margin-top:$space-small;
 					}
 				}
@@ -3488,7 +4512,7 @@ nav.sub {
 		
 		.rowSettlementImages {
 			.settlement .text {
-				background: $color-main-dark;
+				background: white;
 				text-align: center;
 				font-family: Roboto-Medium;
 				font-size: 18px;
@@ -3513,8 +4537,7 @@ nav.sub {
 	}
 	
 	footer {
-		height: 100vh;
-		
+		height: 70vh;
 		.content {
 			position: absolute;
 			bottom: 0;

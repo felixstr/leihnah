@@ -15,14 +15,14 @@ class LendMapper extends Mapper {
 				l.fk_userBorrow AS userBorrowId,
 				l.fk_userLend AS userLendId,
 				l.fk_postit AS postitId,
-				(DATE(NOW()) between l.getDatetime and l.backDatetime) AS inTime,
-				(DATE(NOW()) >= l.getDatetime) AS getPast,
-				(DATE(NOW()) > l.backDatetime) AS backPast
+				(NOW() between l.getDatetime and l.backDatetime) AS inTime,
+				(NOW() >= l.getDatetime) AS getPast,
+				(NOW() > l.backDatetime) AS backPast
 			FROM lend AS l
 			WHERE 
 				deleted = 0 AND 
 				fk_userLend = :userLendId
-			ORDER BY changeDate DESC
+			ORDER BY changeDate DESC, l.backDatetime
 		";
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':userLendId', $this->userId, PDO::PARAM_INT);
@@ -44,9 +44,13 @@ class LendMapper extends Mapper {
 				$results['mark']++;
 			}
 			
-			$results[$status][] = LendEntity::factory($this->db)
-				->loadRow($row)
-				->toArray();
+			$lendEntity = LendEntity::factory($this->db)->loadRow($row);
+			$timesuggestions = $lendEntity->getTimeSuggestions();
+			if ($timesuggestions['get'][0]['date'] <= date('Y-m-d H:i:s')) {
+				$status = 'past';
+			}
+				
+			$results[$status][] = $lendEntity->toArray();
 		}
 		
 		return $results;
@@ -61,14 +65,14 @@ class LendMapper extends Mapper {
 				l.fk_userBorrow AS userBorrowId,
 				l.fk_userLend AS userLendId,
 				l.fk_postit AS postitId,
-				(DATE(NOW()) between l.getDatetime and l.backDatetime) AS inTime,
-				(DATE(NOW()) >= l.getDatetime) AS getPast,
-				(DATE(NOW()) > l.backDatetime) AS backPast
+				(NOW() between l.getDatetime and l.backDatetime) AS inTime,
+				(NOW() >= l.getDatetime) AS getPast,
+				(NOW() > l.backDatetime) AS backPast
 			FROM lend AS l
 			WHERE 
 				deleted = 0 AND 
 				fk_userBorrow = :userBorrowId
-			ORDER BY changeDate DESC
+			ORDER BY changeDate DESC, l.backDatetime
 		";
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':userBorrowId', $this->userId, PDO::PARAM_INT);
@@ -91,9 +95,14 @@ class LendMapper extends Mapper {
 			}
 			
 			
-			$results[$status][] = LendEntity::factory($this->db)
-				->loadRow($row)
-				->toArray();
+			$lendEntity = LendEntity::factory($this->db)->loadRow($row);
+			$timesuggestions = $lendEntity->getTimeSuggestions();
+			if ($timesuggestions['get'][0]['date'] <= date('Y-m-d H:i:s')) {
+				$status = 'past';
+			}
+				
+			$results[$status][] = $lendEntity->toArray();
+			
 		}
 		
 		return $results;
