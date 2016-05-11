@@ -3,7 +3,7 @@
 </div>
 
 <div class="modalBody">
-	<form name="editObject" ng-submit="editObject.$valid && save()">
+	<form name="editObject" ng-submit="editObject.$valid && save()" ng-if="loaded">
 	    <div class="formRowImage">
 		    
 		    <div class="picAdd">
@@ -55,7 +55,7 @@
 			<div class="warning" ng-show="editObject.name.$error.required">Pflichtfeld</div>
 	    </div>
 	    <div class="formRow">
-		    <label>Alternative Namen für besseres finden über die Suche</label>
+		    <label>Alternative Namen für die Suchfunktion</label>
 			<input type="text" name="nameAlternatives" ng-model="currentObject.nameAlternatives" autocomplete="off" placeholder="z.B. Elektrovelo, Flyer, E-Bike, Elektrofahrrad">
 	    </div>
 	    

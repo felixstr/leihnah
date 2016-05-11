@@ -1,15 +1,16 @@
 <div class="objectContentWrapper">
 	<div class="topContainer" ng-class="{filtered: filter.showSmallHead }"  ng-show="pageVisibility.showContent">
-		<div class="bgImage" preload-bg-image="{{'assets/img/static/'+headerImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
-		<h1 ng-show="true || !(filter.search.length > 0 || filter.category != null)">Hallo {{ currentNeighbor.accountName }}</h1>
+		<div class="bgImage" parallax parallax-ratio="0.5" preload-bg-image="{{'assets/img/static/'+headerImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 		
-		<div class="searchContainer">
-			<div class="input" ng-click="openResults()">Was möchtest du leihen?</div>
-			<input type="text" ng-model="filter.search" placeholder="Was möchtest du leihen?"  ng-click="openResults()">
+		<h1 ng-show="!(filter.search.length > 0 || filter.category != null)"  >Hallo {{ currentNeighbor.accountName }}</h1>
+		
+		<div class="searchContainer" >
+			<div class="input" ng-click="contextBox.openResults()">Was möchtest du leihen?</div>
+			<input type="text" ng-model="filter.search" placeholder="Was möchtest du leihen?"  ng-click="contextBox.openResults()">
 			
 			<div class="buttons">
 				
-				<a href class="bt_dark close" ng-click="closeResults()" ng-show="filter.showResults"><span>X</span></a>
+				<a href class="bt_dark close" ng-click="closeResults()" ng-if="filter.showResults"><span>X</span></a>
 	
 				<a href class="bt_dark arrowDown" ng-click="showCategoryMenu($event)" ng-class="{active: contextBox.id == 'categoryMenu', 'category' : showMobile}"><span>{{ filter.categoryName == '' ? 'Kategorien' : 'Kategorie: '+filter.categoryName }}</span></a>
 			</div>
@@ -29,15 +30,15 @@
 				<a ng-click="showOrderMenu($event)" ng-class="{active: contextBox.id == 'orderMenu'}" class="bt_light arrowDown small">{{ order.current.name }}</a>
 				
 			</div>
-			<div class="results">
-				<div ng-animate="'animate'" ng-repeat="object in (filter.filteredObjects = (objects | orderBy:order.current.field:order.current.reverse | filter:filterResults))" class="itemObject" id="object_{{object.id}}">
+			<div class="results" ng-show="filter.showResultList">
+				<div ng-repeat="object in (filter.filteredObjects = (objects | orderBy:order.current.field:order.current.reverse | filter:filterResults))" class="itemObject" id="object_{{object.id}}">
 					<div class="imageWrap" ng-click="openObject(object.id)">
 						<div class="img" preload-bg-image="{{'assets/img/object/tn_'+object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></div>
 						<div class="height"></div>
 					</div>
 					
 					<div class="info">
-						<span class="profilImage small" ng-style="{'background-image':'url('+(object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+object.neighbor.accountImage)+')'}"></span>
+						<span class="profilImage small" preload-bg-image="{{ 'assets/img/'+(object.neighbor.accountImage == '' ? 'static/profil-default.svg' : 'profil/'+object.neighbor.accountImage) }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/profil-default.svg"></span>
 						<div class="objectName">{{ object.name }}</div>
 						<div class="accountName">von {{ object.neighbor.accountName }}</div>
 					</div>
@@ -57,7 +58,7 @@
 						</div>
 						
 						<div class="info">
-							<span class="profilImage small" ng-style="{'background-image':'url('+(object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+object.neighbor.accountImage)+')'}"></span>
+						<span class="profilImage small" preload-bg-image="{{ 'assets/img/'+(object.neighbor.accountImage == '' ? 'static/profil-default.svg' : 'profil/'+object.neighbor.accountImage) }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/profil-default.svg"></span>
 							<div class="objectName">{{ object.name }}</div>
 							<div class="accountName">von {{ object.neighbor.accountName }}</div>
 						</div>
@@ -65,7 +66,7 @@
 				</div>
 				
 				<div class="buttons">
-					<a class="bt_dark arrowRight" href ng-click="contextBox.changeOrder('newest'); contextBox.setFilterCategory('all')">Mehr neue Gegenstände</a>
+					<a class="bt_dark arrowRight" href ng-click="contextBox.openResults('all', 'newest');">Mehr neue Gegenstände</a>
 				</div>
 			</div>
 			
@@ -80,7 +81,7 @@
 						</div>
 						
 						<div class="info">
-							<span class="profilImage small" ng-style="{'background-image':'url('+(object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+object.neighbor.accountImage)+')'}"></span>
+						<span class="profilImage small" preload-bg-image="{{ 'assets/img/'+(object.neighbor.accountImage == '' ? 'static/profil-default.svg' : 'profil/'+object.neighbor.accountImage) }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/profil-default.svg"></span>
 							<div class="objectName">{{ object.name }}</div>
 							<div class="accountName">von {{ object.neighbor.accountName }}</div>
 						</div>
@@ -88,33 +89,10 @@
 				</div>
 				
 				<div class="buttons">
-					<a class="bt_dark arrowRight" href ng-click="contextBox.changeOrder('popular'); contextBox.setFilterCategory('all')">Mehr beliebte Gegenstände</a>
+					<a class="bt_dark arrowRight" href ng-click="contextBox.openResults('all', 'popular');">Mehr beliebte Gegenstände</a>
 				</div>
-			</div>
-			<!--
-			<div class="previewRow">
-				<h2>Deine Favoriten</h2>
-				
-				<div class="objectContainer">
-					<div ng-repeat="object in objectsFavorites" class="itemObject" ng-click="state.go('object', {objectId: object.id})">
-						<div class="imageWrap">
-							<div class="img" ng-style="{'background-image':'url(assets/img/object/tn_'+object.image_1+')'}"></div>
-							<div class="height"></div>
-						</div>
-						
-						<div class="info">
-							<span class="profilImage small" ng-style="{'background-image':'url('+(object.neighbor.accountImage == '' ? 'assets/img/static/profil-default.svg' : 'assets/img/profil/'+object.neighbor.accountImage)+')'}"></span>
-							<div class="objectName">{{ object.name }}</div>
-							<div class="accountName">von {{ object.neighbor.accountName }}</div>
-						</div>
-					</div>
-				</div>
-				
-	
-				
 			</div>
 			
-			-->
 		</div>
 	</div>
 </div>

@@ -44,6 +44,7 @@ class LendEntity {
 	protected $error = false;
 	
 	protected $db;
+	protected $mailer;
 	
 	public static function factory($db) {
 		return new LendEntity($db);
@@ -68,8 +69,7 @@ class LendEntity {
 				(NOW() > backDatetime) AS backPast
 			FROM lend
 			WHERE 
-				pk_lend = :id AND
-				deleted = 0
+				pk_lend = :id
 		";
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
@@ -159,7 +159,8 @@ class LendEntity {
 				preferredContact_person1_phone = :preferredContact_person1_phone,
 				preferredContact_person2_mail = :preferredContact_person2_mail,
 				preferredContact_person2_phone = :preferredContact_person2_phone,
-				deleted = 0,
+				borrowDeleted = 0,
+				lendDeleted = 0,
 				state = 'request',
 				changeDate = NOW()
 		";
@@ -182,6 +183,34 @@ class LendEntity {
 		}
 		
 		$this->updateSuggestions();
+		
+		
+		if (!$this->error) {
+			
+			$this->load();
+			
+			
+			if ($this->neighborLendEntity->getPerson1_mail() != '') {
+				
+				$mailer = MailMapper::factory($this->mailer)
+					->addAddress($this->neighborLendEntity->getPerson1_mail(), $this->neighborLendEntity->getPerson1_firstName().' '.$this->neighborLendEntity->getPerson1_lastName());
+					
+				if ($this->neighborLendEntity->getPerson2_mail() != '') {
+					$mailer->addAddress($this->neighborLendEntity->getPerson2_mail(), $this->neighborLendEntity->getPerson2_firstName().' '.$this->neighborLendEntity->getPerson2_lastName());
+				}
+				
+				$mailer->setSubject('LEIHNAH - Anfrage für "'.$this->objectEntity->getName().'"');
+				$mailer->setBody('Hallo '.$this->neighborLendEntity->getAccountName().'<br><br><b>'.$this->neighborBorrowEntity->getAccountName().'</b> möchte deinen Gegenstand "'.$this->objectEntity->getName().'" ausleihen.<br><a href="https://'.$_SERVER['HTTP_HOST'].'/#/profil/lend">Bitte beantworte die Anfrage möglichst bald</a><br><br>Schön, dass du LEIHNAH nutzt!<br>Feedback direkt an <a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>');
+					
+				if(!$mailer->send()) {
+					echo $mailer->getErrorInfo();
+				} 
+				
+			}
+			
+    
+			
+		}
 		
 		
 		return $this->id;
@@ -319,7 +348,6 @@ class LendEntity {
 				answerDatetime = NOW(),
 				getDatetime = :getDatetime,
 				backDatetime = :backDatetime,
-				deleted = 0,
 				state = 'answered',
 				changeDate = NOW()
 			WHERE
@@ -350,6 +378,34 @@ class LendEntity {
 			$this->error = true;
 		}
 		
+		if (!$this->error) {
+			
+			$this->load();
+			
+			
+			if ($this->neighborBorrowEntity->getPerson1_mail() != '') {
+				
+				$mailer = MailMapper::factory($this->mailer)
+					->addAddress($this->neighborBorrowEntity->getPerson1_mail(), $this->neighborBorrowEntity->getPerson1_firstName().' '.$this->neighborBorrowEntity->getPerson1_lastName());
+					
+				if ($this->neighborBorrowEntity->getPerson2_mail() != '') {
+					$mailer->addAddress($this->neighborBorrowEntity->getPerson2_mail(), $this->neighborBorrowEntity->getPerson2_firstName().' '.$this->neighborBorrowEntity->getPerson2_lastName());
+				}
+				
+				$mailer->setSubject('LEIHNAH - Anfrage beantwortet für "'.$this->objectEntity->getName().'"');
+				$mailer->setBody('Hallo '.$this->neighborBorrowEntity->getAccountName().'<br><br><b>'.$this->neighborLendEntity->getAccountName().'</b> hat deine Anfrage für den Gegenstand "'.$this->objectEntity->getName().'" beantwortet.<br><a href="https://'.$_SERVER['HTTP_HOST'].'/#/profil/borrow">Bitte bestätige möglichst bald die Termine</a><br><br>Schön, dass du LEIHNAH nutzt!<br>Feedback direkt an <a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>');
+					
+				if(!$mailer->send()) {
+					echo $mailer->getErrorInfo();
+				} 
+				
+			}
+			
+    
+			
+		}
+			
+		
 		return $this;
 			
 	}
@@ -362,7 +418,6 @@ class LendEntity {
 				lend
 			SET
 				confirmedDatetime = NOW(),
-				deleted = 0,
 				state = 'confirmed',
 				changeDate = NOW()
 			WHERE
@@ -379,6 +434,34 @@ class LendEntity {
 			$this->error = true;
 		}
 		
+		
+		if (!$this->error) {
+			
+			$this->load();
+			
+			
+			if ($this->neighborLendEntity->getPerson1_mail() != '') {
+				
+				$mailer = MailMapper::factory($this->mailer)
+					->addAddress($this->neighborLendEntity->getPerson1_mail(), $this->neighborLendEntity->getPerson1_firstName().' '.$this->neighborLendEntity->getPerson1_lastName());
+					
+				if ($this->neighborLendEntity->getPerson2_mail() != '') {
+					$mailer->addAddress($this->neighborLendEntity->getPerson2_mail(), $this->neighborLendEntity->getPerson2_firstName().' '.$this->neighborLendEntity->getPerson2_lastName());
+				}
+				
+				$mailer->setSubject('LEIHNAH - Termine bestätigt, Verleihung findet statt');
+				$mailer->setBody('Hallo '.$this->neighborLendEntity->getAccountName().'<br><br><b>'.$this->neighborBorrowEntity->getAccountName().'</b> hat die Termine für die Übergabe und Rückgabe deines Gegenstands "'.$this->objectEntity->getName().'" bestätigt.<br><a href="https://'.$_SERVER['HTTP_HOST'].'/#/profil/lend">Details zur Verleihung findest du hier</a><br><br>Schön, dass du LEIHNAH nutzt!<br>Feedback direkt an <a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>');
+					
+				if(!$mailer->send()) {
+					echo $mailer->getErrorInfo();
+				} 
+				
+			}
+
+		}
+		
+		
+		
 		return $this;
 			
 	}
@@ -390,7 +473,6 @@ class LendEntity {
 				lend
 			SET
 				directContactDatetime = NOW(),
-				deleted = 0,
 				state = 'direct',
 				changeDate = NOW()
 			WHERE
@@ -419,7 +501,6 @@ class LendEntity {
 				closedDatetime = NOW(),
 				closedText = :closedText,
 				closedType = :closedType,
-				deleted = 0,
 				state = 'closed',
 				changeDate = NOW()
 			WHERE
@@ -438,20 +519,93 @@ class LendEntity {
 			$this->error = true;
 		}
 		
+		
+		if (!$this->error) {
+			
+			$this->load();
+			
+			if ($this->closedType == 'stopped') {
+				// borrower
+				
+				if ($this->neighborLendEntity->getPerson1_mail() != '') {
+				
+					$mailer = MailMapper::factory($this->mailer)
+						->addAddress($this->neighborLendEntity->getPerson1_mail(), $this->neighborLendEntity->getPerson1_firstName().' '.$this->neighborLendEntity->getPerson1_lastName());
+						
+					if ($this->neighborLendEntity->getPerson2_mail() != '') {
+						$mailer->addAddress($this->neighborLendEntity->getPerson2_mail(), $this->neighborLendEntity->getPerson2_firstName().' '.$this->neighborLendEntity->getPerson2_lastName());
+					}
+					
+					$mailer->setSubject('LEIHNAH - Anfrage gestoppt');
+					$mailer->setBody('Hallo '.$this->neighborLendEntity->getAccountName().'<br><br><b>'.$this->neighborBorrowEntity->getAccountName().'</b> hat die Anfrage wieder gestoppt:<br><br><i>"'.$this->closedText.'"</i>.<br><br><a href="https://'.$_SERVER['HTTP_HOST'].'/#/profil/lend">Details zur Verleihung findest du hier</a><br><br>Schön, dass du LEIHNAH nutzt!<br>Feedback direkt an <a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>');
+						
+					if(!$mailer->send()) {
+						echo $mailer->getErrorInfo();
+					} 
+					
+				}
+				
+				
+				
+			} else {
+				// lender
+				
+				if ($this->neighborBorrowEntity->getPerson1_mail() != '') {
+				
+					$mailer = MailMapper::factory($this->mailer)
+						->addAddress($this->neighborBorrowEntity->getPerson1_mail(), $this->neighborBorrowEntity->getPerson1_firstName().' '.$this->neighborBorrowEntity->getPerson1_lastName());
+						
+					if ($this->neighborBorrowEntity->getPerson2_mail() != '') {
+						$mailer->addAddress($this->neighborBorrowEntity->getPerson2_mail(), $this->neighborBorrowEntity->getPerson2_firstName().' '.$this->neighborBorrowEntity->getPerson2_lastName());
+					}
+					
+					if ($this->closedType == 'refused') {
+						$titleAdd = 'abgelehnt';
+						$closeText = '<b>'.$this->neighborLendEntity->getAccountName().'</b> hat die Anfrage leider abgelehnt:';
+					} else if ($this->closedType == 'canceled') {
+						$titleAdd = 'gestoppt';
+						$closeText = '<b>'.$this->neighborLendEntity->getAccountName().'</b> hat die Ausleihe gestoppt:';
+					} else if ($this->closedType == 'successful') {
+						$titleAdd = 'abgeschlossen';
+						$closeText = '<b>'.$this->neighborLendEntity->getAccountName().'</b> hat die Ausleihe abgeschlossen:';
+					}
+					
+					$mailer->setSubject('LEIHNAH - Anfrage '.$titleAdd);
+					$mailer->setBody('Hallo '.$this->neighborBorrowEntity->getAccountName().'<br><br>'.$closeText.'<br><br><i>"'.$this->closedText.'"</i>.<br><br><a href="https://'.$_SERVER['HTTP_HOST'].'/#/profil/lend">Details zur Verleihung findest du hier</a><br><br>Schön, dass du LEIHNAH nutzt!<br>Feedback direkt an <a href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>');
+						
+					if(!$mailer->send()) {
+						echo $mailer->getErrorInfo();
+					} 
+					
+				}
+				
+			}
+			
+			
+
+		}
+		
+		
 		return $this;
 	}
 	
 	public function delete() {
 		$result = false;
-
-		if ($this->objectEntity->getUserId() == Authentication::getUser()->getId()) {
 		
+		$delete = false;
+		if ($this->neighborBorrowEntity->getUserId() == Authentication::getUser()->getId()) {
+			$delete = 'borrow';
+		} else if ($this->neighborLendEntity->getUserId() == Authentication::getUser()->getId()) {
+			$delete = 'lend';
+		}
+		
+		if ($delete !== false) {
 			$sql = "
 				UPDATE
 					lend
 				SET
-					deleted = 1,
-					deleteDate = NOW()
+					".$delete."Deleted = 1,
+					".$delete."DeleteDate = NOW()
 				WHERE
 					pk_lend = :id
 			";
@@ -497,6 +651,8 @@ class LendEntity {
 	public function setClosedText($value){ $this->closedText = $value; return $this; }
 	public function setClosedType($value){ $this->closedType = $value; return $this; }
 		
+	
+	public function setMailer($value) {$this->mailer = $value; return $this; }
 	
 	public function toArray() { 
 		

@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('MainController', function($scope, $http, $state, $window, $log, $location, $interval, $document, $timeout, AuthenticationService, ContextBoxService, auth, CategoryService, resize, PageVisibilityService, ScrollService) {
+angular.module('Leihnah').controller('MainController', function($scope, $http, $state, $window, $log, $location, $interval, $document, $timeout, AuthenticationService, ContextBoxService, auth, CategoryService, PageVisibilityService, ScrollService) {
 	
 	if (AuthenticationService.authenticated && $state.is("landingpage")) {
 		$state.go('objects');
@@ -14,10 +14,10 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	$scope.fadeout = false;
 
 	$scope.pageVisibility = PageVisibilityService;
-
 	
 	
-	$scope.lastObjectId = 0; // @todo: needet?
+	
+// 	$scope.lastObjectId = 0; // @todo: needet?
 	$scope.scrollPosition = 0;
 	$scope.backState = '';
 	
@@ -50,6 +50,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 		categoryName: '',
 		showResults: false,
 		showSmallHead: false,
+		showResultList: true,
 		filteredObjects: []
 	}
 	$scope.resetFilter = function() {
@@ -58,16 +59,11 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 			category: null,
 			categoryName: '',
 			showResults: false,
-			showSmallHead: false
+			showSmallHead: false,
+			showResultList: true
 		};
 	}
-	$scope.openResults = function() {
-		
-		
-		if ($scope.filter.category == null) {
-			$scope.contextBox.setFilterCategory('all');
-		}
-	}
+	
 	
 	$scope.closeResults = function() {
 
@@ -119,7 +115,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	
 	$scope.objects = '';
 	$scope.loadObjects = function() {
-		$log.debug('main-controller: loadObjects');
+// 		$log.debug('main-controller: loadObjects');
 		
 		$http.get('api/object', {
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
@@ -139,18 +135,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 			});
 	}
 	
-/*
-	$interval(function() {
-		$log.debug('loaditerator');
-		$scope.loadObjects();
-	}, 10000);
-*/
-	
-	/*
-	$scope.allObjectImagesLoaded = false;
-	var checkLoadedImages 
-	*/
-// 	$scope.loadObjects();
+
 	
 	
 	// categories
@@ -160,7 +145,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 
 	// watch if authentication is changed	
 	$scope.$watch(function() { return AuthenticationService.authenticated; }, function(newVal, oldVal) {
-		$log.debug('authentication has changed');
+// 		$log.debug('authentication has changed');
 		
 		$scope.authenticated = AuthenticationService.authenticated;
 		$scope.loadCurrentNeighbor();
@@ -226,11 +211,13 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	// resize: check if mobile oder desktop view
 	$scope.showMobile = false;
 	$scope.showDesktop = false;
-	resize($scope).call(function() { 
+	
+	$(window).on('resize', function() { 
 		$scope.$apply(function() {
 	       setResponsveVisibility();
 	    });	
 	});
+	
     var setResponsveVisibility = function() {
 	    if ($window.innerWidth > 624) {
 		    $('body').removeClass('screen-small');	
@@ -250,6 +237,7 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 	$scope.toggleMobileNav = function() {
 		if ($scope.mobileNav == 'hide') {
 			$scope.mobileNav = 'show';
+			$document.scrollTo(0, 0, 0);
 		} else {
 			$scope.mobileNav = 'hide';
 		}
@@ -300,6 +288,15 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 		}
 	}
 	
+	$scope.goPageInfo = function() {
+		if (!$state.is('info')) {
+			PageVisibilityService.hide();
+			$timeout(function() {
+				$state.go('info');
+			}, 300);
+		}
+	}
+	
 	$scope.contextBox.goPageProfil = function(page) {
 		if (!$state.includes('profil')) {
 			$log.debug('hidecontent');
@@ -313,10 +310,33 @@ angular.module('Leihnah').controller('MainController', function($scope, $http, $
 		}
 	}
 	
+
+	
 	/*
-	$interval(function() {
-		$scope.loadLends();
-	}, 10000);
+	* check if data update
 	*/
+	$interval(function() {
+		
+		$http.get('api/checkdata', {
+				headers: { 'auth-token': AuthenticationService.getLocalToken() }
+			})
+			.success(function(response) {
+// 				$log.debug('checkdata', response);
+				
+				if (response.updateLends) {
+					$scope.loadLends();
+				}
+				if (response.updateObjects) {
+					$scope.loadObjects();
+				}
+				
+			})
+			.error(function(error) {
+				$log.debug(error);
+			});
+		
+		
+	}, 10000);
+	
 	
 });

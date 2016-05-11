@@ -93,9 +93,10 @@
 					<div class="title">Anfrage stellen</div>
 					<div class="content" id="requestContent">
 						
-						<p ng-if="object.neighbor.id == currentNeighbor.id">Eigene Gegenstände können nicht ausgeliehen werden.</p>
+						<p ng-if="viewStates.isOwnObject && !viewStates.ownerEmailAvailable">Deine Nachbarn können dir keine Anfrage stellen, da du noch keine eMail-Adresse in deinem Profil angegeben hast.</p>
+						<p ng-if="viewStates.isOwnObject && viewStates.ownerEmailAvailable">Eigene Gegenstände können nicht ausgeliehen werden.</p>
 						
-						<div ng-show="object.neighbor.id != currentNeighbor.id">
+						<div ng-show="viewStates.showRequestForm">
 													
 									
 							<div class="wizardContainer {{ currentStep }}">

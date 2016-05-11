@@ -1,7 +1,7 @@
 angular.module('Leihnah').controller('EditObjectController', function($scope, $uibModalInstance, $http, $log, currentObject, AuthenticationService, Upload, categories, currentNeighbor) {
+
 	
-	$log.debug('currentobject', currentObject);
-	$log.debug('currentNeighbor', currentNeighbor);
+	$scope.loaded = false;
 	
 	$scope.currentNeighbor = angular.copy(currentNeighbor);
 	$scope.formDisabled = false;
@@ -50,17 +50,17 @@ angular.module('Leihnah').controller('EditObjectController', function($scope, $u
 	}
 	
 	$scope.categories = angular.copy(categories);
-	$log.debug('categories', categories);
+// 	$log.debug('categories', categories);
 	/*
 	if ($scope.categories[0].id != 0 && $scope.currentObject.categoryId == 0) {
 		$scope.categories.splice(0, 0, {id: 0, name: '-- Auswahl --'});
 	}
 	*/
 	
-	$log.debug('scope.categories', $scope.categories);
+// 	$log.debug('scope.categories', $scope.categories);
 	
 	$scope.updateCategory = function() {
-		$log.debug('categoryid', $scope.currentObject.categoryId);
+// 		$log.debug('categoryid', $scope.currentObject.categoryId);
 		if ($scope.currentObject.categoryId == '0') {
 			$scope.editObject.category.$setValidity("notSelected", false);
 		} else {
@@ -155,5 +155,6 @@ angular.module('Leihnah').controller('EditObjectController', function($scope, $u
 	};
 
 	
+	$scope.loaded = true;
 
 });

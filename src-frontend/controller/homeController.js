@@ -28,7 +28,7 @@ angular.module('Leihnah').controller('HomeController', function($scope, $http, $
 					$scope.fail = null;
 					
 				} else {
-					$log.debug('fail', response.failure);
+// 					$log.debug('fail', response.failure);
 					
 					$scope.fail = response.failure;
 					if (response.failure == 'credentials') {

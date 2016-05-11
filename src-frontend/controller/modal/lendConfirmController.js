@@ -1,6 +1,6 @@
 angular.module('Leihnah').controller('LendConfirmController', function($scope, $uibModalInstance, $http, $log, AuthenticationService, currentLend) {
 	
-	$log.debug('currentLend', currentLend);
+// 	$log.debug('currentLend', currentLend);
 	
 	$scope.currentLend = angular.copy(currentLend);
 	
@@ -9,10 +9,10 @@ angular.module('Leihnah').controller('LendConfirmController', function($scope, $
 		feedback: ''
 	}
 	
-	$log.debug('$scope.closeData', $scope.closeData);
+// 	$log.debug('$scope.closeData', $scope.closeData);
 	
 	$scope.send = function () {
-		$log.debug('send: send');
+// 		$log.debug('send: send');
 		
 		var data = $scope.closeData;
 		

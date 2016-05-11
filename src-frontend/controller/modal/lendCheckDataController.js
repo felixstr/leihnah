@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('LendCheckDataController', function($scope, $uibModalInstance, $http, $log, $uibModal, AuthenticationService, currentLend, ContextBoxService) {
+angular.module('Leihnah').controller('LendCheckDataController', function($scope, $uibModalInstance, $http, $log, $uibModal, $timeout, AuthenticationService, currentLend, ContextBoxService) {
 	
 // 	$log.debug('currentLend', currentLend);
 	$scope.contextBox = ContextBoxService;
@@ -27,13 +27,13 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 		backDatetime: ''
 	}
 	
-	$log.debug('$scope.checkData', $scope.checkData);
+// 	$log.debug('$scope.checkData', $scope.checkData);
 	
 	
 	$scope.showBoxBack = function(event) {
 // 		$scope.formInfo.showBox = 'back';
 		
-		ContextBoxService.setTargetElement(event.currentTarget);
+		ContextBoxService.setTargetElement($('.bt_back'));
 	    ContextBoxService.setHorizontalAlign('right');
 	    ContextBoxService.setId('boxBack');	    
 	    ContextBoxService.setOnlyTopAlign(true);	    
@@ -59,7 +59,7 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 	}
 	
 	$scope.contextBox.selectTime = function(type, date, time) {
-		$scope.formInfo.showBox = '';
+// 		$scope.formInfo.showBox = '';
 
 		if (date == 'none') {
 			$scope.formInfo.dateStatus = 'no';
@@ -99,7 +99,14 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 		
 		ContextBoxService.hide();
 		
-		$log.debug($scope.checkData);
+		if (type == 'get' && $scope.checkData.getDatetime != '' && $scope.checkData.backDatetime == '') {
+			$timeout(function() {
+				$scope.showBoxBack();
+			}, 10);
+			
+		}
+		
+// 		$log.debug($scope.checkData);
 	}
 	
 	$scope.answerRequest = function() {
@@ -111,7 +118,7 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 		};
 		data = $scope.checkData;
 		
-		$log.debug('data', data);
+// 		$log.debug('data', data);
 		
 		var url = 'api/lend/answer/'+$scope.currentLend.id;			
 		
@@ -119,7 +126,7 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 			headers: { 'auth-token': AuthenticationService.getLocalToken() }
 		})
 		.success(function(response) {
-			$log.debug('sendAnswer: response', response);
+// 			$log.debug('sendAnswer: response', response);
 			
 			if (response.ok) {
 				$uibModalInstance.close();
@@ -135,8 +142,8 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 	
 	$scope.openModalClose = function(object) {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
+// 			backdrop: 'static',
+// 			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/lendClose.html',
 			controller: 'LendCloseController',
@@ -168,7 +175,7 @@ angular.module('Leihnah').controller('LendCheckDataController', function($scope,
 			headers: { 'auth-token': AuthenticationService.getLocalToken() }
 		})
 		.success(function(response) {
-			$log.debug('sendAnswer: response', response);
+// 			$log.debug('sendAnswer: response', response);
 			
 			if (response.ok) {
 				$uibModalInstance.close();

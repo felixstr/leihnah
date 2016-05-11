@@ -11,22 +11,47 @@ angular.module('Leihnah').controller('LandingPageController', function($scope, A
 	$scope.contextBox = ContextBoxService;	
 
 	
-	var headerImages = ['lp-header-7.jpg'];
+	var headerImages = ['lp-header.jpg'];
 	var headerImage = headerImages[Math.floor(Math.random() * headerImages.length)];
 	$scope.headerBG = 'assets/img/static/'+headerImage;
 	
 	
-	$scope.inspirationImages = [
-		'assets/img/static/lp-schwimmweste.jpg',
-		'assets/img/static/lp-heissleim.jpg',
-		'assets/img/static/lp-schneeschuhe.jpg',
-		'assets/img/static/lp-abc.jpg',
-		'assets/img/static/lp-teigwarenmaschine.jpg',
-		'assets/img/static/lp-ukulele.jpg',
-		'assets/img/static/lp-barivox.jpg',
-		'assets/img/static/lp-naehmaschine.jpg'
+	var inspirationImages = [
+		'assets/img/static/lp-inspiration-stoepsel.jpg',
+		'assets/img/static/lp-inspiration-heissleim.jpg',
+		'assets/img/static/lp-inspiration-ente.jpg',
+		'assets/img/static/lp-inspiration-schneeschuhe.jpg',
+		'assets/img/static/lp-inspiration-bohrmaschine.jpg',
+		'assets/img/static/lp-inspiration-teigwarenmaschine.jpg',
+		'assets/img/static/lp-inspiration-ukulele.jpg',
+		'assets/img/static/lp-inspiration-barrivox.jpg',
+		'assets/img/static/lp-inspiration-siedler.jpg',
+		'assets/img/static/lp-inspiration-waage.jpg',
+		'assets/img/static/lp-inspiration-naehmaschiene.jpg'
 		
 	];
+	
+	var shuffle = function(array) {
+		var currentIndex = array.length, temporaryValue, randomIndex;
+		
+		// While there remain elements to shuffle...
+		while (0 !== currentIndex) {
+		
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+		
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+		}
+		
+		return array;
+	}
+	$scope.inspirationImages = shuffle(inspirationImages);
+	$scope.inspirationImages.splice(8, $scope.inspirationImages.length - 8);
+
 	
 	$scope.statements = [
 		{
@@ -49,7 +74,7 @@ angular.module('Leihnah').controller('LandingPageController', function($scope, A
 			text: 'Riedtli - Unterstrass'
 		},
 		{
-			image: 'assets/img/static/lp-settlement-neubuel.jpg',
+			image: 'assets/img/static/lp-settlement-neubuehl.jpg',
 			text: 'Neubühl - Wollishofen'
 		},
 		{
@@ -71,13 +96,14 @@ angular.module('Leihnah').controller('LandingPageController', function($scope, A
 		}
 	};
 	
+	/*
 	$document.on('scroll', function() {
 		$scope.$apply(function() {
 	       setShowFooter($document.scrollTop());
 	    });	
 		
     });
-    
+    */
     
     // login
     $scope.showLogin = function(from) {
@@ -134,7 +160,7 @@ angular.module('Leihnah').controller('LandingPageController', function($scope, A
 					$scope.fail = null;
 					
 				} else {
-					$log.debug('fail', response.failure);
+// 					$log.debug('fail', response.failure);
 					$scope.loginFormDisabled = false;
 					
 					$scope.fail = response.failure;
@@ -154,6 +180,12 @@ angular.module('Leihnah').controller('LandingPageController', function($scope, A
 			});
 		
 	}
-
+	/*
+	
+	$scope.parallax = {
+		header: parallaxHelper.createAnimator(-0.5),
+		footer: parallaxHelper.createAnimator(-0.5)
+	}
+	*/
 	
 });

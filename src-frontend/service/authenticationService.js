@@ -2,12 +2,13 @@ angular.module('Leihnah').service('AuthenticationService', function($http, $log,
 	var self = this;
 	
 	self.currentUser = null;
-	self.authenticationChecked = false;
+// 	self.authenticationChecked = false;
 	self.authenticated = false;
 	
 	self.checkAuthentication = function(callback) {
-		if (self.authenticationChecked) {
-			$log.debug('authentication already checked');
+		/*
+		if (false && self.authenticationChecked) {
+// 			$log.debug('authentication already checked');
 			if (self.currentUser === null) {
 				callback(false);
 			} else {
@@ -16,9 +17,11 @@ angular.module('Leihnah').service('AuthenticationService', function($http, $log,
 		} else {
 			$log.debug('checkAuthentication: loadUserInfo');
 		
-			self.loadUserInfo(callback)
-			self.authenticationChecked = true; // @todo: ok here?
+			
 		}
+		*/
+		
+		self.loadUserInfo(callback);
 
 	}
 	

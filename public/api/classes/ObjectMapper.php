@@ -89,4 +89,33 @@ class ObjectMapper extends Mapper {
 	public function setOrderByViewCount(){ $this->orderBy = 'viewCount'; return $this;}
 	public function setSortDESC(){ $this->sort = 'DESC'; return $this;}
 	public function setLimit($value){ $this->limit = $value; return $this;}
+	
+	public function checkUpdate() {
+		$result = false;
+		
+		$sql = "
+			SELECT 
+				o.pk_object AS id
+			FROM object AS o
+			JOIN user AS u ON
+				o.`fk_user` = u.`pk_user`
+			WHERE 
+				o.changeDate > (NOW() - INTERVAL 10 SECOND)
+				".($this->restriction && $this->settlementId != null ? 'AND u.fk_settlement = :settlementId' : '')."
+		";
+		$stmt = $this->db->prepare($sql);
+		if ($this->restriction && $this->settlementId != null) {
+			$stmt->bindParam(':settlementId', $this->settlementId, PDO::PARAM_INT);
+		}
+		$stmt->execute();
+		
+		$results = $stmt->fetchAll();
+		
+		if (count($results) > 0) {
+			$result = true;
+		}
+		
+		
+		return $result;
+	}
 }

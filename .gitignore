@@ -18,3 +18,5 @@ src-frontend/index-alt.scss
 src-frontend/index-alt2.scss
 
 src-frontend/index Kopie.scss
+
+public/api/classes/MailMapper.php

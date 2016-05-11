@@ -47,9 +47,9 @@ $container['mailer'] = function ($c) {
 	$phpMailer->Host = 'mail.cyon.ch';  // Specify main and backup SMTP servers
 	$phpMailer->SMTPAuth = true;                               // Enable SMTP authentication
 	$phpMailer->Username = 'mailer@leihnah.ch';                 // SMTP username
-	$phpMailer->Password = $mailer['pass'];                           // SMTP password
-// 	$phpMailer->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-	$phpMailer->Port = 587;  
+	$phpMailer->Password =  $mailer['pass'];                           // SMTP password
+	$phpMailer->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+	$phpMailer->Port = 465; 
     
     return $phpMailer;
 };
@@ -566,7 +566,7 @@ $app->get('/mail', function (Request $request, Response $response, $args) {
     
     $result['ok'] = false;
     
-/*
+
     $mailer = MailMapper::factory($this->mailer)
     	->addAddress('fexfix@bluewin.ch', 'Felxi')
     	->setSubject('test')
@@ -578,7 +578,7 @@ $app->get('/mail', function (Request $request, Response $response, $args) {
 	} else {
 		$result['ok'] = true;
 	}
-*/
+
 	
 	
 	$newResponse = $response->withJson($result);
@@ -638,6 +638,7 @@ $app->post('/lend/start', function (Request $request, Response $response, $args)
 	    	->getUserId();
 	    
 	    $borrowId = LendEntity::factory($this->db)
+	    	->setMailer($this->mailer)
 		    ->setUserBorrowId(Authentication::getUser()->getId())
 		    ->setUserLendId($userLendId)
 	    	->setObjectId($requestBody['objectId'])
@@ -676,6 +677,7 @@ $app->post('/lend/answer/{id}', function (Request $request, Response $response, 
     if (Authentication::isAuthenticated()) {
 	    
 	    $lendEntity = LendEntity::factory($this->db)
+	    	->setMailer($this->mailer)
 	    	->setId($args['id'])
 	    	->load();
 	    	
@@ -751,6 +753,7 @@ $app->post('/lend/confirm/{id}', function (Request $request, Response $response,
     if (Authentication::isAuthenticated()) {
 	    
 	    $lendEntity = LendEntity::factory($this->db)
+	    	->setMailer($this->mailer)
 	    	->setId($args['id'])
 	    	->load();
 	    	
@@ -787,6 +790,7 @@ $app->post('/lend/close/{id}', function (Request $request, Response $response, $
     if (Authentication::isAuthenticated()) {
 	    
 	    $lendEntity = LendEntity::factory($this->db)
+	    	->setMailer($this->mailer)
 	    	->setId($args['id'])
 	    	->load();
 	    
@@ -881,9 +885,58 @@ $app->get('/lend[/{id}]', function (Request $request, Response $response, $args)
 	
 
 	$newResponse = $response->withJson($result);
-// 	$newResponse = $response->withJson($result, null, JSON_NUMERIC_CHECK);
 	
     return $newResponse;
 });
+
+/**
+*
+*/
+$app->delete('/lend/{id}', function (Request $request, Response $response, $args) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+
+    $result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+
+	    if (isset($args['id'])) {
+		    // update
+		    $result['ok'] = LendEntity::factory($this->db)
+		    	->setId($args['id'])
+		    	->load()
+		    	->delete();
+	    } 
+		
+    }
+
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
+
+$app->get('/checkdata', function (Request $request, Response $response) {
+    
+    Authentication::initialize($this->db, $this->logger);
+    Authentication::setToken($request->getHeader('auth-token'));
+    Authentication::login();
+    
+    $result['ok'] = false;
+    if (Authentication::isAuthenticated()) {
+	    
+	    $result['updateLends'] = LendMapper::factory($this->db)->checkUpdate();
+	    $result['updateObjects'] = ObjectMapper::factory($this->db)->checkUpdate();
+	    	    
+	    $result['ok'] = true;
+    }
+
+		
+	$newResponse = $response->withJson($result);
+	
+    return $newResponse;
+});
+
 
 $app->run();

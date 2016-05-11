@@ -17,6 +17,7 @@ class CategoryMapper extends Mapper {
 			FROM category
 			LEFT JOIN object AS o ON
 				o.`fk_category` = `pk_category` AND
+				o.`image_1` != '' AND
 				o.`active` = 1 AND
 				o.`deleted` = 0
 			JOIN user AS u ON

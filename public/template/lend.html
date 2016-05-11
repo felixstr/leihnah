@@ -10,12 +10,12 @@
 		<div class="firstPerson showContact">
 			<div class="profilImage large" ng-style="borrowProfilImageBG"></div>
 			<div class="info">
-				<a class="bt_light small arrowDown contact" ng-click="showContactData()"><span>{{ currentLend.neighborBorrow.accountName }}</span></a>
+				<a class="bt_light small arrowDown contact" ng-click="showContactData()"><span class="iconMail"></span><span class="name">{{ currentLend.neighborBorrow.accountName }}</span></a>
 			</div>
 		</div>
 		
 		<div class="img" ng-style="objectImageBG">
-			<div class="arrow"></div>
+			<div class="info">{{ currentLend.object.name }}</div>
 		</div>
 		
 		<div class="secondPerson">
@@ -34,9 +34,8 @@
 		
 		<div class="messageItem left">	
 			<div class="content">
-				<div class="profilImage" ng-style="borrowProfilImageBG"></div>
 				
-				<div class="title">Anfrage von {{ currentLend.neighborBorrow.accountName }}</div>
+				<div class="title">Anfrage von «{{ currentLend.neighborBorrow.accountName }}»</div>
 				<div class="text">«{{ currentLend.requestText }}»</div>
 				<div class="suggestions" ng-class="'max_day-'+(currentLend.timeSuggestions.get.length > currentLend.timeSuggestions.back.length ? currentLend.timeSuggestions.get.length : currentLend.timeSuggestions.back.length) ">
 					
@@ -65,9 +64,8 @@
 			</div>
 		</div>
 		
-		<div class="messageItem right" ng-show="currentLend.directContactDatetime != null">	
+		<div class="messageItem right" ng-if="currentLend.directContactDatetime != null">	
 			<div class="content">
-				<div class="profilImage" ng-style="profilImageBG"></div>
 				
 				<div class="title">Keine passende Termine gefunden</div>
 				<div class="message"><p>Du hast keine passende Termine gefunden, möchtest aber im direkten Kontakt neue Termine finden.</p></div>
@@ -75,9 +73,8 @@
 			</div>
 		</div>
 		
-		<div id="answerMessage" class="messageItem right" ng-show="currentLend.answerDatetime != null">	
+		<div id="answerMessage" class="messageItem right" ng-if="currentLend.answerDatetime != null">	
 			<div class="content">
-				<div class="profilImage" ng-style="profilImageBG"></div>
 				
 				<div class="title">Anfrage akzeptiert</div>
 				<div class="text" ng-if="currentLend.answerText != ''">«{{ currentLend.answerText }}»</div>
@@ -103,9 +100,8 @@
 		
 		<div class="messageItem left" ng-if="currentLend.confirmedDatetime != null">	
 			<div class="content">	
-				<div class="profilImage" ng-style="borrowProfilImageBG"></div>
 				
-				<div class="title">{{ currentLend.neighborBorrow.accountName }} hat die Termine bestätigt</div>
+				<div class="title">«{{ currentLend.neighborBorrow.accountName }}» hat die Termine bestätigt</div>
 				<div class="message">Toll, die Verleihung findet statt!</div>
 				<div class="date">{{ currentLend.answerDatetime | amDateFormat:'DD.MM.YY, HH:mm' }}</div>
 			</div>
@@ -135,8 +131,6 @@
 			
 			<div class="closed {{'type-'+currentLend.closedType}}" ng-if="currentLend.state == 'closed'" ng-class="{right: currentLend.closedType == 'refused' || currentLend.closedType == 'canceled' || currentLend.closedType == 'successful', left: currentLend.closedType == 'stopped'}">
 				
-				<div class="profilImage" ng-style="profilImageBG" ng-if="currentLend.closedType == 'refused' || currentLend.closedType == 'canceled' || currentLend.closedType == 'successful'"></div>
-				<div class="profilImage" ng-style="borrowProfilImageBG" ng-if="currentLend.closedType == 'stopped'"></div>
 				
 				<div class="title" ng-if="currentLend.closedType == 'refused'">Die Ausleihe wurde von dir abgelehnt</div>
 				<div class="title" ng-if="currentLend.closedType == 'stopped'">Die Ausleihe wurde wieder gestoppt</div>
@@ -148,13 +142,12 @@
 			
 			<div class="content actionContent" ng-if="currentLend.state != 'closed'">
 				
-				<div class="profilImage" ng-style="profilImageBG"></div>
 				
 				<div class="contentWrap">
 				
 					<div ng-show="currentLend.state == 'request'">
 							
-						<h3>Antworte möglichst bald, damit {{ currentLend.neighborBorrow.accountName }} weiss, ob die Verleihung zu stande kommt.</h3>
+						<h3>Antworte möglichst bald, damit «{{ currentLend.neighborBorrow.accountName }}» weiss, ob die Verleihung zu stande kommt.</h3>
 						<a class="bt_dark small arrowRight" href ng-click="openModalCheckData()">Terminvorschläge prüfen</a>
 						<a class="bt_light cancel small" href ng-click="openModalClose()">Anfrage ablehnen</a>
 					
@@ -162,7 +155,7 @@
 					
 					<div ng-show="currentLend.state == 'direct'">
 							
-						<h3>Nimm möglichst bald mit {{ currentLend.neighborBorrow.accountName }} Kontakt auf, um neue Übergabetermine zu finden.</h3>
+						<h3>Nimm möglichst bald mit «{{ currentLend.neighborBorrow.accountName }}» Kontakt auf, um neue Übergabetermine zu finden.</h3>
 						<p>Habt ihr passende Termine gefunden, kannst du diese eintragen oder sonst die Anfrage schliessen.</p>
 						<a class="bt_dark small" href ng-click="openDialogPrototypInfo()">Termine eintragen</a>
 						<a class="bt_light cancel small" href ng-click="openModalClose()">Anfrage schliessen</a>
@@ -170,7 +163,7 @@
 					</div>
 					
 					<div ng-show="currentLend.state == 'answered'">
-						<h3>Warte, bis {{ currentLend.neighborBorrow.accountName }} die Termine bestätigt</h3>
+						<h3>Warte, bis «{{ currentLend.neighborBorrow.accountName }}» die Termine bestätigt</h3>
 						<p>Du hast jederzeit die Möglichkeit die Ausleihe zu stornieren.</p>
 			
 						<a class="bt_light cancel small" href ng-click="openModalClose()">Anfrage stornieren</a>
@@ -206,7 +199,7 @@
 						<a class="bt_light small" href ng-if="false">Verleihung verlängern</a>
 						
 						<h3>Hast du den Gegenstand nicht zurückerhalten?</h3>
-						<p>Nimm mit {{ currentLend.neighborBorrow.accountName }} Kontakt auf, um das weitere Vorgehen zu besprechen.</p>
+						<p>Nimm mit «{{ currentLend.neighborBorrow.accountName }}» Kontakt auf, um das weitere Vorgehen zu besprechen.</p>
 						<a href class="bt_dark small arrowRight" ng-click="openModalClose()">Verleihung abschliessen</a>
 					
 					</div>
@@ -222,14 +215,14 @@
 		<div class="messageItem both" ng-if="states.showBottomGetBar ">	
 			<div class="content get">
 				<div class="title">Übergabe am {{ currentLend.getDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }}</div>
-				<div class="message">Sofern nicht anders vereinbart, wird der Gegenstand von {{ currentLend.neighborBorrow.accountName }} abgeholt.</div>
+				<div class="message">Sofern nicht anders vereinbart, wird der Gegenstand von «{{ currentLend.neighborBorrow.accountName }}» abgeholt.</div>
 			</div>
 		</div>
 		
 		<div class="messageItem both" ng-if="states.showBottomBackBar">
 			<div class="content back">	
 				<div class="title">Rückgabe am {{ currentLend.backDatetime | amDateFormat:'dd, DD.MM.YY HH:mm' }}</div>
-				<div class="message" ng-if="currentLend.inTime && currentLend.state != 'closed'">Sofern nicht anders vereinbart, wird der Gegenstand von {{ currentLend.neighborBorrow.accountName }} zurückgebracht.</div>
+				<div class="message" ng-if="currentLend.inTime && currentLend.state != 'closed'">Sofern nicht anders vereinbart, wird der Gegenstand von «{{ currentLend.neighborBorrow.accountName }}» zurückgebracht.</div>
 			</div>
 		</div>
 	</div>

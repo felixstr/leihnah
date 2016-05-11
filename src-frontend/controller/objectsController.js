@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('ObjectsController', function($scope, $http, $state, $window, $log, $uiViewScroll, $document, $timeout, AuthenticationService, auth, CategoryService, ContextBoxService, ScrollService, Piwik, PageVisibilityService) {
+angular.module('Leihnah').controller('ObjectsController', function($scope, $http, $state, $window, $log, $uiViewScroll, $document, $timeout, $interval, AuthenticationService, auth, CategoryService, ContextBoxService, ScrollService, Piwik, PageVisibilityService) {
 	
 	Piwik.trackPageView($window.location.origin+'/objects');
 	
@@ -11,10 +11,6 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 	
 	$timeout(function() {
 		
-/*
-		$log.debug('ScrollService.lastState', ScrollService.lastState);
-		$log.debug('ScrollService.lastScrollPosition', ScrollService.lastScrollPosition);
-*/
 		
 		if (ScrollService.lastState == 'object' && $scope.filter.showResults) {
 			$document.scrollTo(0, ScrollService.lastScrollPosition);
@@ -24,27 +20,11 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 	}, 300);
 	
 		
-// 	$scope.showCategories = false;
 	
-// 	$log.debug('$scope.filter', $scope.filter);
-	
-	$scope.headerImages = ['abc.jpg', 'barivox.jpg', 'heissleim.jpg', 'schwimmweste.jpg', 'teigwaren.jpg', 'ukulele.jpg', 'schleifmaschine.jpg'];
-	$scope.headerImages = ['header-ukulele.jpg'/*, 'header-teigwaren.jpg'*/, 'header-stoepsel.jpg', 'header-schneeschuhe.jpg', 'header-bohrmaschine.jpg', 'header-spiel1.jpg', 'header-strom.jpg', 'header-waage.jpg', 'header-barivox.jpg', 'header-heissleim.jpg', 'header-ente.jpg'];
+	$scope.headerImages = ['header-ukulele.jpg', 'header-stoepsel.jpg', 'header-schneeschuhe.jpg', 'header-bohrmaschine.jpg', 'header-spiel1.jpg', 'header-strom.jpg', 'header-waage.jpg', 'header-barivox.jpg', 'header-heissleim.jpg', 'header-ente.jpg'];
 	$scope.headerImage = $scope.headerImages[Math.floor(Math.random() * $scope.headerImages.length)];
-/*
-	$scope.headerImage = 'header-ukulele.jpg';
-	$scope.headerImage = 'header-teigwaren.jpg';
-	$scope.headerImage = 'header-stoepsel.jpg';
-	$scope.headerImage = 'header-schneeschuhe.jpg';
-	$scope.headerImage = 'header-bohrmaschine.jpg';
-	$scope.headerImage = 'header-spiel1.jpg';
-	$scope.headerImage = 'header-strom.jpg';
-	$scope.headerImage = 'header-waage.jpg';
-	$scope.headerImage = 'header-barivox.jpg';
-	$scope.headerImage = 'header-heissleim.jpg';
-	$scope.headerImage = 'header-ente.jpg';
-*/
-
+// 	$scope.headerImage = 'header-naehmaschiene.jpg';
+	
 	
 	// OrderMenu
 	$scope.showOrderMenu = function(event) {
@@ -64,7 +44,7 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 	    ContextBoxService.categories = $scope.categories;
 	    ContextBoxService.view = $scope.filter.showResults ? 'filtered' : 'default';
 	    ContextBoxService.onLoad(function(){
-		    $document.scrollToElement($('#contextBoxWrap'), 165, 300);
+// 		    $document.scrollToElement($('#contextBoxWrap'), 165, 300);
 	    });
 
 // 	    
@@ -83,14 +63,25 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 		
 		
 	}
-	/*
-	$scope.toggleCategories = function() {
-		$scope.showCategories = !$scope.showCategories;
-	}
-	*/
+
 	
 	$scope.contextBox.setFilterCategory = function(id) {
-		$scope.filter.category = id;
+		
+// 		$log.debug('filter', $scope.filter);
+		
+		if ($scope.filter.category != null) {
+			$scope.filter.showResultList = false;
+			$timeout(function() {
+				$scope.filter.category = id;
+			}, 300);
+			$timeout(function() {
+				$scope.filter.showResultList = true;
+			}, 600);
+			
+		} else {
+			$scope.filter.category = id;
+		}
+		
 		
 		
 		if (id == null) {
@@ -105,21 +96,39 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 		if ($scope.filter.categoryName != '') {
 			Piwik.trackPageView($window.location.origin+'/objects/kategorie:'+$scope.filter.categoryName);
 			
-			$document.scrollTo(0, 0, 300);
+			$document.scrollTo(0, 0, 0);
 			
 			$timeout(function() {
 				$scope.filter.showSmallHead = true;
-				$scope.filter.showResults = true;
+// 				$scope.filter.showResults = true;
 				
 			}, 300);
-			
+			$timeout(function() {
+// 				$scope.filter.showSmallHead = true;
+				$scope.filter.showResults = true;
+				
+			}, 0);
 			
 			
 		}
 		
 
 		
-		$log.debug('scope.filter', $scope.filter);
+// 		$log.debug('scope.filter', $scope.filter);
+	}
+	
+	$scope.contextBox.openResults = function(categoryId, order) {
+		$scope.filter.showResults = true;
+		
+		if (order != undefined) {
+			$scope.contextBox.changeOrder(order);
+		}
+		
+		if (categoryId != undefined) {
+			$scope.contextBox.setFilterCategory(categoryId);
+		} else {
+			$scope.contextBox.setFilterCategory('all');
+		}
 	}
 	
 	$scope.filterResults = function(element) {
@@ -203,13 +212,21 @@ angular.module('Leihnah').controller('ObjectsController', function($scope, $http
 		
 	}
 	
-	/*
-	$timeout(function() {
-		$('.img').each(function(i, item){ 
-			$log.info($(item).css('background-image')) 
+	
+	
+	
+	$interval(function() {
+		$('.img, .profilImage').each(function(i, item){ 
+			
+			if ($(item).css('background-image').indexOf('placeholder-load.jpg') >= 0) {
+				$log.info('vor', $(item).css('background-image'));
+				$(item).css('background-image', 'url('+$(item).attr('preload-bg-image')+'?ts='+(Math.floor(Date.now() / 1000))+')');
+				$log.info('nach', $(item).css('background-image'));
+			}
 		});
 	},5000);
-	*/
+	
+	
 	
 	
 });

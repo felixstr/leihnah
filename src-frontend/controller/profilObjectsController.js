@@ -1,7 +1,7 @@
 angular.module('Leihnah').controller('ProfilObjectsController', function($scope, $http, $state, $window, $uibModal, $log, $timeout, ContextBoxService, AuthenticationService, auth, CategoryService, Piwik, PageVisibilityService) {
 	Piwik.trackPageView($window.location.origin+'/profil/objects');
 	
-	$log.debug('ProfilObjectsController');
+// 	$log.debug('ProfilObjectsController');
 	
 	$scope.objects = '';
 	
@@ -20,7 +20,7 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				$log.debug('loadObjects', response);
+// 				$log.debug('loadObjects', response);
 				if (response.ok) {
 					$scope.objects = response.objects;
 					
@@ -39,8 +39,8 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 	$scope.contextBox.openModalObject = function(object) {
 		$log.debug('obj', object); 
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
+// 			backdrop: 'static',
+// 			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/editObject.html',
 			controller: 'EditObjectController',
@@ -77,8 +77,8 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 	
 	$scope.contextBox.openModalObjectDelete = function(object) {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
+// 			backdrop: 'static',
+// 			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/deleteObject.html',
 			controller: 'DeleteObjectController',
@@ -100,38 +100,11 @@ angular.module('Leihnah').controller('ProfilObjectsController', function($scope,
 			$log.debug('Modal dismissed at: ' + new Date());
 		});
 	}
-	/*
-	$scope.openModalObjectActivation = function(object) {
-		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
-			size: 'medium',
-			templateUrl: 'template/modal/activationObject.html',
-			controller: 'ActivationObjectController',
-			resolve: {
-				currentObject: function () {
-					return object;
-				}
-			}
-		});
-		
-		modalInstance.result.then(function () {
-			$scope.loadObjects();
-			$scope.$parent.$parent.loadObjects();
-			CategoryService.loadCategories(function(categories) {
-				$scope.$parent.$parent.categories = categories;
-			});
-			
-		}, function () {
-			$log.debug('Modal dismissed at: ' + new Date());
-		});
-	}
-	*/
+
 	
 	$scope.contextBox.activation = function (object) {
 
 		var url = 'api/object/'+object.id;
-// 		$log.debug(url);
 		
 		var data = object;
 		data.active = !object.active;

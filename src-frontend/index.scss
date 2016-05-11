@@ -40,9 +40,17 @@ $color-special-orange: #f68e05;
 $zIndex-footer: 1;
 $zIndex-BG: 2;
 $zIndex-content: 3;
-$zIndex-topbar: 5;
-$zIndex-contextmenuOverlay: 2000;
-$zIndex-contextmenu: 2001;
+
+$zIndex-contextmenuOverlay: 7;
+$zIndex-contextmenu: 8;
+$zIndex-topbar3: 10; /* borrow-lend bar */
+$zIndex-topbar2: 15; /* topbar */
+$zIndex-topbar: 20; /* navbar */
+
+$zIndex-contextmenuOverlayModal: 2000;
+$zIndex-contextmenuModal: 2001;
+
+
 
 /* image */
 $image-ratio: 75%;
@@ -164,19 +172,7 @@ header.site {
 		color: $color-text;
 
 		font-family: Roboto-Medium;
-/*		
-		&:hover {
-			border-bottom: 5px solid $color-grey-dark;
-		}
 		
-		&.current {
-			border-bottom: 5px solid $color-main-dark;
-		}
-				
-		&:active {
-			border-bottom: 5px solid $color-main-dark;
-		}
-	*/		
 	}
 	
 	a.profil {
@@ -227,7 +223,7 @@ header.site {
 			
 			transform: translateX(50%);
 			
-			transition: all 0.4s 0s ease;
+			transition: all 0.4s 0.3s ease;
 			
 			z-index: 1;
 			
@@ -284,7 +280,7 @@ header.site {
 		top: 0;
 		width: 100vw;
 		height: 100vh;
-		background-image: url(img/lp-header-7.jpg);
+		background-image: url(img/footer-bg.jpg);
 		background-size: cover;
 		background-position: center center;
 		filter: blur(5px);
@@ -298,6 +294,8 @@ header.site {
 		top: 0;
 		padding-top: 4vh;
 		padding-left: 10vw;
+		overflow:scroll;
+		padding-bottom: $space;
 		background: $color-black-light;
 		background: rgba(0, 0, 0, 0.8);
 		
@@ -428,12 +426,12 @@ header.site {
 #containerMain {
 	float: left;
 	width: 100%;
-	padding-top: 70px;
 	min-height: calc(100vh);
 	position: relative;
-	z-index: $zIndex-content;
+/* 	z-index: $zIndex-content;*/
+	background: white;
 	
-	box-shadow: 0px 2px 3px rgba(0, 0, 0, 1);
+/*	box-shadow: 0px 2px 3px rgba(0, 0, 0, 1);*/
 		
 	.contentContainer {
 		float: left;
@@ -443,7 +441,7 @@ header.site {
 		position: relative;
 		background: white;
 		min-height: calc(100vh - 70px);
-		
+		margin-top: 70px;
 	}
 	
 	&.page_objects {
@@ -489,45 +487,43 @@ footer {
 	float: left;
 	position: relative;
 	z-index: $zIndex-footer;
-	background: $color-black-light;
+	background: white;
 	width: 100vw;
-	height: 400px;
+	height: 430px;
+	padding-top: 200px;
 	overflow: hidden;
 	
+	.bg, .overlay {
+		position: absolute;
+		left: -50px;
+		top: -50px;
+		width: calc(100% + 100px);
+		height: calc(100% + 100px);
+
+		
+	}
 	.bg {
-		position: absolute;
-		left: -100px;
-		top: -100px;
-		width: calc(100% + 200px);
-		height: calc(100% + 200px);
-		background-image: url(img/lp-header-7.jpg);
+		background-image: url(img/footer-bg.jpg);
 		background-size: cover;
-		background-position: center calc(50% + 130px);
+		background-position: center -150px ;
 		background-color: green;
-		filter: blur(20px);
+		filter: blur(5px);
 	}
-	.contentWrap {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
+	.overlay {
 		background: rgba(0, 0, 0, 0.8);
+			
 	}
+
 	.content {
-		position: absolute;
-		bottom: 0;
-		width: 1155px;
+		position: relative;
+		padding: 0 calc($space*2);
 		margin-left: calc(50% - 600px);
 		
-		padding-top: calc(125px + ($space*4));
-		padding: calc($space*4) calc($space*2);
-		
-		
-		
 		.top {
+			
 			float: left;
 			width: 50%;
+			
 			img {
 				width: 80px;
 				float: left;
@@ -541,7 +537,9 @@ footer {
 				font-family: Roboto-Medium;
 				font-size: 16px;
 			}
+			
 		}
+		
 		.bottom {
 			float:left;
 			margin-right: 20px;
@@ -566,6 +564,13 @@ footer {
 	}
 	
 	
+	
+}
+
+body.touch-device {
+	footer {
+		
+	}
 }
 
 
@@ -621,12 +626,7 @@ a {
 }
 a.text {
 	border-bottom: 1px solid $color-grey-dark;
-	
-	/*
-	&:hover {
-		border-color: $color-title-normal;
-	}
-	*/
+
 }
 b, strong {
 	font-family: Roboto-Medium;
@@ -675,7 +675,8 @@ span.accountName {
 .profilObjectWrap,
 .profilLendWrap,
 .profilBorrowWrap,
-.contentContainer {
+.contentContainer,
+.infoHeader {
 	&.ng-hide-add {
 		transition: all 0.3s 0s ease-in-out;
 	}
@@ -713,9 +714,9 @@ footer {
 		width: 100%;
 		padding: calc($space-small * 3) calc((50% - 720px) + (25px*1));
 		transform: translateX(0);
-		z-index: 20;
+		z-index: $zIndex-topbar2;
 		background: $color-grey-dark-bg;
-		height: 59px;
+		height: 60px;
 		
 		position: fixed;
 		transform: translateY(0);
@@ -779,13 +780,13 @@ footer {
 		.topContainer {
 			float: left;
 			width: 100%;
-			height: calc(100vh - 250px);
+			height: calc(100vh - 200px);
 			min-height: 500px;
 			position: relative;
 			
 			
 			padding: 0 calc(50% - 600px + ($space*2));
-			padding-top: 15vh;
+			padding-top: 20vh;
 	
 			background-repeat: no-repeat;
 			background-size: cover;
@@ -797,6 +798,7 @@ footer {
 				min-height: 115px;
 				padding-top: $space;
 				padding-bottom: $space;
+				margin-top: 70px;
 				
 				.bgImage {
 					opacity: 0;
@@ -822,9 +824,9 @@ footer {
 			.bgImage {
 				position: absolute;
 				left: 0;
-				top: 0;
+				top: -50px;
 				width: 100%;
-				height: 100%;
+				height: calc(100% + 100px);
 				background-repeat: no-repeat;
 				background-size: cover;
 				background-position: center center;
@@ -939,6 +941,17 @@ footer {
 			width: 100%;
 			border-top: 1px solid $color-grey-dark;
 			padding-top: $space;
+			
+			&.ng-hide-add {
+				transition: all 0.3s 0s ease-in-out;
+			}
+			&.ng-hide-remove {
+				transition: all 0.3s 0s ease-in-out;
+			}
+			
+			&.ng-hide {
+				opacity: 0;
+			}
 		}
 		
 		.previewRow {
@@ -997,10 +1010,24 @@ footer {
 	
 }
 
-body.scroll-header #containerMain .topBar,
-body.scroll-up #containerMain .topBar {
-	transform: translateY(70px);
+body.scroll-header #containerMain,
+body.scroll-up #containerMain {
+	.topBar {
+		transform: translateY(70px);
+	}
+	
+	
 }
+body.scroll-header.scroll-conversation #containerMain,
+body.scroll-up.scroll-conversation #containerMain {
+	.header {
+		transform: translateY(70px);
+	}
+	
+	
+}
+
+
 
 #contextBoxWrap.category {
 	background: white;
@@ -1027,7 +1054,7 @@ body.scroll-up #containerMain .topBar {
 	    border-bottom: none;
 	}
 	
-	$count: 5;
+	$count: 4;
 	.itemCategory {
 		float: left;
 		width: calc((100% / $count) - ($space-small/$count*($count - 1)));
@@ -1036,24 +1063,11 @@ body.scroll-up #containerMain .topBar {
 		
 		transition: all 0.1s ease-in-out;	
 		
-		&:nth-child(5n+1) {
+		&:nth-child(4n+1) {
 			margin-left: 0;
 		}
 		
-		/*
-		&:hover {
-			
-			.info {
-				background-color: $color-main-dark-active;
-			}
-		}
-		*/
-		/*
-		&:active {
-			transform: scale3d(0.95,0.95,0.95);
-		}
-		*/
-		
+	
 		.imageWrap {
 			float: left;
 			width: 100%;
@@ -1194,21 +1208,32 @@ body.scroll-up #containerMain .topBar {
 		margin-left: 23px;
 		margin-top: 18px;
 		
+		
 		> .arrow {
 			margin-left: -10px;
 		}
 	}
+	&.profil,
+	&.boxGet,
+	&.boxBack,
+	&.lendContact,
+	&.login {
+		z-index: $zIndex-contextmenuModal;
+	}
 	
 	&.boxGet {
+		margin-left: 50px;
 		> .arrow {
-			margin-left: 30px;
+			margin-left: -7px;
+			left: 50% !important;
 		}
 	}
 	
 	&.boxBack {
-		margin-left: 280px;
+		margin-left: 260px;
 		> .arrow {
-			margin-left: -220px;
+			margin-left: -7px;
+			left: 50% !important;
 		}
 	}
 
@@ -1240,20 +1265,7 @@ body.scroll-up #containerMain .topBar {
 			font-size: 16px;
 			position: relative;
 			color: $color-text;
-			/*
-			&.current {
-				background-color: $color-grey-light;
-				font-family: Roboto-Medium;
-			}
-			
-			&:hover {
-				background-color: $color-grey-light;
-			}
-			
-			&:active {
-				background-color: $color-grey-dark;
-			}
-			*/
+
 		}
 	}
 	
@@ -1265,7 +1277,7 @@ body.scroll-up #containerMain .topBar {
 		top: 0;
 		left: 0;
 		background: $color-main-dark;
-		z-index: 11;
+		z-index: $zIndex-topbar;
 		box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
 		
 		display: none;
@@ -1286,6 +1298,14 @@ body.scroll-up #containerMain .topBar {
 	z-index: $zIndex-contextmenuOverlay;
 	top: 0;
 	left: 0;
+	
+	&.profil,
+	&.boxGet,
+	&.boxBack,
+	&.lendContact,
+	&.login {
+		z-index: $zIndex-contextmenuOverlayModal;
+	}
 }
 
 
@@ -1374,10 +1394,6 @@ span.mark {
 		a.close {
 			background-color: $color-special-red;
 			background-image: url(img/icon-close-white.svg);
-			
-			&:hover {
-				background-color: $color-special-red-active;
-			}
 		}
 	}
 	
@@ -1482,9 +1498,8 @@ span.mark {
 				display: block;
 				font-size: 14px;
 				margin-bottom: 3px;
-				color: $color-grey-dark-text;
-				text-transform: uppercase;
-				letter-spacing: 0.5px;
+				color: $color-text;
+				font-family: RobotoSlab;
 				
 				&.checkbox {
 					color: black;
@@ -1610,10 +1625,14 @@ form {
 		border: 1px solid $color-grey-dark;
 		font-size: 14px;
 		padding: 8px;
-				
+
+	}
+	
+	input, textarea, button.bt_dark, button.bt_light, select  {
+		
 		&:focus {
-/*			background-color: $color-main-light;*/
-			border-color: $color-main-dark;	
+			outline: 2px solid $color-grey-dark-text;
+			
 		}
 	}
 }
@@ -1687,21 +1706,9 @@ a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
 		background-position: calc($space/2) center;
 		background-size: 7px;
 		background-image: url(img/arrow-left-black.svg);
-		
-		/*
-		&:hover {
-			background-position-x: calc(($space-small*3) - 3px);
-		}
-		*/
 	}
 	&.arrowDown {
 		background-image: url(img/arrow-down-black.svg);
-		/*
-		&.active,
-		&:hover {
-			background-position-y: calc(50% + 3px);
-		}
-		*/
 	}
 	&.close {
 		background-image: url(img/icon-close-black.svg);
@@ -1742,13 +1749,7 @@ a.bt_light, a.bt_dark, button.bt_dark, input.bt_dark, input.bt_light {
 		opacity: 0.5;
 		box-shadow: none;
 		cursor: default;
-		
-		/*
-		&:hover,
-		&:active {
-			background-position: calc(100% - ($space-small*3)) center;
-		}
-		*/
+
 	}
 	
 }
@@ -1760,13 +1761,6 @@ a.bt_light, input.bt_light {
 	line-height: 37px;
 	color: $color-text;
 	
-	/*
-	&:hover,
-	&.active,
-	&:active {
-		background-color: $color-main-light;
-	}
-	*/
 }
 
 a.bt_dark, button.bt_dark, input.bt_dark {
@@ -1775,12 +1769,7 @@ a.bt_dark, button.bt_dark, input.bt_dark {
 
 	border: none;
 	line-height: 41px;
-	/*
-	&.active,
-	&:hover {
-		background-color: $color-main-dark-active;
-	}
-	*/
+
 }
 input.bt_dark {
 	display: inline-block;
@@ -1811,22 +1800,14 @@ a.bt_light.small, a.bt_dark.small, button.bt_dark.small, input.bt_dark.small {
 	
 	&.arrowDown {
 		padding-right: calc(($space-small*1) +  10px + ($space-small*2));
-		/*
-		&:hover {
-			background-position-y: calc(50% + 2px);
-		}
-		*/
+
 	}
 	
 	
 	&.arrowRight {
 		background-size: 6px;
 		padding-right: calc(($space-small*1) +  8px + ($space-small*2));
-		/*
-		&:hover {
-			background-position-x: calc((100% - ($space-small*2)) + 3px);
-		}
-		*/
+
 	}
 	
 	&.arrowLeft {
@@ -1834,12 +1815,7 @@ a.bt_light.small, a.bt_dark.small, button.bt_dark.small, input.bt_dark.small {
 		padding-right: calc($space-small*2);
 		padding-left: calc(($space-small*1) +  8px + ($space-small*2));
 		background-position-x: calc($space-small*2);
-		
-		/*
-		&:hover {
-			background-position-x: calc(($space-small*2) - 3px);
-		}
-		*/
+
 	}
 }
 
@@ -1965,27 +1941,9 @@ a.bt_dark.small, button.bt_dark.small, input.bt_dark.small {
 		
 		
 	}
-	/*
 
-	&.ng-enter {
-		transition: 0.5s linear all;
-		opacity: 0;
-	}
- 
-	&.ng-enter.ng-enter-active {
-		opacity: 1;
-	}
-	
-	&.ng-leave {
-		transition: 0.5s linear all;
-		opacity: 1;
-	}
- 
-	&.ng-leave.ng-leave-active {
-		opacity: 0;
-	}
-	
-*/
+
+
 }
 
 
@@ -2027,14 +1985,6 @@ a.bt_dark.small, button.bt_dark.small, input.bt_dark.small {
 			span {
 				display: none;
 			}
-			
-			/*
-			&:active,
-			&:hover {
-				background-position-y: calc(50% + 3px);
-				background-color: $color-main-dark-active;
-			}
-			*/
 			
 		}
 	}
@@ -2286,18 +2236,11 @@ body.click-device {
 		}
 	}
 	
-	.modalBody.lendCheckData {
-		form .buttonRow a {
-			&:hover {
-				background-color: $color-special-back;
-			}
-			&:first-of-type {
-				&:hover {
-					background-color: $color-special-get;
-				}
-			}
+
+	.modalHead.warning a.close {
+		&:hover {
+			background-color: $color-special-red-active;
 		}
-	
 	}
 	
 	
@@ -2499,18 +2442,10 @@ body.touch-device {
 		}
 	}
 	
-	.modalBody.lendCheckData {
-		form .buttonRow a {
-			&:active {
-				background: $color-special-back;
-			}
-			&:first-of-type {
-				&:active {
-					background: $color-special-get;
-				}
-			}
+	.modalHead.warning a.close {
+		&:active {
+			background-color: $color-special-red-active;
 		}
-	
 	}
 
 }
@@ -2594,24 +2529,6 @@ nav.sub {
 			color: $color-text;
 			border-bottom: 5px solid white;
 			padding-bottom: 10px;
-			
-			/*
-			&:hover {
-				border-bottom: 5px solid $color-grey-dark;
-			}
-			&.current {
-				font-family: Roboto-Medium;
-				border-bottom: 5px solid $color-main-dark;
-			}
-			
-			&:active {
-				border-bottom: 5px solid $color-main-dark;
-			}
-			*/
-			
-			.mark {
-				
-			}
 		}
 	}
 }
@@ -2633,6 +2550,13 @@ nav.sub {
 
 }
 
+.profilObjectWrap, .profilLendWrap, .profilBorrowWrap {
+	> p {
+		font-size: 18px;
+		line-height: 27px;
+	}
+}
+
 .profilBaseWrap {
 	float: left;
 	width: 100%;
@@ -2642,7 +2566,7 @@ nav.sub {
 	}
 	
 	.contact {
-		width: calc(100% - 150px - $space);
+		width: calc(100% - 150px - ($space * 2));
 		float: right;
 		
 		
@@ -2672,7 +2596,7 @@ nav.sub {
 		float: left;
 		width: 100%;
 		margin-top: $space;
-		padding-left: calc(150px + $space);
+		padding-left: calc(150px + ($space * 2));
 	}
 	
 	#btProfilEdit {
@@ -2991,11 +2915,7 @@ nav.sub {
 						&::before {
 							display: none;
 						}
-						/*
-						&:hover {
-							background-color: $color-main-dark-active;
-						}
-						*/
+
 					}
 					.rn-carousel-control-next {
 						background-image: url(img/arrow-right-black.svg);
@@ -3348,21 +3268,12 @@ nav.sub {
 												width: 30px;
 												
 												transition: all 0.1s ease-in-out;
-												/*
-												&:hover {
-													background-color: $color-main-dark-active;
-													background-position-x: calc(50% + 3px);
-												}
-												*/
+
 											}
 											
 											button.uib-left {
 												background-image: url(img/arrow-left-black.svg);
-												/*
-												&:hover {
-													background-position-x: calc(50% - 3px);
-												}
-												*/
+
 											}
 										}
 									}
@@ -3388,22 +3299,7 @@ nav.sub {
 												font-size: 12px;
 												
 								
-												/*
-												&:hover {
-													background: $color-main-light;
-												}
-												&:active {
-													color: $color-text;
-													background: $color-main-light-acitve;
-												}
-												
-												&:disabled {
-													cursor: default;
-													background: $color-grey-light;
-													color: $color-grey-light-text;
-												}
-												
-												*/
+
 												&.other-month {
 													display: none;
 												}
@@ -3517,11 +3413,11 @@ nav.sub {
 		float: left;
 		width: 100%;
 		margin-top: 50px;
-		max-height: calc(100vh - 400px);
+		max-height: calc(100vh - 440px);
 		overflow: scroll;
 		
 		a.cancel {
-			margin-top: $space;
+			margin-top: calc($space-small * 2);
 			margin-bottom: $space;
 		}
 	}
@@ -3530,7 +3426,6 @@ nav.sub {
 #contextBoxWrap.boxGet,
 #contextBoxWrap.boxBack,
 #contextBoxWrap.timepicker {
-	position: absolute;
 	background: white;
 		
 	text-align: center;
@@ -3612,20 +3507,7 @@ nav.sub {
 				text-align: center;
 				
 				cursor: pointer;
-				/*
-				&:hover {
-					background: $color-main-light;
-				}
-				
-				&.active {
-					background: $color-main-dark;
-				}
-				
-				&:active {
-					background: $color-main-dark-active;
-					color: $color-text;
-				}
-				*/
+
 			}
 		}
 	}
@@ -3645,6 +3527,49 @@ nav.sub {
 * Borrow / Lend
 */
 
+body.scroll-conversation {
+	#containerMain.page_borrow, #containerMain.page_lend {
+		.header {
+			position: fixed;
+			top: 0;
+		
+			padding-bottom: calc($space-small *2);
+			padding-top: calc(($space-small *2) + 72px);
+			
+			padding-left: calc(50% - (1440px/2) + ($space-small *8));
+		padding-right: calc(50% - (1440px/2) + ($space-small *8));
+		
+			box-shadow: 0px 1px 3px rgba(0,0,0, 0.1);
+			border-bottom: none;
+			
+			.arrowBG {
+				top: calc(19px + 72px);
+				width: calc(1440px - 80px - ($space-small * 18));
+				left: calc(50% - ((1440px - 80px - ($space-small * 18)) / 2));
+			}
+			.profilImage {
+				width: 40px;
+				height: 40px;
+			}
+			.img {
+				width: 65px;
+				height: calc(65px * 0.75);
+				
+				
+				.info {
+					display: none;
+				}
+			}
+			
+			.firstPerson {
+				width: calc(50% - ($space) - (65px/2));
+				.info {
+					display: none;
+				}
+			}
+		}
+	}
+}
 
 
 #containerMain.page_borrow, #containerMain.page_lend {
@@ -3655,22 +3580,36 @@ nav.sub {
 		top: 0px;
 	}
 	.header {
+
 		float: left;
 		width: 100%;
 
 		padding: calc($space*1) calc(50% - (1200px/2));
-		margin-top: 80px;
-		position: relative;
+		padding: calc($space*1) $space;
+		padding-top: calc($space + 62px);
+		padding-left: calc(50% - (1440px/2) + ($space *1));
+		padding-right: calc(50% - (1440px/2) + ($space *1));
+		
+		position: absolute;
+		top: 0px;
+		transform: translateY(0);
+		transition: transform 0.3s 0s ease-in-out;
+		
+		
+		z-index: $zIndex-topbar3;
+		background: white;
+		
+		border-color: $color-grey-dark;
 		
 		.arrowBG {
 			position: absolute;
-			width: 290px;
-			left: calc(50% - (290px / 2));
-			top: 62px;
+			width: calc(1440px - 200px - ($space * 2) - ($space-small * 2));
+			left: calc(50% - ((1440px - 200px - ($space * 2)) / 2) + $space-small);
+			top: calc(65px + 60px);
 			height: 3px;
 			background-image: url(img/arrow-left-black-light.svg);
 			background-image: url(img/arrow-left-color.svg);
-			background-position: 4px center;
+			background-position: 0px center;
 			background-repeat: no-repeat;
 			background-size: 8px;
 			height: 20px;
@@ -3678,7 +3617,7 @@ nav.sub {
 			&::before {
 				content: '';
 				position: absolute;
-				width: calc(100% - 6px);
+				width: calc(100% - 2px);
 				height: 2px;
 				top: 9px;
 				right: 0;
@@ -3687,76 +3626,76 @@ nav.sub {
 			}
 		}
 		.img {
-			position: absolute;
-			left: calc(50% - (190px/2));
-			width: 190px;
-			height: 100px;
-			top: $space;
-			margin-right: -20px;
+			float: left;
+			width: 250px;
+			height: calc(250px * 0.75);
+			margin-left: $space;
 			background-size: cover;
 			background-position: center center;
 			border: 2px solid $color-grey-dark-text;
-			border: 4px solid $color-main-dark;
+			border: 5px solid white;
+			position: relative;
+			margin-top: -5px;
+			margin-bottom: -5px;
 			
-			.arrow {
-				display: none;
+			.info {
 				position: absolute;
-				width: 100%;
-				height: 100%;
-				top: 0;
-				left: 0;
-/*				background-color: rgba(0, 0, 0, 0.2);*/
-				background-image: url(img/arrow-right-grey.svg);
-				background-size: 20%;
-				background-repeat: no-repeat;
-				background-position: center center;
-				
-				/*
-				&:hover {
-					background: none;
-				}
-				*/
+				bottom: calc($space-small * 2);
+				left: calc($space-small * 2);
+				width: calc(100% - ($space-small * 4));
+				background: white;
+				line-height: 17px;
+				font-size: 13px;
+				font-family: Roboto-Medium;
+				padding: calc($space-small * 1) calc($space-small * 2);
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
+
 		}
 		
-		.firstPerson, .secondPerson {
-			width: calc(50% - (190px / 2) - ($space*2));
-		}
+
 		
 		.firstPerson {
+			width: calc(50% - (250px / 2) - ($space*1));
+			min-width: 120px;
 			float: left;
-			.name {
-				font-size: 18px;
-			}
+			
 			
 			.profilImage {
-				float: right;
+				float: left;
 			}
 			
 			.info {
-				float: right;
-				text-align: right;
-				line-height: 90px;
-				padding-right: $space;
+				float: left;
+				text-align: left;
+				width: calc(100% - 100px);
+				padding-left: $space;
+				> .name {
+					font-size: 18px;
+					padding-top: $space;
+					
+				}
+				
+				a,
+				> .name {
+					max-width: 100%;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+				}
 			}
 			
 			&.showContact {
-				.info {
-					line-height: 22px;
-					padding-top: $space;
-					padding-right: $space;
-					
-					a.contact {
-						margin-top: $space-small;
-					}
-				}
+
 			}
 		}
 		
 		.secondPerson {
 			float: right;
 			.profilImage {
-				float: left;
+				float: right;
 			}
 		}
 		
@@ -3765,7 +3704,10 @@ nav.sub {
 	
 	.conversationContainer {
 		float: left;
-		padding: $space calc(50% - (1200px/2) + $space);
+		width: 100%;
+		padding: $space calc(50% - (1200px/2) + $space-small);
+		margin-top: calc(25px * 12);
+		
 		position: relative;
 		
 		.timeline {
@@ -3809,7 +3751,7 @@ nav.sub {
 		.messageItem {
 			float: left;
 			width: 100%;
-			margin-bottom: calc($space * 2);
+			margin-bottom: calc($space * 3);
 			padding-right: $space;
 			padding-left: $space;
 			
@@ -3820,7 +3762,7 @@ nav.sub {
 				float: left;
 				width: calc(50% - ($space * 2));
 				position: relative;
-				margin-bottom: $space;
+				/*margin-bottom: $space;*/
 				background: $color-grey-light;
 				background: white;
 				border-bottom: 1px solid $color-grey-dark-bg;
@@ -3838,10 +3780,7 @@ nav.sub {
 					right: -7px;
 					transform: rotate( 225deg );
 				}
-				
-				.profilImage {
-					display: none;
-				}
+
 				
 				> .title {
 					line-height: 22px;
@@ -3961,6 +3900,8 @@ nav.sub {
 			
 			
 			&.both {
+				margin-bottom: calc(25px);
+				
 				.content {
 					width: 50%;
 					margin-left: calc(50% - 25%);
@@ -4024,6 +3965,7 @@ nav.sub {
 			float: left;
 			width: 100%;
 			padding: $space;
+			padding-bottom: calc($space * 2);
 			
 			.content {
 				margin-top: -5px;
@@ -4098,7 +4040,7 @@ nav.sub {
 		.arrowBG {
 			background-image: url(img/arrow-right-black-light.svg);
 			background-image: url(img/arrow-right-color.svg);
-			background-position: calc(100% - 4px) center;
+			background-position: right center;
 			&::before {
 				right: auto;
 				left: 0;
@@ -4116,16 +4058,6 @@ nav.sub {
 	}
 }
 #containerMain.page_lend {
-	.header {
-		
-		.img {
-			.arrow {
-				background-image: url(img/arrow-left-grey.svg);
-			}
-		}
-		
-	}
-	
 	.conversationContainer {
 		.actionBox.state-answered .content {
 			&::before {
@@ -4147,23 +4079,21 @@ nav.sub {
 			text-align: center;
 			a {
 				margin: calc($space-small * 2);
-				border: none;
-				background-color: $color-special-back-light;
-				
-				/*
-				&:hover {
-					background: $color-special-back;
-				}
-				*/
-				
-				&:first-of-type {
-					background-color: $color-special-get-light;
+				span:first-child {
+					background-repeat: no-repeat;
+					background-size: 20px;
+					background-position: left center;
+					display: inline-block;
+					width: 21px;
+					height: 21px;
+					position: relative;
+					top: 5px;
+					margin-right: 5px;
+					background-image: url(img/icon-arrow-get.svg);
 					
-					/*
-					&:hover {
-						background: $color-special-get;
+					&.back {
+						background-image: url(img/icon-arrow-back.svg);
 					}
-					*/
 				}
 				
 				&.noMatching {
@@ -4229,6 +4159,47 @@ nav.sub {
 }
 
 /**
+* InfoPage
+*/
+.infoHeader {
+
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 70vh;
+	background-size: cover;
+	background-position: center top;
+	z-index: 0;
+
+}
+#containerMain.page_info .contentContainer {
+	margin-top: 0;
+	padding-top: 0;
+	
+	> .text {
+		width: 625px;
+		padding: calc($space *2);
+		margin-left: calc(50% - 600px);
+		margin-top: calc(-$space * 3);
+		padding-top: 40px;
+		background: white;
+
+		h1 {
+			font-family: RobotoSlab-Bold;
+			font-size: 39px;
+			line-height: 46px;
+		}
+		
+		p {
+			font-family: Roboto-Light;
+			font-size: 18px;
+			line-height: 27px;
+		}
+	}
+}
+
+/**
 * LandingPage
 */
 #contextBoxWrap.login {
@@ -4257,7 +4228,7 @@ nav.sub {
 
 .landingPageWrap {
 	header.landingPage {
-		position: absolute;
+		position: relative;
 		top: 0;
 		left: 0;
 
@@ -4300,11 +4271,11 @@ nav.sub {
 	}
 	
 	section.headerBG {
-		position: fixed;
-		top: 0;
+		position: relative;
+		top: -100px;
 		left: 0;
 		width: 100vw;
-		height: 100vh;
+		height: 83vh;
 		background-size: cover;
 		background-position: center top;
 		z-index: 0;
@@ -4312,9 +4283,9 @@ nav.sub {
 	
 	section.main {
 		position: relative;
-		z-index: 2;
+		z-index: $zIndex-content;
 		background: white;
-		margin-top: 90vh;
+		margin-top: -10vh;
 		float: left;
 		width: 100%;
 		
@@ -4537,13 +4508,10 @@ nav.sub {
 	}
 	
 	footer {
-		height: 70vh;
+		height: 530px;
 		.content {
-			position: absolute;
-			bottom: 0;
-			margin-left: calc(50% - (1200px/2));
-			padding-bottom: calc($space*4);
+			top: 100px;
 		}
-		
 	}
+	
 }

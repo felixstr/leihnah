@@ -1,5 +1,5 @@
 <div ng-include="contextBox.template" ng-show="contextBox.visible" onload="contextBox.loaded()"></div>
-<div id="contextBoxOverlay" ng-show="contextBox.visible" ng-click="contextBox.hide()"></div>
+<div id="contextBoxOverlay" ng-show="contextBox.visible" class="login" ng-click="contextBox.hide()"></div>
 
 
 <div class="landingPageWrap">
@@ -18,7 +18,7 @@
 		
 	</header>
 
-	<section class="headerBG" preload-bg-image="{{ headerBG }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></section>
+	<section class="headerBG" preload-bg-image="{{ headerBG }}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png" parallax parallax-ratio="0.5"></section>
 	
 	<section class="main">
 		<div class="rowDescription">
@@ -64,7 +64,7 @@
 		<div class="rowSettlements">
 			<div class="titleAdd">Neubühl, Im Tiergarten, Riedtli</div>
 			<h2>LEIHNAH-Siedlungen</h2>
-			<p>LEINAH wird bereits jetzt in verschiedenen Siedlungen verwendet. Ist deine Siedlung schon dabei?</p>
+			<p>LEIHNAH wird bereits jetzt in verschiedenen Siedlungen verwendet. Ist deine Siedlung schon dabei?</p>
 		</div>
 		
 		<div class="rowSettlementImages">
@@ -109,17 +109,17 @@
 	
 	<footer>
 		<div class="bg"></div>
-		<div class="contentWrap">
-			<div class="content">
-				<div class="top">
-					<img class="logo" src="assets/img/static/leihnah-logo.svg" />
-					<div class="slogan">Mehr Wert in der Nachbarschaft</div>
-				</div>
-				
-				<div class="bottom">
-					Eine Bachelorarbeit von Felix Stricker. <br />
-					Für Fragen oder Anregungen: <a  class="text" href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>
-				</div>
+		<div class="overlay" >
+		</div>
+		<div class="content">
+			<div class="top">
+				<img class="logo" src="assets/img/static/leihnah-logo.svg" />
+				<div class="slogan">Mehr Wert in der Nachbarschaft</div>
+			</div>
+			
+			<div class="bottom">
+				Eine Bachelorarbeit von Felix Stricker. <br />
+				Für Fragen oder Anregungen: <a  class="text" href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>
 			</div>
 		</div>
 	</footer>

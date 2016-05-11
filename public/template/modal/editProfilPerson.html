@@ -27,11 +27,27 @@
 			</label>
 	    </div>
 		
+<!--
 		<div class="formRow" ng-class="{ error: editPerson.phone.$error.required }">
 			<label>Mobile Nummer</label>
 			<input type="text" name="phone" ng-model="person.phone" ng-minlength="10" ng-maxlength="15" ng-pattern="/^[\d ]*$/" autocomplete="off" placeholder="z.B. 079 123 45 67">
 			<div class="warning" ng-show="editPerson.phone.$error.pattern || editPerson.phone.$error.minlength || editPerson.phone.$error.maxlength">			
 				<span ng-show="editPerson.phone.$error.pattern">Nur Zahlen und Leerzeichen sind erlaubt. </span>
+				<span ng-show="editPerson.phone.$error.minlength">Mindestens 10 Zeichen sind nötig. </span>
+				<span ng-show="editPerson.phone.$error.maxlength">Zuviele Zeichen. </span>
+			</div>
+			
+			<label class="checkbox" ng-show="person.phone != '' && !editPerson.phone.$error.required">
+				<input type="checkbox" ng-model="person.phonePublic">
+				<div class="label">Immer sichtbar für alle angemeldeten Nachbarn</div>
+			</label>
+		</div>
+-->
+		
+		<div class="formRow" ng-class="{ error: editPerson.phone.$error.required }">
+			<label>Mobile Nummer</label>
+			<input type="text" name="phone" ng-model="person.phone" ng-minlength="10" ng-maxlength="15" autocomplete="off" placeholder="z.B. 079 123 45 67">
+			<div class="warning" ng-show="editPerson.phone.$error.minlength || editPerson.phone.$error.maxlength">			
 				<span ng-show="editPerson.phone.$error.minlength">Mindestens 10 Zeichen sind nötig. </span>
 				<span ng-show="editPerson.phone.$error.maxlength">Zuviele Zeichen. </span>
 			</div>

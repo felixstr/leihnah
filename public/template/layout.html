@@ -1,5 +1,5 @@
-<div ng-include="contextBox.template" ng-show="contextBox.visible" onload="contextBox.loaded()"></div>
-<div id="contextBoxOverlay" ng-show="contextBox.visible" ng-click="contextBox.hide()"></div>
+<div id="contextBoxContainer" ng-include="contextBox.template" ng-show="contextBox.visible" onload="contextBox.loaded()" class="{{ contextBox.id }}"></div>
+<div id="contextBoxOverlay" ng-show="contextBox.visible" ng-click="contextBox.hide()" class="{{ contextBox.id }}"></div>
 
 <div class="mobile-nav" ng-if="showMobile" ng-class="{showMobileNav: mobileNav == 'show'}" ng-show="pageVisibility.showContent">
 	<div class="bg"></div>
@@ -17,6 +17,7 @@
 		</div>
 		<div class="pages">
 			<a ng-class="{current: state.is('objects') || state.includes('object')}" ng-click="toggleMobileNav(); goPageObjects(); resetFilter(); loadObjects(); " href >Gegenstände</a>
+			<a ng-class="{current: state.is('info')}" ng-click="toggleMobileNav(); goPageInfo();" href >Information</a>
 		</div>
 		<div class="logout">
 			<a href ng-click="logoutUser(); toggleMobileNav()">Abmelden</a>
@@ -41,8 +42,7 @@
 <!--  		content: {{  pageVisibility.showContent }}, contentProfil: {{  pageVisibility.showContentProfil }} -->
 		<nav class="pages" ng-if="showDesktop">
 			<a ng-class="{current: state.is('objects') || state.includes('object')}" ng-click="goPageObjects();" href>Gegenstände</a>
-	<!-- 		<a ui-sref="neighbor">Nachbarn</a> -->
-	<!-- 		<a ui-sref="wishlist">Wunschliste</a> -->
+			<a href class="info" ng-class="{current: state.is('info')}" ng-click="goPageInfo()">Info<span>rmation</span></a>
 		</nav>
 
 		<button class="hamburger" ng-if="showMobile" ng-click="toggleMobileNav()" ng-class="{active: mobileNav == 'show'}">
@@ -57,19 +57,20 @@
 	<div id="containerMain" ng-class="{'fadeout': fadeout}" class="{{ 'page_'+state.current.name.replace('.', '-') }}"ui-view autoscroll='false' onload="contentLoaded()"></div>
 	
 	
-	<footer ng-show="pageVisibility.showContent">
+	<footer ng-show="pageVisibility.showContent" >
 		<div class="bg"></div>
-		<div class="contentWrap">
-			<div class="content">
-				<div class="top">
-					<img class="logo" src="assets/img/static/leihnah-logo.svg" />
-					<div class="slogan">Mehr Wert in der Nachbarschaft</div>
-				</div>
-				
-				<div class="bottom">
-					Eine Bachelorarbeit von Felix Stricker. <br />
-					Für Fragen oder Anregungen: <a  class="text" href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>
-				</div>
+		<div class="overlay">
+			
+		</div>
+		<div class="content">
+			<div class="top">
+				<img class="logo" src="assets/img/static/leihnah-logo.svg" />
+				<div class="slogan">Mehr Wert in der Nachbarschaft</div>
+			</div>
+			
+			<div class="bottom">
+				Eine Bachelorarbeit von Felix Stricker. <br />
+				Für Fragen oder Anregungen: <a  class="text" href="mailto:felix@leihnah.ch">felix@leihnah.ch</a>
 			</div>
 		</div>
 		

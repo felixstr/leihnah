@@ -1,6 +1,6 @@
 angular.module('Leihnah').controller('ActivationObjectController', function($scope, $uibModalInstance, $http, $log, currentObject, AuthenticationService) {
 	
-	$log.debug('currentobject', currentObject);
+// 	$log.debug('currentobject', currentObject);
 	
 	$scope.currentObject = angular.copy(currentObject);
 	

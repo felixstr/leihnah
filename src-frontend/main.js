@@ -1,14 +1,9 @@
-var app = angular.module('Leihnah', ["ui.router", 'ui.bootstrap', "ngFileUpload", 'piwik', 'ngSanitize', 'angular-carousel', 'ngTouch', 'angularMoment', 'ngAnimate', 'duScroll', 'rt.resize', 'angular-preload-image']); 
+var app = angular.module('Leihnah', ["ui.router", 'ui.bootstrap', "ngFileUpload", 'piwik', 'ngSanitize', 'angular-carousel', 'ngTouch', 'angularMoment', 'ngAnimate', 'duScroll', 'angular-preload-image', 'angular-parallax']); 
 module.exports = app;
  
  
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $logProvider, $windowProvider) {
-/*
-	
-	$analyticsProvider.firstPageview(true); 
-	$analyticsProvider.withAutoBase(true);
-	$analyticsProvider.virtualPageviews(false);
-*/
+
 	
 	if ($windowProvider.$get().location.host != 'localhost' && $windowProvider.$get().location.host != '192.168.1.101') {
 		$logProvider.debugEnabled(false);
@@ -104,10 +99,10 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $logProvi
 			templateUrl: 'template/neighbor.html',
 			parent: 'layout'
 		})
-		.state('wishlist', {
-			url: '/wishlist',
-			controller: 'WishlistController',
-			templateUrl: 'template/wishlist.html',
+		.state('info', {
+			url: '/info',
+			controller: 'InfoController',
+			templateUrl: 'template/info.html',
 			parent: 'layout'
 		})
 		.state('profil', {
@@ -189,9 +184,13 @@ app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache
 	
 	var toHome = function($q){
 		var deferred = $q.defer();
-
+		
+		
+		$log.debug('check');
+		
 		AuthenticationService.checkAuthentication(function(authenticated, user) {
 			if (authenticated) {
+				$log.debug('authenticated');
 				deferred.resolve(true);
 			} else {
 				deferred.resolve($state.target('landingpage'));
@@ -210,6 +209,7 @@ app.run(function($rootScope, $state, $transitions, $window, $log, $templateCache
 	$transitions.onBefore({ to: 'profil.objects' }, toHome);
 	$transitions.onBefore({ to: 'profil.lend' }, toHome);
 	$transitions.onBefore({ to: 'profil.borrow' }, toHome);
+	$transitions.onBefore({ to: 'info' }, toHome);
 	
 	
 	

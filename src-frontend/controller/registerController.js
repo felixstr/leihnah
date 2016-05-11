@@ -9,7 +9,7 @@ angular.module('Leihnah').controller('RegisterController', function($scope, $htt
 	
 	// Function
 	$scope.checkUsername = function() {
-		$log.debug('check username: ', $scope.registerInfo.username);
+// 		$log.debug('check username: ', $scope.registerInfo.username);
 		
 		if ($scope.registerInfo.username != undefined) {
 			$http.post('api/usernameexists', {

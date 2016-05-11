@@ -4,7 +4,7 @@
 
 <div class="modalBody">
 
-	<form name="editProfil" ng-submit="editProfil.$valid && save()">
+	<form name="editProfil" ng-submit="editProfil.$valid && save()" ng-if="loaded">
 	    <div class="formRowImage">
 			<div class="picAdd round">
 				<div class="image" ng-show="editProfil.image.$valid" ngf-background="profilImage.file"></div>
@@ -32,12 +32,23 @@
 			<input type="text" name="address" ng-model="currentNeighbor.address" ng-minlength="3" required autocomplete="off">
 			<div class="warning" ng-show="editProfil.address.$error.required">Pflichtfeld</div>
 		</div>
+<!--
 
 		<div class="formRow" ng-class="{ error: editProfil.fixnetPhone.$error.pattern || editProfil.fixnetPhone.$error.minlength || editProfil.fixnetPhone.$error.maxlength }">
 			<label>Festnetz Telefon</label>
 			<input type="text" name="fixnetPhone" ng-model="currentNeighbor.fixnetPhone" ng-minlength="10" ng-maxlength="15" ng-pattern="/^[\d ]*$/" autocomplete="off" placeholder="z.B. 044 123 45 67">
 			<div class="warning" ng-show="editProfil.accountName.$error.pattern || editProfil.fixnetPhone.$error.minlength || editProfil.fixnetPhone.$error.maxlength" >
 				<span ng-show="editProfil.fixnetPhone.$error.pattern">Nur Zahlen und Leerzeichen sind erlaubt. </span>
+				<span ng-show="editProfil.fixnetPhone.$error.minlength">Mindestens 10 Zeichen sind nötig. </span>
+				<span ng-show="editProfil.fixnetPhone.$error.maxlength">Zuviele Zeichen. </span>
+			</div>
+		</div>
+		
+-->
+		<div class="formRow" ng-class="{ error: editProfil.fixnetPhone.$error.minlength || editProfil.fixnetPhone.$error.maxlength }">
+			<label>Festnetz Telefon</label>
+			<input type="text" name="fixnetPhone" ng-model="currentNeighbor.fixnetPhone" ng-minlength="10" ng-maxlength="15" autocomplete="off" placeholder="z.B. 044 123 45 67">
+			<div class="warning" ng-show="editProfil.fixnetPhone.$error.minlength || editProfil.fixnetPhone.$error.maxlength" >
 				<span ng-show="editProfil.fixnetPhone.$error.minlength">Mindestens 10 Zeichen sind nötig. </span>
 				<span ng-show="editProfil.fixnetPhone.$error.maxlength">Zuviele Zeichen. </span>
 			</div>

@@ -1,4 +1,4 @@
-angular.module('Leihnah').service('ContextBoxService', function($log, resize) {
+angular.module('Leihnah').service('ContextBoxService', function($log) {
 	var self = this;
 	
 	self.id = 0;
@@ -113,7 +113,7 @@ angular.module('Leihnah').service('ContextBoxService', function($log, resize) {
 		
 	}
 	
-	$(window).resize(function() {
+	$(window).on('resize', function() {
 		
 		if (self.targetElement != null) {
 			self.setPositions();

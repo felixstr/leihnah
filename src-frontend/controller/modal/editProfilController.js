@@ -1,6 +1,6 @@
 angular.module('Leihnah').controller('EditProfilController', function($scope, $uibModalInstance, $http, $log, currentNeighbor, AuthenticationService, Upload) {
 	
-	$log.debug('currentneighbor', currentNeighbor);
+	$scope.loaded = false;
 	
 	$scope.currentNeighbor = angular.copy(currentNeighbor);
 	
@@ -11,7 +11,7 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 	
 	
 	$scope.save = function () {
-		$log.debug('save: load');
+// 		$log.debug('save: load');
 		
 		var data = $scope.currentNeighbor;
 // 		$log.debug('scope.profilImage.file', $scope.profilImage.file)
@@ -21,7 +21,7 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				$log.debug(response);
+// 				$log.debug(response);
 				$scope.currentNeighbor = response.neighbor;
 				$uibModalInstance.close(response.neighbor);
 				
@@ -42,7 +42,7 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 			})
 			.then(
 				function(response) {
-					$log.debug(response);
+// 					$log.debug(response);
 					
 					$scope.currentNeighbor = response.data.neighbor;
 					$uibModalInstance.close(response.data.neighbor);
@@ -65,6 +65,6 @@ angular.module('Leihnah').controller('EditProfilController', function($scope, $u
 		$uibModalInstance.dismiss('cancel');
 	};
 
-	
+	$scope.loaded = true;
 
 });

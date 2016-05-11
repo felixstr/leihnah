@@ -4,10 +4,10 @@
 	</div>
 	
 	<h2>Kategorien</h2>
-	<a href class="bt_light arrowRight small" ng-click="contextBox.hide(); contextBox.setFilterCategory('all')">Alle Kategorien</a>
+	<a href class="bt_light arrowRight small" ng-click="contextBox.hide(); contextBox.openResults()">Alle Kategorien</a>
 	
 	<div class="content">
-		<div ng-repeat="category in contextBox.categories" class="itemCategory" ng-click="contextBox.hide(); contextBox.setFilterCategory(category.id)">
+		<div ng-repeat="category in contextBox.categories" class="itemCategory" ng-click="contextBox.hide();  contextBox.openResults(category.id)">
 			<div class="imageWrap" >
 				<div class="img" ng-style="{'background-image':'url(assets/img/static/'+category.image+')'}"></div>
 				<div class="height"></div>

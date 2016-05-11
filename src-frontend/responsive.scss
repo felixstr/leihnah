@@ -49,6 +49,35 @@ $space-small: 5px;
 		}
 	}
 	
+	#containerMain.page_lend,
+	#containerMain.page_borrow {
+		.header {
+			width: 100%;
+			margin-left: 0;
+			padding-left: calc($space*1);
+			padding-right: calc($space*1);
+			
+			.arrowBG {
+				width: calc(100% - 200px - ($space * 2) - ($space-small * 2));
+				left: calc(50% - ((100% - 200px - ($space * 2)) / 2) + $space-small);
+			}
+		}
+	}
+	
+	body.scroll-conversation {
+		#containerMain.page_borrow, #containerMain.page_lend {
+			.header {
+				padding-left: calc($space-small *8);
+				padding-right: calc($space-small *8);
+				
+				.arrowBG {
+					width: calc(100% - 80px - ($space-small * 18));
+					left: calc(50% - ((100% - 80px - ($space-small * 18)) / 2));
+				}
+			}
+		}
+	}
+	
 	.page_object {
 		
 		.objectInfo {
@@ -63,12 +92,17 @@ $space-small: 5px;
 }
 
 @media all and (max-width: 1200px) {
-	footer {
-		height: 350px;
-		.bg {
-			background-position-y: 50%;
+	
+	footer,
+	.landingPageWrap footer {
+		height: 430px;
+
+		.content {
+			top: 0;
 		}
 	}
+	
+	
 	/* landing-page */
 	.landingPageWrap {
 		header.landingPage .content {
@@ -109,12 +143,7 @@ $space-small: 5px;
 			}
 		}
 		
-		footer {
-			.content {
-				margin-left: 0;
-				width: 100%;
-			}
-		}
+		
 	}
 	
 	/* site */
@@ -174,36 +203,6 @@ $space-small: 5px;
 	}
 	
 	#containerMain.page_borrow, #containerMain.page_lend { 
-		.header {
-			width: 100%;
-			padding: $space;
-			
-			.firstPerson {
-				.info {
-					width: calc(100% - 100px);
-					
-					.name {
-						width: 100%;
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
-					}
-				}
-				
-				&.showContact  {
-					a.contact {
-						max-width: 100%;
-						white-space: nowrap;
-						text-overflow: ellipsis;
-						overflow: hidden;
-						text-align: left;
-					}
-				
-				}
-				
-			}
-			
-		}
 		.conversationContainer { 
 			width: 100%;
 			padding: calc($space/1) $space;
@@ -260,6 +259,14 @@ $space-small: 5px;
 			}
 		}
 	}
+	
+	#containerMain.page_info .contentContainer {
+		padding: 0;
+		
+		> .text { 
+			margin-left: 0;
+		}
+	}
 }
 
 @media all and (max-width: 1023px) {
@@ -312,11 +319,19 @@ $space-small: 5px;
 	}	
 	
 	/* footer */
-	footer .content {
-		.top, .bottom {
-			width: 100%;
+
+	footer,
+	.landingPageWrap footer {
+		.bg {
+			background-position: center center ;
+		}
+		.content {
+			.top, .bottom {
+				width: 100%;
+			}
 		}
 	}
+	
 	
 	/* site */
 	header.site {
@@ -353,42 +368,36 @@ $space-small: 5px;
 	
 	#containerMain.page_borrow, #containerMain.page_lend { 
 		.header {
-			.arrowBG {
-				width: 240px;
-				left: calc(50% - (240px / 2));
-				top: 45px;
-			}
-			.profilImage {
-				width: 60px;
-				height: 60px;
-				margin-bottom:5px;
+			border-bottom-width: 1px; 
+			border-bottom-style: solid;
+			
+			.img {
+				width: 175px;
+				height: calc(175px * 0.75);
 			}
 			.firstPerson {
+				width: calc(50% - (175px / 2) - ($space*1));
+				
 				.info {
-					padding: 0;
-					line-height: 22px;
-					width: 100%;
+					padding-left: calc(3 * $space-small);
 					
-					.name {
-						margin-top: 5px;
-						width: 100%;
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
+					> .name {
+						font-size: 16px;
+						padding-top: $space;
 					}
+					
+					
 				}
-				&.showContact .info {
-					padding: 0;
-					width: 100%;
-				}
+				
 			}
-
-			.firstPerson, .secondPerson {
-				width: calc(50% - (190px / 2) - ($space));
-			}
+			
+			
 		}
 
 		.conversationContainer { 
+			padding-top: calc($space * 2);
+			margin-top: calc($space * 10);
+			
 			.timeline {
 				display: none;
 			}
@@ -399,6 +408,7 @@ $space-small: 5px;
 					width: calc(75%);
 					
 					
+/*
 					.profilImage {
 						display: block;
 						position: absolute;
@@ -407,20 +417,23 @@ $space-small: 5px;
 						width: 40px;
 						height: 40px;
 					}
+*/
 					
 				}
 				
 				&.right .content,
 				.closed.right {
 					&::before {
-						right: -7px;
+						right: 12px;
+						top:-7px;
 						left: auto;
 					}
-					margin-right: 60px; 
 					
-					.profilImage {
+	/*
+				.profilImage {
 						right: -60px;
 					}
+*/
 					
 					.date {
 						right: 2px;
@@ -428,17 +441,20 @@ $space-small: 5px;
 					}
 				}
 				
-				&.left .content {
+				&.left .content,
+				.closed.left {
 					&::before {
-						left: -7px;
+						left: 12px;
+						top:-7px;
 						right: auto;
 					}
 					
-					margin-left: 60px; 
 					
+/*
 					.profilImage {
 						left: -60px;
 					}
+*/
 					
 					.date {
 						left: 2px;
@@ -461,16 +477,18 @@ $space-small: 5px;
 					width: 500px;
 					
 					&::before {
-						right: -9px;
-						top: 14px;
+						right: 12px;
+						top:-9px;
 						left: auto;
 					}
-					margin-right: 65px; 
 					
-					.profilImage {
+					
+			/*
+		.profilImage {
 						right: -65px;
 						
 					}
+*/
 				}
 				
 			}
@@ -534,6 +552,9 @@ $space-small: 5px;
 
 		nav {
 			margin-left: calc($space*1);
+			a.info span {
+				display: none;
+			}
 		}
 		a.profil {
 			margin-right: calc($space*1);
@@ -541,6 +562,20 @@ $space-small: 5px;
 			.name {
 				display: none;
 			}
+		}
+		
+	}
+	
+	footer {
+		.content {
+			padding-left: calc($space*1);
+			padding-right: calc($space*1);
+		}
+	}
+	.landingPageWrap footer {
+		.content {
+			padding-left: calc($space*2);
+			padding-right: calc($space*2);
 		}
 	}
 
@@ -713,7 +748,20 @@ $space-small: 5px;
 	}
 	
 	#containerMain.page_borrow, #containerMain.page_lend { 
+		
+		.header {
+			.img {
+				width: 146px;
+				height: calc(146px * 0.75);
+			}
+			.firstPerson {
+				width: calc(50% - (146px / 2) - ($space*1));
+			}
+
+		}
+		
 		.conversationContainer { 
+			margin-top: calc($space * 9);
 			
 			.actionBox {
 				.actionContent {
@@ -732,7 +780,8 @@ $space-small: 5px;
 @media all and (max-width: 624px) {
 	/* text */
 	h1,
-	#containerMain h1 {
+	#containerMain h1,
+	#containerMain.page_info .contentContainer .text h1 {
 		font-size: 30px;
 		line-height: 37px;
 	}
@@ -742,12 +791,14 @@ $space-small: 5px;
 		line-height: 28px;
 	}
 	
-	/* buttons */
-	/*
-	a.bt_light, a.bt_dark {
-		padding: 0 calc($space/2);
+	
+	#containerMain.page_info .contentContainer .text p {
+		font-size: 18px;
+		line-height: 26px;
 	}
-	*/
+	
+	
+	
 	
 	span.mark {
 		width: 15px;
@@ -757,7 +808,6 @@ $space-small: 5px;
 	/* landing-page */
 	.landingPageWrap {
 		header.landingPage .content {
-// 			background: yellow;
 			padding: $space;
 			
 			img.logo {
@@ -791,8 +841,7 @@ $space-small: 5px;
 			background-size: 370%;
 		}
 		section.main {
-			margin-top: 107vh;
-			
+		
 			.titleAdd {
 				font-size: 18px;
 				line-height: 25px;
@@ -866,6 +915,12 @@ $space-small: 5px;
 			}
 		}
 		
+		footer {
+			.content {
+				padding-left: calc($space*1);
+				padding-right: calc($space*1);
+			}
+		}
 	}
 	
 	/* site */
@@ -897,6 +952,8 @@ $space-small: 5px;
 		margin: 0;
 		padding-top: 60px;
 		padding-bottom: 90px;
+		
+		z-index: 30;
 		
 		> a {
 			top: calc($space + 40px);
@@ -940,7 +997,7 @@ $space-small: 5px;
 	
 	
 	#containerMain {
-		padding-top: 50px;
+		
 		
 		.topBar {
 			height: 50px;
@@ -969,19 +1026,21 @@ $space-small: 5px;
 		
 		.contentContainer {
 			min-height: calc(100vh - 50px);
+			margin-top: 50px;
 		}
 		
 		.objectContentWrapper {
 			.topContainer {
-				height: 300px;
-				min-height: 300px;
-				padding-top: calc($space*2);
+				height: 350px;
+				min-height: 350px;
+				padding-top: calc($space*4);
 				
 				
 				&.filtered {
 					height: 98px;
 					min-height: 0;
-				
+					margin-top: 50px;
+					
 					.searchContainer {
 						input, .input {
 							margin-top: 9px;
@@ -1049,10 +1108,24 @@ $space-small: 5px;
 	}
 	
 	
-	body.scroll-header #containerMain .topBar,
-	body.scroll-up #containerMain .topBar {
-		transform: translateY(50px);
+
+	body.scroll-header #containerMain,
+	body.scroll-up #containerMain {
+		.topBar {
+			transform: translateY(50px);
+		}
+
 	}
+	
+	body.scroll-header.scroll-conversation #containerMain,
+	body.scroll-up.scroll-conversation #containerMain {
+		.header {
+			transform: translateY(50px);
+		}
+	}
+	
+	
+
 	
 	
 	#containerMain.page_object .contentContainer.hasTopBar {
@@ -1064,6 +1137,8 @@ $space-small: 5px;
 		.objectInfo { 
 			
 			.containerImage .footer {
+				padding: calc($space-small * 4);
+				
 				.profilImage {
 				
 					margin-left: 0;
@@ -1072,6 +1147,11 @@ $space-small: 5px;
 				.accountName,
 				.address {
 					width: calc(100% - 75px);
+					
+				}
+				.accountName {
+					font-size: 20px;
+					line-height: 24px;
 				}
 			}
 			
@@ -1187,17 +1267,45 @@ $space-small: 5px;
 			.modalBody {
 				height: calc(100vh - 80px);
 				max-height: none;
+				padding: $space;
 				
+				form {
+					.fromText {
+						p {
+							font-size: 14px;
+							line-height: 20px;
+						}
+					}
+				}
+				
+				/*
 				.formRow {
 					width: calc(100% - (2*25px));
 					margin-left: calc(1*25px);
 				}
-				
-				.formRowImage .picAdd {
-					width: 90px;
-					height: 90px;
-					margin: 0 5px;
+				*/
+				.formRowImage {
+					width: calc(100% + ($space*2));
+					margin-left: -$space;
+					margin-top: -$space; 
+
+					.picAdd {
+						width: 90px;
+						height: 90px;
+						margin: 0 5px;
+					}
 				}
+			}
+		}
+	}
+	
+	.modalBody.lendCheckData {
+		form .buttonRow {
+			
+			
+			a {
+				margin: calc($space-small *2) calc($space *2);
+				margin-top: 0;
 			}
 		}
 	}
@@ -1206,11 +1314,13 @@ $space-small: 5px;
 	#contextBoxWrap.timepicker {
 		width: calc(100% - ($space * 4));
 	}
+	
+	#contextBoxWrap.boxGet,
 	#contextBoxWrap.boxBack {
-		margin-left: calc(100% - 300px - 25px);
-		> .arrow {
-			margin-left: -40px;
-		}
+		position: fixed;
+		
+		margin-left: calc(50% - 150px);
+
 	}
 	
 	.profilLendWrap, .profilBorrowWrap {
@@ -1244,63 +1354,83 @@ $space-small: 5px;
 			}
 		}
 	}
+	
+	body.scroll-conversation {
+		#containerMain.page_borrow, #containerMain.page_lend {
+			.header {
+				padding-top: calc(($space-small*2) + 52px);
+				padding-left: calc($space-small *2);
+				padding-right: calc($space-small *2);
+			
+				.arrowBG {
+					top: calc(19px + 52px);
+					width: calc(100% - 80px - ($space-small * 6));
+					left: calc(50% - ((100% - 80px - ($space-small * 6)) / 2));
+				}
+			}
+		}
+	}
 
 	#containerMain.page_borrow, #containerMain.page_lend { 
 		.header {
-			padding: calc($space-small * 4) calc($space-small * 2);
-			padding-bottom: 0;
-			margin-top: 50px;
+			padding: calc($space-small * 2);
+			
+			padding-top: calc(($space-small * 2) + 52px);
+			transform: translateY(0px);
 			
 			.arrowBG {
-				width: 90px;
-				left: calc(50% - (90px / 2));
-				top: 30px;
+				top: 72px;
+				width: calc(100% - 145px - ($space-small * 6));
+				left: calc(50% - ((100% - 210px - ($space-small * 6)) / 2));
 			}
 			
 			.profilImage {
 				width: 40px;
 				height: 40px;
-				margin-bottom: 0;
 			}
-			
-			
-			
 			.img {
-				top: calc($space-small * 4);
-				height: 40px;
-				width: calc(40px * 4 / 3);
-				left: calc(50% - ((40px * 4 / 3)/2));
-			}
-			
-			.firstPerson, .secondPerson {
-				width: calc(50% - ((50px * 4 / 3)/2) - ($space-small * 2));
-			}
-			
-			.firstPerson {
-				&.showContact .info,
-				.info {
-					width: calc(100% - 40px - $space-small);
-					padding-right: calc($space-small * 2);
-				}
+				width: 65px;
+				height: calc(65px * 0.75);
 				
 				.info {
-					.name {
-						margin: 0;
+					display: none;
+				}
+			}
+
+			.firstPerson {
+				width: calc(50% - (65px / 2) - ($space*1));
+				.info {
+					width: calc(100% - 40px);
+					padding-top: $space-small;
+					padding-left: 10px;
+					> .name {
+						display: inline-block;
+						position: relative;
+						padding-top: 5px;
+						padding-right: 5px;
+						background: white;
 						font-size: 14px;
-						font-family: Roboto-Medium;
-						line-height: 40px;
+					}
+					a span.name {
+						display: none;
 					}
 				}
 			}
+			
 		}
 		
 		.conversationContainer {
 			padding: calc($space-small * 2);
-			padding-top: calc($space * 2);
-
+			padding-top: calc($space * 1);
+			margin-top: calc(5px * 23);
+			
 			.messageItem {
-				.content {
-					width: calc(100% - 65px);
+				margin-bottom: calc($space * 2);
+			}
+			
+			.messageItem, .actionBox {
+				.content, .closed {
+					width: calc(100% - ($space-small * 9));
 					
 					> .title {
 						line-height: 18px;
@@ -1315,6 +1445,13 @@ $space-small: 5px;
 						padding: calc($space-small*2);
 						font-size: 14px;
 						line-height: 18px;
+						
+						.day {
+							width: 89px;
+						}
+					}
+					.suggestions {
+						padding-right: 0;
 					}
 					.dates {
 						.get, .back {
@@ -1338,11 +1475,18 @@ $space-small: 5px;
 				}
 			}
 			
-			.actionBox .content .contentWrap {
-				padding: calc($space-small *3);
-				p {
-					line-height: 18px;
-					font-size: 14px;
+			.actionBox .content {
+				width: calc(100%);
+				.contentWrap {
+					padding: calc($space-small *3);
+					h3 {
+						font-size: 16px;
+						line-height: 20px;
+					}
+					p {
+						line-height: 18px;
+						font-size: 14px;
+					}
 				}
 			}
 		}
@@ -1351,6 +1495,18 @@ $space-small: 5px;
 	a.bt_light.small, button.bt_light.small, input.bt_light.small {
 		border-width: 1px;
 		line-height: 28px;
+	}
+	
+	#containerMain.page_info .contentContainer {
+		> .text { 
+			width: 100%;
+			padding: $space;
+			
+			p {
+				font-size: 18px;
+				line-height: 26px;
+			}
+		}
 	}
 }
 
@@ -1408,24 +1564,7 @@ $space-small: 5px;
 						}
 					}
 					
-					/*
-					margin: 0;
-					padding: calc($space-small*4) calc($space-small*2);
-					height: auto;
-					
-					.title {
-						font-size: 14px;
-					}
-					.date, .time {
-						font-size: 18px;
-						width: 100%;
-						float: left;
-						
-						&::after {
-							display: none;
-						}
-					}
-					*/
+			
 				}
 				.von {
 					margin-top: calc($space-small * 6 * -1);
@@ -1462,7 +1601,6 @@ $space-small: 5px;
 	
 	#contextBoxWrap.category {
 		width: calc(100% - ($space*4));
-		margin-left: calc(((100% - ($space*4)) * -1) + ($space/2));
 		margin-left: 0;
 		width: 200px;
 	}
@@ -1601,63 +1739,25 @@ $space-small: 5px;
 			width: calc(100% + ($space-small*8));
 			margin-left: calc(($space-small*4) * -1);
 			
-			/*
-			.itemLend {
-				.von, .bis {
-					width: 100%;
-					text-align: left;
-					padding-left: calc($space-small*4);
-					.title {
-						font-size: 16px;
-					}
-					.date {
-						margin-bottom:calc($space-small*1);
-						
-						&::after {
-							content: ' - ';
-						}
-					}
-					.date,
-					.time {
-						font-size: 22px;
-						float: none;
-						display: inline;
-						
-					}
-					
-				}
-				.von {
-					padding-bottom: 0;
-				}
-				
-				.bottomBar {
-					text-align: left;
-				}
-			}
-			*/
+			
 		}
 	}
 	
-	#containerMain.page_borrow, #containerMain.page_lend { 
-		.header {
-			.firstPerson.showContact .info a.contact {
-				background-position-x: 50%;
-				
-				span {
-					display: none;
-				}
-			}
+	#containerMain.page_info .contentContainer {
+		> .text { 
+			padding-left: calc($space-small*4);
+			padding-right: calc($space-small*4);
 		}
-		
-		
 	}
 	
 	
 }
 
+
+/*
 @media all and (max-height: 700px) {
 	.landingPageWrap section.main {
 		margin-top: 640px;
 	}
 }
-
+*/

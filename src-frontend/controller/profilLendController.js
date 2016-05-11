@@ -17,5 +17,25 @@ angular.module('Leihnah').controller('ProfilLendController', function($scope, $h
 		}, 700);
 
 	}
+	
+	$scope.openModalDelete = function(lend) {
+		var modalInstance = $uibModal.open({
+			size: 'medium',
+			templateUrl: 'template/modal/deleteLend.html',
+			controller: 'DeleteLendController',
+			resolve: {
+				currentLend: function () {
+					return lend;
+				}
+			}
+		});
+		
+		modalInstance.result.then(function () {
+			$scope.$parent.$parent.loadLends();
+			
+		}, function () {
+			$log.debug('Modal dismissed at: ' + new Date());
+		});
+	}
 
 });

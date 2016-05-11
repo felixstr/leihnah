@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('LendController', function($scope, $http, $stateParams, $window, $log, $timeout, $document, AuthenticationService, auth, $uibModal, CategoryService, Piwik, $state, resize, ContextBoxService, PageVisibilityService) {
+angular.module('Leihnah').controller('LendController', function($scope, $http, $stateParams, $window, $log, $timeout, $document, AuthenticationService, auth, $uibModal, CategoryService, Piwik, $state, ContextBoxService, PageVisibilityService) {
 	Piwik.trackPageView($window.location.origin+'/lend/'+$stateParams.lendId);
 	
 // 	document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -12,16 +12,34 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 	var initStates = function() {
 		$scope.states.showBottomBackBar = $scope.currentLend.confirmedDatetime != null && !$scope.currentLend.backPast && ($scope.currentLend.state != 'closed' || $scope.currentLend.closedType == 'successful');
 		$scope.states.showBottomGetBar = $scope.currentLend.confirmedDatetime != null && !$scope.currentLend.getPast && $scope.currentLend.state != 'closed';
-		$scope.states.expired = $scope.currentLend.confirmedDatetime == null && new Date($scope.currentLend.timeSuggestions.get[0].date).setHours(0,0,0,0) <= new Date().setHours(0,0,0,0);
+		$scope.states.expired = ($scope.currentLend.confirmedDatetime == null && $scope.currentLend.state != 'closed') && new Date($scope.currentLend.timeSuggestions.get[0].date).setHours(0,0,0,0) <= new Date().setHours(0,0,0,0);
 		
 /*
 		$log.debug('states-frist', new Date($scope.currentLend.timeSuggestions.get[0].date).setHours(0,0,0,0));
 		$log.debug('states-now', new Date().setHours(0,0,0,0));
 		
 */
-		$log.debug('states', $scope.states);
+// 		$log.debug('states', $scope.states);
 	}
 	
+	
+	$(window).on('scroll', function() {
+/*
+		$log.debug($document.scrollTop());
+		$log.debug($('.conversationContainer').offset());
+		$log.debug($('.conversationContainer').offset().top - $('.topBar').height() - $('header').height());
+*/
+
+		if ($('.conversationContainer').length > 0) {
+			if ($document.scrollTop() > $('.conversationContainer').offset().top - $('.topBar').height() - $('header').height()) {
+				$('body').addClass('scroll-conversation');
+			} else {
+				$('body').removeClass('scroll-conversation');
+			}
+		}
+		
+		
+	});
 	
 	
 	var initScrollTo = function() {
@@ -35,7 +53,7 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 		if ($scope.states.expired) {
 			$document.scrollTo(0, $("#containerMain").height() - $window.innerHeight, 500);
 		} else if ($scope.currentLend.state == 'request') {
-			$document.scrollToElement($(".contentContainer"), 0, 500);
+// 			$document.scrollToElement($(".messageItem"), 50, 500);
 		} else {
 			$document.scrollToElement($(".actionBox"), ($(window).height() / 2), 500);
 		}
@@ -60,7 +78,7 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 			
 	}
 	
-	resize($scope).call(function() { 
+	$(window).on('resize', function() { 
 		$scope.$apply(function() {
 	       setTimelineHeight();
 	    });	
@@ -68,8 +86,8 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 	
 	$scope.openModalCheckData = function(object) {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
+// 			backdrop: 'static',
+// 			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/lendCheckData.html',
 			controller: 'LendCheckDataController',
@@ -127,8 +145,9 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 	$scope.showContactData = function() {
 		ContextBoxService.setTargetElement($("a.contact"));
 	    ContextBoxService.setHorizontalAlign('right');
-	    ContextBoxService.setId('lendContact');	    
+	    ContextBoxService.setId('lendContact');	  
 	    ContextBoxService.show();
+	    
 	    ContextBoxService.currentLend = $scope.currentLend;
 	    ContextBoxService.person = $scope.currentLend.neighborBorrow;
 	    ContextBoxService.dataAll = false;
@@ -141,7 +160,7 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				$log.debug('loadLend', response);
+// 				$log.debug('loadLend', response);
 				if (response.ok) {
 					$scope.currentLend = response.lend;
 					
@@ -165,7 +184,7 @@ angular.module('Leihnah').controller('LendController', function($scope, $http, $
 						setTimelineHeight();
 						initScrollTo();
 						
-					}, 300);					
+					}, 800);					
 					
 				} else {
 					$state.go('profil.lend');

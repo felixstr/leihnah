@@ -20,7 +20,7 @@ class LendMapper extends Mapper {
 				(NOW() > l.backDatetime) AS backPast
 			FROM lend AS l
 			WHERE 
-				deleted = 0 AND 
+				lendDeleted = 0 AND 
 				fk_userLend = :userLendId
 			ORDER BY changeDate DESC, l.backDatetime
 		";
@@ -45,9 +45,12 @@ class LendMapper extends Mapper {
 			}
 			
 			$lendEntity = LendEntity::factory($this->db)->loadRow($row);
-			$timesuggestions = $lendEntity->getTimeSuggestions();
-			if ($timesuggestions['get'][0]['date'] <= date('Y-m-d H:i:s')) {
-				$status = 'past';
+			
+			if ($row['state'] == 'request') {
+				$timesuggestions = $lendEntity->getTimeSuggestions();
+				if ($timesuggestions['get'][0]['date'] <= date('Y-m-d H:i:s')) {
+					$status = 'past';
+				}
 			}
 				
 			$results[$status][] = $lendEntity->toArray();
@@ -70,7 +73,7 @@ class LendMapper extends Mapper {
 				(NOW() > l.backDatetime) AS backPast
 			FROM lend AS l
 			WHERE 
-				deleted = 0 AND 
+				borrowDeleted = 0 AND 
 				fk_userBorrow = :userBorrowId
 			ORDER BY changeDate DESC, l.backDatetime
 		";
@@ -96,11 +99,14 @@ class LendMapper extends Mapper {
 			
 			
 			$lendEntity = LendEntity::factory($this->db)->loadRow($row);
-			$timesuggestions = $lendEntity->getTimeSuggestions();
-			if ($timesuggestions['get'][0]['date'] <= date('Y-m-d H:i:s')) {
-				$status = 'past';
+			
+			if ($row['state'] == 'request') {
+				$timesuggestions = $lendEntity->getTimeSuggestions();
+				if ($timesuggestions['get'][0]['date'] <= date('Y-m-d H:i:s')) {
+					$status = 'past';
+				}
 			}
-				
+			
 			$results[$status][] = $lendEntity->toArray();
 			
 		}
@@ -109,5 +115,28 @@ class LendMapper extends Mapper {
 	}
 	
 	public function setUserId($userId){ $this->userId = $userId; return $this;}
+	
+	public function checkUpdate() {
+		$result = false;
+		
+		$sql = "
+			SELECT 
+				l.pk_lend AS id
+			FROM lend AS l
+			WHERE 
+				l.changeDate > (NOW() - INTERVAL 10 SECOND)
+		";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute();
+		
+		$results = $stmt->fetchAll();
+		
+		if (count($results) > 0) {
+			$result = true;
+		}
+		
+		
+		return $result;
+	}
 
 }

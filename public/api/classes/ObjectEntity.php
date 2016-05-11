@@ -122,8 +122,7 @@ class ObjectEntity {
 				fk_object = :id AND 
 				getDatetime IS NOT NULL AND
 				backDatetime >= NOW() AND 
-				state != 'closed' AND
-				deleted = 0
+				state != 'closed'
 			ORDER BY getDatetime
 		";
 		$stmt = $this->db->prepare($sql);
@@ -132,6 +131,49 @@ class ObjectEntity {
 		
 		while($row = $stmt->fetch()) {
 			$result = array_merge($result, $this->getDates($row['getDatetime'], $row['backDatetime']));	
+		}
+		
+		// get request dates
+		$sql = "
+			SELECT 
+				t.pk_lendTimeSuggestion AS id,
+				t.fk_lend AS lendId,
+				t.date,
+				t.type
+			FROM lendTimeSuggestion AS t
+			JOIN lend AS l ON 
+				t.fk_lend = l.pk_lend
+			WHERE 
+				l.fk_object = :id AND
+				l.state = 'request'
+			ORDER BY
+				lendId, date
+		";
+		$stmt = $this->db->prepare($sql);
+		$stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+		$stmt->execute();
+		
+		$firstDate = null;
+		$currentLendId = 0;
+		$lastDate = null;
+		while($row = $stmt->fetch()) {
+			if ($currentLendId == $row['lendId']) {
+				$lastDate = $row['date'];
+			} else {
+				$result = array_merge($result, $this->getDates($firstDate, $lastDate));	
+				
+				$firstDate = null;
+				$lastDate = null;
+			}
+			
+			if ($firstDate == null) {
+				$firstDate = $row['date'];
+				$currentLendId = $row['lendId'];
+			}
+		}
+		
+		if ($firstDate != null) {
+			$result = array_merge($result, $this->getDates($firstDate, $lastDate));	
 		}
 		
 // 		echo print_r($result);	

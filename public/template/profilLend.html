@@ -1,7 +1,7 @@
 <div class="profilLendWrap" ng-show="pageVisibility.showContentProfil">
 	
 	<h2>An die Nachbarn verliehene Gegenstände</h2>
-	<p>Hier sind alle offenen Anfragen deiner Nachbarn sowie aktuell oder vergangene verliehene Gegenstände ersichtlich.</p>
+	<p>Hier sind alle offenen Anfragen deiner Nachbarn sowie aktuell oder abgeschlossene verliehene Gegenstände ersichtlich.</p>
 	
 	<h3 ng-if="!lends.past && !lends.current">Du hast noch keinen Gegenstand an einen Nachbarn über Leihnah verliehen.</h3>
 	
@@ -74,9 +74,9 @@
 			
 		</div>
 		
-		<h2 class="past" ng-if="lends.past.length > 0">Vergangene Verleihungen</h2>
+		<h2 class="past" ng-if="lends.past.length > 0">Abgeschlossene Verleihungen</h2>
 		
-		<div ng-repeat="item in lends.past" class="itemLend" ng-click="goLend(item.id)">
+		<div ng-repeat="item in lends.past" class="itemLend">
 			
 			
 			
@@ -91,7 +91,7 @@
 				
 			</div>
 			
-			<div class="what" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png">
+			<div class="what" preload-bg-image="{{'assets/img/object/tn_'+item.object.image_1}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"  ng-click="goLend(item.id)">
 				
 				<div class="info">
 					<span class="profilImage small" preload-bg-image="{{'assets/img/profil/'+item.neighborBorrow.accountImage}}" default-image="assets/img/static/placeholder-load.jpg" fallback-image="assets/img/static/placeholder-notfound.png"></span>
@@ -105,7 +105,7 @@
 			</div>
 			
 			
-			<div ng-if="item.state == 'request' || item.state == 'direct'">
+			<div ng-if="item.state == 'request' || item.state == 'direct'"  ng-click="goLend(item.id)">
 				<div class="von">
 					<div class="title"><span>Erster Übergabe-Vorschlag</span></div>
 					<div class="date">{{ item.timeSuggestions.get[0].date | amDateFormat:'DD.MM.YY' }}</div>
@@ -118,7 +118,7 @@
 				</div>
 			</div>
 			
-			<div ng-if="item.state == 'confirmed' || item.state == 'answered'">
+			<div ng-if="item.state == 'confirmed' || item.state == 'answered'"  ng-click="goLend(item.id)">
 				<div class="von">
 					<div class="title"><span>Übergabe</span></div>
 					<div class="date">{{ item.getDatetime | amDateFormat:'DD.MM.YY' }}</div>
@@ -131,17 +131,15 @@
 				</div>
 			</div>
 			
-			<div class="closed" ng-if="item.state == 'closed'">
+			<div class="closed" ng-if="item.state == 'closed'"  ng-click="goLend(item.id)">
 				<div ng-if="item.closedType == 'refused' || item.closedType == 'canceled' || item.closedType == 'successful'" class="title">Dein Feedback</div>
-				<div ng-if="item.closedType == 'stopped'" class="title">Feedback von {{ item.neighborBorrow.accountName }}</div>
+				<div ng-if="item.closedType == 'stopped'" class="title">Feedback von «{{ item.neighborBorrow.accountName }}»</div>
 				
 				<div class="statement">«{{ item.closedText }}»</div>
 			</div>
 			
 			<div class="bottomBar">
-				<a href class="delete bt_dark cancel" ng-click="">
-					<span ng-if="true">Löschen</span>
-				</a>
+				<a href class="delete bt_dark cancel" ng-click="openModalDelete(item);">Löschen</a>
 			</div>
 			
 		</div>

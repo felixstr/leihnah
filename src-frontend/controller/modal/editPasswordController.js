@@ -8,10 +8,10 @@ angular.module('Leihnah').controller('EditPasswordController', function($scope, 
 	$scope.user.passwordNew = '';
 	$scope.user.passwordNewRepeat = '';
 	
-	$log.debug('user', $scope.user);
+// 	$log.debug('user', $scope.user);
 	
 	$scope.checkPasswords = function() {
-		$log.debug($scope.user.passwordNew);
+// 		$log.debug($scope.user.passwordNew);
 		if (($scope.user.passwordNew == '' && $scope.user.passwordNewRepeat == '') || ($scope.user.passwordNew == $scope.user.passwordNewRepeat)) {
 			$scope.editUser.passwordNewRepeat.$setValidity("same", true);
 		} else {
@@ -20,7 +20,7 @@ angular.module('Leihnah').controller('EditPasswordController', function($scope, 
 	}
 	
 	$scope.checkUsername = function() {
-		$log.debug('check username: ', $scope.user.name);
+// 		$log.debug('check username: ', $scope.user.name);
 		
 		if ($scope.user.name == undefined || $scope.user.name.length < 3) {
 			$scope.editUser.name.$setValidity("minlength", false);
@@ -51,7 +51,7 @@ angular.module('Leihnah').controller('EditPasswordController', function($scope, 
 	
 	
 	$scope.save = function () {
-		$log.debug('save: load');
+// 		$log.debug('save: load');
 		
 		var data = $scope.user;
 			
@@ -59,7 +59,7 @@ angular.module('Leihnah').controller('EditPasswordController', function($scope, 
 			headers: { 'auth-token': AuthenticationService.getLocalToken() }
 		})
 		.success(function(response) {
-			$log.debug('save paswword', response);
+// 			$log.debug('save paswword', response);
 			if (response.ok) {
 				AuthenticationService.loadUserInfo();
 				

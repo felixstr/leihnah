@@ -1,15 +1,19 @@
 angular.module('Leihnah').controller('ObjectDetailController', function($scope, $http, $stateParams, $window, $log, $document, $timeout, $window, $filter, AuthenticationService, ContextBoxService, ScrollService, auth, $uibModal, CategoryService, Piwik, $state, PageVisibilityService) {
+
 	Piwik.trackPageView($window.location.origin+'/object/'+$stateParams.objectId);
 	
-
-	
-	$scope.$parent.lastObjectId = $stateParams.objectId; // @todo: needet?
 	
 	
-	$scope.today = function() {
-		$scope.dt = new Date();
-	};
-	$scope.today();
+	$scope.viewStates = {
+		showRequestForm: true,
+		isOwnObject: false,
+		ownerEmailAvailable: true
+	}
+	var setStates = function() {
+		$scope.viewStates.isOwnObject = $scope.$parent.currentNeighbor.id == $scope.object.neighbor.id;
+		$scope.viewStates.ownerEmailAvailable = $scope.object.neighbor.person1_mail != '' || $scope.object.neighbor.person2_mail;
+		$scope.viewStates.showRequestForm = !$scope.viewStates.isOwnObject && $scope.viewStates.ownerEmailAvailable;
+	}
 	
 	
 
@@ -60,6 +64,10 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 	$scope.systemRequest.firstBackSuggestion = '';
 	
 	
+	$scope.today = function() {
+		$scope.dt = new Date();
+	};
+	$scope.today();
 	
 	
 	var defaultSelectedDay = {
@@ -99,6 +107,9 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 	
 	$scope.change = function(type) {
 		var currentDate = $scope.dt;
+		
+		$log.debug('currentDate', currentDate);
+		$log.debug('selectedd', $scope.selectedDay);
 				
 		var dateString = getDateString(currentDate);
 		
@@ -131,7 +142,7 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 		    ContextBoxService.onClose(function() {
 			    			    
 			    $scope.selectedDay = defaultSelectedDay;
-				$document.scrollToElement($('.containerRequest'), 150, 300);
+				$document.scrollToElement($('.containerRequest'), 100, 300);
 				
 		    });
 		    ContextBoxService.dt = $scope.dt;
@@ -456,8 +467,8 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 	// edit object	
 	$scope.openModalObject = function(object) {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
+// 			backdrop: 'static',
+// 			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/editObject.html',
 			controller: 'EditObjectController',
@@ -503,11 +514,15 @@ angular.module('Leihnah').controller('ObjectDetailController', function($scope, 
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-// 				$log.debug('loadedObject', response);
+				$log.debug('loadedObject', response);
 				if (response.ok) {
 					$scope.object = response.objects;
 					
-					renderDatepicker();
+					setStates();
+					
+					if ($scope.viewStates.showRequestForm) {
+						renderDatepicker();
+					}
 					
 					$scope.object.directContactTypes = [];
 					if ($scope.object.directContact_fixnetPhone || $scope.object.directContact_person1_phone || $scope.object.directContact_person2_phone) {

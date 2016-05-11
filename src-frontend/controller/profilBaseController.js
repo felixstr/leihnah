@@ -1,7 +1,6 @@
 angular.module('Leihnah').controller('ProfilBaseController', function($scope, $http, $state, $window, $uibModal, $log, $timeout, ContextBoxService, AuthenticationService, auth, Piwik, PageVisibilityService) {
 	Piwik.trackPageView($window.location.origin+'/profil/base');
 	
-	$log.debug('ProfilBaseController');
 	
 	$timeout(function() {
 		PageVisibilityService.showProfil();
@@ -18,8 +17,6 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 	
 	$scope.contextBox.openModalProfilEdit = function() {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/editProfil.html',
 			controller: 'EditProfilController',
@@ -32,8 +29,7 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 		});
 		
 		modalInstance.result.then(function (neighbor) {
-			$scope.$parent.$parent.currentNeighbor = neighbor;
-			$log.debug('neighbor', neighbor);
+			$scope.$parent.$parent.loadCurrentNeighbor();
 			
 		}, function () {
 			$log.debug('Modal dismissed at: ' + new Date());
@@ -42,8 +38,6 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 	
 	$scope.contextBox.openModalProfilPerson = function(which) {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/editProfilPerson.html',
 			controller: 'EditProfilPersonController',
@@ -67,26 +61,10 @@ angular.module('Leihnah').controller('ProfilBaseController', function($scope, $h
 	
 	$scope.contextBox.openModalPasswordEdit = function() {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/editPassword.html',
-			controller: 'EditPasswordController'/*,
-			resolve: {
-				currentNeighbor: function () {
-					return $scope.currentNeighbor;
-				}
-			}*/
+			controller: 'EditPasswordController'
 		});
-		/*
-		modalInstance.result.then(function (neighbor) {
-			$scope.currentNeighbor = neighbor;
-			
-			
-		}, function () {
-			$log.debug('Modal dismissed at: ' + new Date());
-		});
-		*/
 	}
 	
 	

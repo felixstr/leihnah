@@ -1,7 +1,7 @@
 angular.module('Leihnah').controller('LendCloseController', function($scope, $uibModalInstance, $http, $log, AuthenticationService, currentLend, kind) {
 	
-	$log.debug('currentLend', currentLend);
-	$log.debug('kind', kind);
+// 	$log.debug('currentLend', currentLend);
+// 	$log.debug('kind', kind);
 	
 	$scope.currentLend = angular.copy(currentLend);
 	
@@ -49,10 +49,10 @@ angular.module('Leihnah').controller('LendCloseController', function($scope, $ui
 		kind: kind
 	}
 	
-	$log.debug('$scope.closeData', $scope.closeData);
+// 	$log.debug('$scope.closeData', $scope.closeData);
 	
 	$scope.send = function () {
-		$log.debug('send: send');
+// 		$log.debug('send: send');
 		
 		var data = $scope.closeData;
 		
@@ -60,7 +60,7 @@ angular.module('Leihnah').controller('LendCloseController', function($scope, $ui
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				$log.debug(response);
+// 				$log.debug(response);
 				
 				if (response.ok) {
 					

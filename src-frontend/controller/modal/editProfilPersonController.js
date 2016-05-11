@@ -1,6 +1,6 @@
 angular.module('Leihnah').controller('EditProfilPersonController', function($scope, $uibModalInstance, $http, $log, currentNeighbor, AuthenticationService, person) {
 	
-	$log.debug('currentneighbor', currentNeighbor);
+// 	$log.debug('currentneighbor', currentNeighbor);
 	
 	$scope.currentNeighbor = angular.copy(currentNeighbor);
 	
@@ -28,9 +28,9 @@ angular.module('Leihnah').controller('EditProfilPersonController', function($sco
 	
 	
 	$scope.save = function () {
-		$log.debug('save: load');
+// 		$log.debug('save: load');
 		
-		$log.debug($scope.person);
+// 		$log.debug($scope.person);
 		
 		var data = {};
 		if (person == 1) {

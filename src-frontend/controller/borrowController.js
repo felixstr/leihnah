@@ -1,4 +1,4 @@
-angular.module('Leihnah').controller('BorrowController', function($scope, $http, $stateParams, $window, $log, $timeout, AuthenticationService, auth, $uibModal, $document, CategoryService, Piwik, $state, resize, ContextBoxService, PageVisibilityService) {
+angular.module('Leihnah').controller('BorrowController', function($scope, $http, $stateParams, $window, $log, $timeout, AuthenticationService, auth, $uibModal, $document, CategoryService, Piwik, $state, ContextBoxService, PageVisibilityService) {
 	Piwik.trackPageView($window.location.origin+'/borrow/'+$stateParams.borrowId);
 	
 // 	document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -12,15 +12,30 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 	var initStates = function() {
 		$scope.states.showBottomBackBar = $scope.currentBorrow.confirmedDatetime != null && ($scope.currentBorrow.state != 'closed' || $scope.currentBorrow.closedType == 'successful') && !$scope.currentBorrow.backPast;
 		$scope.states.showBottomGetBar = $scope.currentBorrow.confirmedDatetime != null && !$scope.currentBorrow.getPast && $scope.currentBorrow.state != 'closed';
-		$scope.states.expired = $scope.currentBorrow.confirmedDatetime == null && new Date($scope.currentBorrow.timeSuggestions.get[0].date).setHours(0,0,0,0) <= new Date().setHours(0,0,0,0);
+		$scope.states.expired = ($scope.currentBorrow.confirmedDatetime == null && $scope.currentBorrow.state != 'closed') && new Date($scope.currentBorrow.timeSuggestions.get[0].date).setHours(0,0,0,0) <= new Date().setHours(0,0,0,0);
 	}
 	
+	
+	$(window).on('scroll', function() {
+/*
+		$log.debug($document.scrollTop());
+		$log.debug($('.conversationContainer').offset());
+		$log.debug($('.conversationContainer').offset().top - $('.topBar').height() - $('header').height());
+*/
+		if ($('.conversationContainer').length > 0) {
+			if ($document.scrollTop() > $('.conversationContainer').offset().top - $('.topBar').height() - $('header').height()) {
+				$('body').addClass('scroll-conversation');
+			} else {
+				$('body').removeClass('scroll-conversation');
+			}
+		}
+	});
 	
 	
 	$scope.openModalClose = function(object) {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
+// 			backdrop: 'static',
+// 			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/lendClose.html',
 			controller: 'LendCloseController',
@@ -46,8 +61,8 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 	
 	$scope.openModalConfirm = function(object) {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
+// 			backdrop: 'static',
+// 			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/lendConfirm.html',
 			controller: 'LendConfirmController',
@@ -105,7 +120,7 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 			height = $('.actionBox').position().top + 20;
 		}
 		
-		$log.debug('height', height);
+// 		$log.debug('height', height);
 		
 		
 		$('.timelinePast').css({ 'height': height+'px' });
@@ -117,7 +132,7 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 		
 	}
 	
-	resize($scope).call(function() { 
+	$(window).on('resize', function() { 
 		$scope.$apply(function() {
 	       setTimelineHeight();
 	    });	
@@ -125,8 +140,8 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 		
 	$scope.openModalObject = function(object) {
 		var modalInstance = $uibModal.open({
-			backdrop: 'static',
-			keyboard: false,
+// 			backdrop: 'static',
+// 			keyboard: false,
 			size: 'medium',
 			templateUrl: 'template/modal/editObject.html',
 			controller: 'EditObjectController',
@@ -167,7 +182,7 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 				headers: { 'auth-token': AuthenticationService.getLocalToken() }
 			})
 			.success(function(response) {
-				$log.debug('loadBorrow', response);
+// 				$log.debug('loadBorrow', response);
 				if (response.ok) {
 					$scope.currentBorrow = response.lend;
 					
@@ -191,7 +206,7 @@ angular.module('Leihnah').controller('BorrowController', function($scope, $http,
 						setTimelineHeight();
 						initScrollTo();
 						
-					}, 300);	
+					}, 800);	
 					
 				}
 			})
